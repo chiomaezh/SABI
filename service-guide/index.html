@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="https://use.typekit.net/pty8jvh.css">
+
+  <title>Service Guide — SABI</title>
+  <meta name="description" content="A guide to SABI's services — Brand Strategy Review, World Building, Copy, and Community & Partnerships — to help you find the right starting point for your brand." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=owners-text:wght@350;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FAFBE3;
+      --surface: #FAFBE3;
+      --border: #423A3A;
+      --text: #211D1D;
+      --found-bg: #211D1D;
+      --found-text: #FAFBE3;
+      --font-body: 'owners-text', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 350;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    .page { width: 100%; max-width: 720px; }
+
+    /* ── Header ── */
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3.5rem;
+      border-bottom: 0.5px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    .site-name {
+      font-family: "all-round-gothic", sans-serif;
+      font-weight: 400;
+      font-size: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .site-tag {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* ── Page header ── */
+    .game-label {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      margin-bottom: 0.6rem;
+    }
+    .game-title {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: clamp(28px, 5vw, 36px);
+      line-height: 1.1;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .game-intro {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13.5px;
+      color: var(--text);
+      line-height: 1.9;
+      max-width: 540px;
+      margin-bottom: 3rem;
+    }
+
+    /* ── Flow ── */
+    .flow {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 2.5rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .step:last-child {
+      border-bottom: none;
+      margin-bottom: 2.5rem;
+      padding-bottom: 0;
+    }
+
+    .step-number {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+
+    .step-question {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 1.4rem;
+    }
+
+    .branches {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .branch {
+      border: 1px solid var(--border);
+    }
+
+    .branch-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 1.1rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .branch-answer {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .branch-arrow {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 24px;
+      color: var(--text);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      margin-left: 12px;
+      line-height: 1;
+    }
+
+    .branch.open .branch-arrow {
+      transform: rotate(45deg);
+    }
+
+    .branch-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+      padding-left: 1.1rem;
+      padding-right: 2.5rem;
+    }
+
+    .branch.open .branch-content {
+      padding-bottom: 1.1rem;
+    }
+
+    .branch-outcome {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 13.5px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .branch-outcome.muted {
+      opacity: 1;
+    }
+
+    .branch-desc {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13.5px;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    .branch-next {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13.5px;
+      line-height: 1.8;
+      color: var(--text);
+      margin-top: 0.6rem;
+    }
+
+    a {
+      color: var(--text);
+    }
+
+    .service-name {
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .service-link {
+      text-decoration: underline;
+      color: var(--text);
+    }
+
+    .coming-soon-tag {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      border: 0.5px solid var(--text);
+      color: var(--text);
+      padding: 2px 7px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* ── Reflection ── */
+    .reflection {
+      border-top: 0.5px solid var(--border);
+      padding-top: 2rem;
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+    }
+    .reflection h2 {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text);
+      margin-bottom: 0.85rem;
+    }
+    .reflection p {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.9;
+      max-width: 540px;
+    }
+    .reflection a {
+      color: var(--text);
+      text-decoration: underline;
+    }
+
+    /* ── Site footer ── */
+    .site-footer {
+      border-top: 0.5px solid var(--border);
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .site-footer p {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 11px;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 500px) {
+      .site-footer p:last-child { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header class="site-header">
+    <span class="site-tag">Service Guide</span>
+    <a href="https://www.sabi.london" class="site-name">S A B I</a>
+  </header>
+
+  <main>
+    <h1 class="game-title">Find your service</h1>
+    <p class="game-intro">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
+    </p>
+
+    <div class="flow">
+
+      <!-- Step 1 -->
+      <div class="step">
+        <p class="step-number">Question 01</p>
+        <p class="step-question">Are you confident about your existing brand identity — mission, voice, aesthetic, and intellectual property?</p>
+        <div class="branches">
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">Yes</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-outcome muted">Continue to Question 02</p>
+            </div>
+          </div>
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">No</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-outcome">Brand DNA <span class="coming-soon-tag">Coming soon</span></p>
+              <p class="branch-desc">Designing a full suite of brand assets. The service is for both new businesses approaching brand design for the first time, and brands looking to redesign their identity.</p>
+            </div>
+          </div>
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">Not sure</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-outcome"><a href="https://www.sabi.london/brand-strategy-review" class="service-link">Brand Strategy Review</a></p>
+              <p class="branch-desc">A focused audit of your brand's identity, communications, and online presence. Includes a ten-page report with priority actions.</p>
+              <p class="branch-next">Consider <a href="https://www.sabi.london/world-building" class="service-link service-name">World Building</a> as a next step once your foundations are clear.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step">
+        <p class="step-number">Question 02</p>
+        <p class="step-question">Do you have a clear picture of who your customer is, and what your brand means to them?</p>
+        <div class="branches">
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">Yes</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-outcome muted">Continue to Question 03</p>
+            </div>
+          </div>
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">No</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-outcome"><a href="https://www.sabi.london/world-building" class="service-link">World Building</a></p>
+              <p class="branch-desc">Deep research into your brand's position in the cultural landscape. Includes audience profiling, competitor mapping, and a model for how your customer moves through your brand universe.</p>
+            </div>
+          </div>
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">Not sure</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-desc">Start with the <a href="https://www.sabi.london/brand-strategy-review" class="service-link service-name">Brand Strategy Review</a> to establish a clear baseline, then move into <a href="https://www.sabi.london/world-building" class="service-link service-name">World Building</a> to map where your brand needs to go.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step">
+        <p class="step-number">Question 03</p>
+        <p class="step-question">Are you primarily looking to increase your brand's reach through press, networking, and collaborations?</p>
+        <div class="branches">
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">Yes</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-outcome muted">Continue to Question 04</p>
+            </div>
+          </div>
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">Not exactly</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-outcome muted">Continue to Question 05</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step">
+        <p class="step-number">Question 04</p>
+        <p class="step-question">Is this about the overall brand, for the founder, or for an upcoming project?</p>
+        <div class="branches">
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">Brand</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-outcome"><a href="https://www.sabi.london/world-building" class="service-link">World Building</a></p>
+              <p class="branch-desc">Profiling your target customer or client, and understanding how they navigate your market niche. Highlighting culturally complementary brands to align with.</p>
+              <p class="branch-next">Once you have a clear picture of your brand universe, consider <a href="https://www.sabi.london/community-and-partnerships" class="service-link service-name">Community &amp; Partnerships</a> for a curated list of 50 industry contacts to platform and endorse your brand.</p>
+            </div>
+          </div>
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">Founder</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-outcome"><a href="https://www.sabi.london/community-and-partnerships" class="service-link">Community &amp; Partnerships</a></p>
+              <p class="branch-desc">A dossier of 50 leads to support your personal visibility — including press, social clubs, PRs, talent management, media training, and more.</p>
+            </div>
+          </div>
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">Project</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-outcome"><a href="https://www.sabi.london/community-and-partnerships" class="service-link">Community &amp; Partnerships</a></p>
+              <p class="branch-desc">If you're seeking support for a launch, campaign, collaboration, event, or other business initiative such as retail or affiliate strategy, your dossier will include 50 industry contacts curated to boost your brand's project.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step">
+        <p class="step-number">Question 05</p>
+        <p class="step-question">Are you looking to maintain engagement and resonance with your existing audience through content?</p>
+        <div class="branches">
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">Yes</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-outcome"><a href="https://www.sabi.london/copy" class="service-link">Copy</a></p>
+              <p class="branch-desc">Creative copywriting for brand marketing and communications. This service is tailored to your project, e.g. a campaign, a press release, website, email marketing, e-commerce.</p>
+              <p class="branch-next">Consider <a href="https://www.sabi.london/community-and-partnerships" class="service-link service-name">Community &amp; Partnerships</a> as a next step to support your content rollout.</p>
+            </div>
+          </div>
+          <div class="branch">
+            <button class="branch-header" onclick="toggleBranch(this)">
+              <span class="branch-answer">Not sure</span>
+              <span class="branch-arrow">+</span>
+            </button>
+            <div class="branch-content">
+              <p class="branch-outcome"><a href="https://calendar.app.google/tAGcUDxYCfzESDob6" class="service-link">OOO Hours</a></p>
+              <p class="branch-desc">Book an Out-of-Office Hours session. Free 30-minute weekend slots for introductions and general questions.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>© SABI London</p>
+    <p>BRAND STRATEGY REVIEW · WORLD BUILDING · COPY · COMMUNITY &amp; PARTNERSHIPS</p>
+  </footer>
+
+</div>
+<script>
+function toggleBranch(headerBtn) {
+  const branch = headerBtn.closest('.branch');
+  const content = branch.querySelector('.branch-content');
+  const isOpen = branch.classList.contains('open');
+
+  // Close every other open branch on the entire page
+  document.querySelectorAll('.branch.open').forEach(b => {
+    if (b !== branch) {
+      b.classList.remove('open');
+      b.querySelector('.branch-content').style.maxHeight = null;
+    }
+  });
+
+  if (isOpen) {
+    branch.classList.remove('open');
+    content.style.maxHeight = null;
+  } else {
+    branch.classList.add('open');
+    content.style.maxHeight = content.scrollHeight + 'px';
+  }
+}
+</script>
+</body>
+</html>
