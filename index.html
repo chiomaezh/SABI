@@ -278,18 +278,18 @@
 
     // ── Align the top of the description with the top of the weather block (desktop layout only) ──
     function alignDescToStation() {
-      const desc = document.querySelector('.footer-desc');
+      const leftCol = document.querySelector('.footer-col-left');
       const station = document.querySelector('.station');
-      if (!desc || !station) return;
+      if (!leftCol || !station) return;
       if (window.innerWidth <= 760) {
-        desc.style.marginTop = '0px';
+        leftCol.style.marginTop = '0px';
         return;
       }
-      desc.style.marginTop = '0px'; // reset before measuring
+      leftCol.style.marginTop = '0px'; // reset before measuring
       const stationHeight = station.getBoundingClientRect().height;
-      const descHeight = desc.getBoundingClientRect().height;
-      const offset = Math.max(0, stationHeight - descHeight);
-      desc.style.marginTop = offset + 'px';
+      const leftColHeight = leftCol.getBoundingClientRect().height;
+      const offset = Math.max(0, stationHeight - leftColHeight);
+      leftCol.style.marginTop = offset + 'px';
     }
 
     window.addEventListener('load', alignDescToStation);
