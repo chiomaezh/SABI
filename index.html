@@ -129,11 +129,11 @@
 
     /* ── Description block ── */
     .footer-desc {
-      max-width: 320px;
+      max-width: 380px;
       font-family: var(--font-body);
-      font-size: 15px;
+      font-size: 17px;
       font-weight: 500;
-      line-height: 1.7;
+      line-height: 1.35;
       color: var(--text);
       text-align: left;
       margin: 0 0 28px 0;
@@ -159,8 +159,18 @@
     .contact-line {
       font-family: var(--font-body);
       font-size: 13px;
-      color: var(--text);
-      font-weight: 300;
+      color: #000000;
+      font-weight: 700;
+    }
+
+    .contact-link {
+      color: #000000 !important;
+      text-decoration: none;
+    }
+    .contact-link:visited,
+    .contact-link:active,
+    .contact-link:hover {
+      color: #000000 !important;
     }
 
     @media (max-width: 760px) {
@@ -191,8 +201,8 @@
       <p class="footer-desc">A creative consultancy offering strategy and design for culture-shaping presence and storytelling.</p>
       <div class="contact-block">
         <span class="contact-label">Contact</span>
-        <span class="contact-line">office@sabi.london</span>
-        <span class="contact-line">+44 7400 192837</span>
+        <a href="mailto:office@sabi.london" target="_blank" rel="noopener" class="contact-line contact-link">office@sabi.london</a>
+        <a href="tel:+447400192837" class="contact-line contact-link">+44 7400 192837</a>
       </div>
     </div>
 
