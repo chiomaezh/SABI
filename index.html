@@ -160,7 +160,7 @@
     .station-meta {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 7px;
       font-family: var(--font-body);
       font-size: 30px;
       letter-spacing: 1px;
@@ -359,15 +359,37 @@
 
     // ── Force all three station rows (city/time/meta) to share the exact same width ──
     function matchStationRowWidths() {
-      const rows = document.querySelectorAll('.station-row');
-      if (!rows.length) return;
-      rows.forEach(r => r.style.width = 'auto');
-      let maxWidth = 0;
-      rows.forEach(r => {
-        const w = r.getBoundingClientRect().width;
-        if (w > maxWidth) maxWidth = w;
-      });
-      rows.forEach(r => r.style.width = maxWidth + 'px');
+      const cityEl = document.querySelector('.station-city');
+      const timeEl = document.querySelector('.station-time');
+      const metaEl = document.querySelector('.station-meta');
+      if (!cityEl || !timeEl || !metaEl) return;
+
+      // Reset any previous scaling before measuring fresh
+      timeEl.style.fontSize = '';
+      metaEl.style.fontSize = '';
+
+      const cityWidth = cityEl.getBoundingClientRect().width;
+
+      const timeWidth = timeEl.getBoundingClientRect().width;
+      const timeFontSize = parseFloat(getComputedStyle(timeEl).fontSize);
+      if (timeWidth > 0) {
+        const newTimeSize = timeFontSize * (cityWidth / timeWidth);
+        timeEl.style.fontSize = newTimeSize + 'px';
+      }
+
+      const metaIcon = metaEl.querySelector('.station-icon');
+      const metaTemp = metaEl.querySelector('[data-temp]');
+      if (metaIcon && metaTemp) {
+        const iconWidth = metaIcon.getBoundingClientRect().width;
+        const gapPx = parseFloat(getComputedStyle(metaEl).gap) || 0;
+        const tempWidth = metaTemp.getBoundingClientRect().width;
+        const tempFontSize = parseFloat(getComputedStyle(metaTemp).fontSize) || parseFloat(getComputedStyle(metaEl).fontSize);
+        const availableForText = cityWidth - iconWidth - gapPx;
+        if (tempWidth > 0 && availableForText > 0) {
+          const newTempSize = tempFontSize * (availableForText / tempWidth);
+          metaTemp.style.fontSize = newTempSize + 'px';
+        }
+      }
     }
 
     window.addEventListener('load', matchStationRowWidths);
