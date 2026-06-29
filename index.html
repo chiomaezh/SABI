@@ -189,20 +189,20 @@
       line-height: 1.15;
       color: var(--text);
       text-align: left;
-      margin: 0 0 28px 0;
+      margin: 0 0 18px 0;
     }
 
     /* ── Contact block ── */
     .contact-block {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 11px;
       text-align: left;
     }
 
     .contact-label {
       font-family: var(--font-body);
-      font-size: 14px;
+      font-size: 15px;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--text);
@@ -211,7 +211,7 @@
 
     .contact-line {
       font-family: var(--font-body);
-      font-size: 15px;
+      font-size: 16px;
       color: #000000;
       font-weight: 400;
     }
@@ -426,6 +426,30 @@
     window.addEventListener('load', centreLogoMobile);
     window.addEventListener('resize', centreLogoMobile);
     setTimeout(centreLogoMobile, 100);
+
+    // ── Desktop only: match total height of (description + contact) to the weather block ──
+    function matchLeftColumnHeightToStation() {
+      if (window.innerWidth <= 760) return;
+      const desc = document.querySelector('.footer-desc');
+      const contact = document.querySelector('.footer-col-left');
+      const station = document.querySelector('.station');
+      if (!desc || !contact || !station) return;
+
+      desc.style.marginBottom = '';
+      const baseMarginBottom = parseFloat(getComputedStyle(desc).marginBottom);
+
+      const stationHeight = station.getBoundingClientRect().height;
+      const descHeight = desc.getBoundingClientRect().height;
+      const contactHeight = contact.getBoundingClientRect().height;
+      const currentTotal = descHeight + baseMarginBottom + contactHeight;
+
+      const diff = stationHeight - currentTotal;
+      desc.style.marginBottom = Math.max(0, baseMarginBottom + diff) + 'px';
+    }
+
+    window.addEventListener('load', matchLeftColumnHeightToStation);
+    window.addEventListener('resize', matchLeftColumnHeightToStation);
+    setTimeout(matchLeftColumnHeightToStation, 1500);
 
   </script>
 </body>
