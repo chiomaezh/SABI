@@ -399,18 +399,11 @@
     setTimeout(matchStationRowWidths, 1500);
 
     // ── On mobile, centre the logo within the empty space between nav and footer ──
-    function centreLogoMobile() {
+    function centreLogoInMainBlock() {
       const logo = document.querySelector('img');
       const nav = document.querySelector('.site-nav');
       const footer = document.querySelector('.site-footer');
       if (!logo || !nav || !footer) return;
-
-      if (window.innerWidth > 760) {
-        logo.style.position = '';
-        logo.style.top = '';
-        logo.style.transform = '';
-        return;
-      }
 
       const navHeight = nav.getBoundingClientRect().height;
       const footerHeight = footer.getBoundingClientRect().height;
@@ -423,9 +416,9 @@
       logo.style.transform = 'translate(-50%, -50%)';
     }
 
-    window.addEventListener('load', centreLogoMobile);
-    window.addEventListener('resize', centreLogoMobile);
-    setTimeout(centreLogoMobile, 100);
+    window.addEventListener('load', centreLogoInMainBlock);
+    window.addEventListener('resize', centreLogoInMainBlock);
+    setTimeout(centreLogoInMainBlock, 100);
 
     // ── Desktop only: match total height of (description + contact) to the weather block ──
     function matchLeftColumnHeightToStation() {
@@ -435,16 +428,27 @@
       const station = document.querySelector('.station');
       if (!desc || !contact || !station) return;
 
+      // Reset both to CSS-defined base values before measuring
       desc.style.marginBottom = '';
+      station.style.gap = '';
       const baseMarginBottom = parseFloat(getComputedStyle(desc).marginBottom);
+      const baseStationGap = parseFloat(getComputedStyle(station).gap) || 8;
 
       const stationHeight = station.getBoundingClientRect().height;
       const descHeight = desc.getBoundingClientRect().height;
       const contactHeight = contact.getBoundingClientRect().height;
-      const currentTotal = descHeight + baseMarginBottom + contactHeight;
+      const leftTotal = descHeight + baseMarginBottom + contactHeight;
 
-      const diff = stationHeight - currentTotal;
-      desc.style.marginBottom = Math.max(0, baseMarginBottom + diff) + 'px';
+      const diff = leftTotal - stationHeight;
+
+      if (diff > 0) {
+        // Left column is taller — stretch the station's internal gaps to match
+        const extraPerGap = diff / 2; // 2 gaps between the 3 station rows
+        station.style.gap = (baseStationGap + extraPerGap) + 'px';
+      } else {
+        // Station is taller or equal — grow the description's margin to match
+        desc.style.marginBottom = (baseMarginBottom - diff) + 'px';
+      }
     }
 
     window.addEventListener('load', matchLeftColumnHeightToStation);
