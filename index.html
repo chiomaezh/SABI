@@ -106,10 +106,14 @@
 
     .footer-col-left {
       align-items: flex-start;
+      transform: scale(0.9);
+      transform-origin: bottom left;
     }
 
     .footer-col-right {
       align-items: flex-end;
+      transform: scale(0.9);
+      transform-origin: bottom right;
     }
 
     /* ── World clock / weather block ── */
@@ -221,8 +225,8 @@
         gap: 28px;
         padding: 24px;
       }
-      .footer-col-left { align-items: center; }
-      .footer-col-right { align-items: center; }
+      .footer-col-left { align-items: center; transform: none; }
+      .footer-col-right { align-items: center; transform: none; }
       .footer-desc { text-align: center; font-size: 14px; max-width: 280px; }
       .contact-block { text-align: center; }
       .station-city { font-size: 16px; letter-spacing: 2px; }
