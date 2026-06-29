@@ -227,7 +227,6 @@
     }
 
     @media (max-width: 760px) {
-      .desc-break { display: none; }
       .site-footer {
         grid-template-columns: 1fr 1fr;
         grid-template-areas: "desc desc" "contact weather";
@@ -357,6 +356,53 @@
     updateWeather();
     setInterval(updateClock, 1000);
     setInterval(updateWeather, 15 * 60 * 1000); // refresh weather every 15 min
+
+    // ── Force all three station rows (city/time/meta) to share the exact same width ──
+    function matchStationRowWidths() {
+      const rows = document.querySelectorAll('.station-row');
+      if (!rows.length) return;
+      rows.forEach(r => r.style.width = 'auto');
+      let maxWidth = 0;
+      rows.forEach(r => {
+        const w = r.getBoundingClientRect().width;
+        if (w > maxWidth) maxWidth = w;
+      });
+      rows.forEach(r => r.style.width = maxWidth + 'px');
+    }
+
+    window.addEventListener('load', matchStationRowWidths);
+    window.addEventListener('resize', matchStationRowWidths);
+    // Re-run shortly after weather loads, since temp text changes width after fetch completes
+    setTimeout(matchStationRowWidths, 1500);
+
+    // ── On mobile, centre the logo within the empty space between nav and footer ──
+    function centreLogoMobile() {
+      const logo = document.querySelector('img');
+      const nav = document.querySelector('.site-nav');
+      const footer = document.querySelector('.site-footer');
+      if (!logo || !nav || !footer) return;
+
+      if (window.innerWidth > 760) {
+        logo.style.position = '';
+        logo.style.top = '';
+        logo.style.transform = '';
+        return;
+      }
+
+      const navHeight = nav.getBoundingClientRect().height;
+      const footerHeight = footer.getBoundingClientRect().height;
+      const viewportHeight = window.innerHeight;
+      const availableMid = navHeight + (viewportHeight - navHeight - footerHeight) / 2;
+
+      logo.style.position = 'fixed';
+      logo.style.left = '50%';
+      logo.style.top = availableMid + 'px';
+      logo.style.transform = 'translate(-50%, -50%)';
+    }
+
+    window.addEventListener('load', centreLogoMobile);
+    window.addEventListener('resize', centreLogoMobile);
+    setTimeout(centreLogoMobile, 100);
 
   </script>
 </body>
