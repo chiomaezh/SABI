@@ -235,15 +235,28 @@
         gap: 16px 12px;
         padding: 20px;
       }
+      .footer-row { display: contents; }
       .footer-col-left {
         align-items: flex-start;
         transform: none;
+        align-self: stretch;
       }
       .footer-col-right {
         align-items: flex-end;
         transform: none;
+        align-self: stretch;
       }
-      .footer-desc { text-align: center; font-size: 13px; max-width: none; margin: 0 0 4px 0; justify-self: center; }
+      .contact-block {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .station {
+        height: 100%;
+        justify-content: space-between;
+      }
+      .footer-desc { text-align: center; font-size: 15px; max-width: none; margin: 0 0 4px 0; justify-self: center; }
       .contact-block { text-align: left; }
       .station-city { font-size: 14px; letter-spacing: 2px; }
       .station-time { font-size: 26px; }
@@ -263,7 +276,7 @@
   <img src="sabi-logo.png" alt="SABI">
 
   <footer class="site-footer">
-    <p class="footer-desc">A creative consultancy offering strategy and design<br class="desc-break">for culture-shaping presence and storytelling.</p>
+    <p class="footer-desc">A creative consultancy offering strategy and design <br class="desc-break">for culture-shaping presence and storytelling.</p>
 
     <div class="footer-row">
       <div class="footer-col footer-col-left">
@@ -285,7 +298,7 @@
           <div class="station-row">
             <span class="station-meta">
               <span class="station-icon" data-icon></span>
-              <span data-temp>--°</span>
+              <span data-temp>--°C</span>
             </span>
           </div>
         </div>
@@ -333,7 +346,7 @@
         const data = await res.json();
         const temp = Math.round(data.current.temperature_2m);
         const code = data.current.weather_code;
-        panel.querySelector('[data-temp]').textContent = `${temp}°`;
+        panel.querySelector('[data-temp]').textContent = `${temp}°C`;
         panel.querySelector('[data-icon]').innerHTML = iconForCode(code);
       } catch (e) {
         panel.querySelector('[data-temp]').textContent = '—';
