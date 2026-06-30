@@ -1,1 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <link rel="stylesheet" href="https://use.typekit.net/pty8jvh.css">
+
+  <title>Services — S A B I</title>
+  <meta name="description" content="A London-based creative consultancy offering strategy and design for culture-shaping presence and storytelling." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=owners-text:wght@350;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FAFBE3;
+      --surface: #FAFBE3;
+      --border: #423A3A;
+      --border-light: #423A3A;
+      --text: #211D1D;
+      --found-bg: #211D1D;
+      --found-text: #FAFBE3;
+      --select-bg: #E8E9C8;
+      --select-text: #211D1D;
+      --font-body: 'owners-text', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 350;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    .page { width: 100%; max-width: 720px; }
+
+    /* ── Header ── */
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+    }
+
+    .site-name {
+      font-family: "all-round-gothic", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .site-tag {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* ── Hamburger menu (accordion) ── */
+    .menu-btn {
+      position: relative;
+      width: 22px;
+      height: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .menu-btn span {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--text);
+      transition: transform 0.25s ease, top 0.25s ease;
+    }
+    .menu-btn span:first-child {
+      top: 2px;
+    }
+    .menu-btn span:last-child {
+      top: 12px;
+    }
+    .menu-btn.open span {
+      height: 1.8px;
+    }
+    .menu-btn.open span:first-child {
+      top: 7px;
+      transform: rotate(45deg);
+    }
+    .menu-btn.open span:last-child {
+      top: 7px;
+      transform: rotate(-45deg);
+    }
+    .menu-accordion {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .menu-accordion.open {
+      max-height: 220px;
+    }
+    .menu-list {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 1rem;
+    }
+    .menu-list a {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.5rem 0;
+    }
+    .menu-list a.active {
+      color: var(--text);
+      opacity: 0.35;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .header-divider {
+      border-top: 0.5px solid var(--border);
+      margin-bottom: 3.5rem;
+    }
+
+    /* ── Page title ── */
+    .page-title {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 25px;
+      line-height: 1.1;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── Service categories (accordion) ── */
+    .service-list {
+      display: flex;
+      flex-direction: column;
+      border: 0.5px solid var(--border);
+    }
+    .service-item {
+      border-bottom: 0.5px solid var(--border);
+      padding: 0 1.2rem;
+    }
+    .service-item:last-child {
+      border-bottom: none;
+    }
+
+    .service-toggle {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 1.3rem 0;
+      text-align: left;
+    }
+    .service-toggle .label {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 16px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .service-icon {
+      position: relative;
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      margin-left: 1rem;
+    }
+    .service-icon::before,
+    .service-icon::after {
+      content: '';
+      position: absolute;
+      background: var(--text);
+      transition: transform 0.25s ease;
+    }
+    .service-icon::before {
+      top: 6px; left: 0;
+      width: 14px; height: 1.5px;
+    }
+    .service-icon::after {
+      top: 0; left: 6px;
+      width: 1.5px; height: 14px;
+    }
+    .service-item.open .service-icon::after {
+      transform: rotate(90deg);
+      opacity: 0;
+    }
+
+    .service-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .service-item.open .service-panel {
+      max-height: 300px;
+    }
+    .service-sublist {
+      padding-bottom: 1.4rem;
+    }
+    .service-sublist a,
+    .service-sublist span {
+      display: block;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.4rem 0;
+      opacity: 0.85;
+    }
+    .service-sublist a:hover {
+      opacity: 1;
+    }
+
+    /* ── Site footer ── */
+    .site-footer {
+      border-top: 0.5px solid var(--border);
+      padding-top: 1.5rem;
+      margin-top: 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .site-footer p {
+      font-family: var(--font-body);
+      font-weight: 350;
+      font-size: 13px;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+
+@media (max-width: 500px) {
+  .site-footer p:last-child {
+    font-size: 10px;
+  }
+}
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header class="site-header">
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+    </button>
+    <a href="https://sabi.london/" class="site-name">S A B I</a>
+  </header>
+
+  <nav class="menu-accordion" id="menuAccordion">
+    <div class="menu-list">
+      <a href="https://sabi.london/about">About</a>
+      <a class="active" aria-current="page" aria-disabled="true">Services</a>
+      <a href="https://play.sabi.london/word-search/">Play</a>
+    </div>
+  </nav>
+
+  <div class="header-divider"></div>
+
+  <main>
+    <h1 class="page-title">Services</h1>
+
+    <div class="service-list">
+
+      <div class="service-item">
+        <button class="service-toggle">
+          <span class="label">Brand</span>
+          <span class="service-icon"></span>
+        </button>
+        <div class="service-panel">
+          <div class="service-sublist">
+            <span>Brand DNA</span>
+            <span>Brand Strategy Review</span>
+            <span>World Building</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-item">
+        <button class="service-toggle">
+          <span class="label">Experience</span>
+          <span class="service-icon"></span>
+        </button>
+        <div class="service-panel">
+          <div class="service-sublist">
+            <span>Community &amp; Partnerships</span>
+            <span>Events</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-item">
+        <button class="service-toggle">
+          <span class="label">Production</span>
+          <span class="service-icon"></span>
+        </button>
+        <div class="service-panel">
+          <div class="service-sublist">
+            <span>Copy</span>
+            <span>Campaign</span>
+            <span>Editions</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>© SABI London</p>
+  </footer>
+
+</div>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const menuAccordion = document.getElementById('menuAccordion');
+
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = menuAccordion.classList.toggle('open');
+    menuBtn.classList.toggle('open', isOpen);
+    menuBtn.setAttribute('aria-expanded', isOpen);
+  });
+
+  document.querySelectorAll('.service-item').forEach((item) => {
+    const toggle = item.querySelector('.service-toggle');
+    toggle.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.service-item').forEach((el) => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+
+</body>
+</html>
