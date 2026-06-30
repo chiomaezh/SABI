@@ -126,6 +126,12 @@
       text-decoration: none;
       padding: 0.5rem 0;
     }
+    .menu-list a.active {
+      color: var(--text);
+      opacity: 0.25;
+      pointer-events: none;
+      cursor: default;
+    }
 
     .header-divider {
       border-top: 0.5px solid var(--border);
@@ -197,7 +203,7 @@
 
   <nav class="menu-accordion" id="menuAccordion">
     <div class="menu-list">
-      <a href="https://sabi.london/about">About</a>
+      <a class="active" aria-current="page" aria-disabled="true">About</a>
       <a href="https://bio.site/sabi__ldn" target="_blank" rel="noopener">Services</a>
       <a href="https://play.sabi.london/word-search/">Play</a>
     </div>
