@@ -1,1 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <link rel="stylesheet" href="https://use.typekit.net/pty8jvh.css">
+
+  <title>About — S A B I</title>
+  <meta name="description" content="A London-based creative consultancy offering strategy and design for culture-shaping presence and storytelling." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=owners-text:wght@350;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FAFBE3;
+      --surface: #FAFBE3;
+      --border: #423A3A;
+      --border-light: #423A3A;
+      --text: #211D1D;
+      --found-bg: #211D1D;
+      --found-text: #FAFBE3;
+      --select-bg: #E8E9C8;
+      --select-text: #211D1D;
+      --font-body: 'owners-text', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 350;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    .page { width: 100%; max-width: 720px; }
+
+    /* ── Header ── */
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+    }
+
+    .site-name {
+      font-family: "all-round-gothic", sans-serif;
+      font-weight: 400;
+      font-size: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .site-tag {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* ── Hamburger menu (accordion) ── */
+    .menu-btn {
+      position: relative;
+      width: 22px;
+      height: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .menu-btn span {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 1.6px;
+      background: var(--text);
+      transition: transform 0.25s ease, top 0.25s ease;
+    }
+    .menu-btn span:first-child {
+      top: 2px;
+    }
+    .menu-btn span:last-child {
+      top: 12px;
+    }
+    .menu-btn.open span {
+      height: 1.8px;
+    }
+    .menu-btn.open span:first-child {
+      top: 7px;
+      transform: rotate(45deg);
+    }
+    .menu-btn.open span:last-child {
+      top: 7px;
+      transform: rotate(-45deg);
+    }
+    .menu-accordion {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .menu-accordion.open {
+      max-height: 220px;
+    }
+    .menu-list {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 1rem;
+    }
+    .menu-list a {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.5rem 0;
+    }
+
+    .header-divider {
+      border-top: 0.5px solid var(--border);
+      margin-bottom: 3.5rem;
+    }
+
+    /* ── Page title ── */
+    .page-title {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 25px;
+      line-height: 1.1;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 1.4rem;
+    }
+    .page-body {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.9;
+      max-width: 75%;
+    }
+    .page-body p {
+      margin-bottom: 1.5rem;
+    }
+    .page-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ── Site footer ── */
+    .site-footer {
+      border-top: 0.5px solid var(--border);
+      padding-top: 1.5rem;
+      margin-top: 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .site-footer p {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 11px;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+
+@media (max-width: 500px) {
+  .site-footer p:last-child {
+    font-size: 10px;
+  }
+}
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header class="site-header">
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+    </button>
+    <a href="https://sabi.london/" class="site-name">S A B I</a>
+  </header>
+
+  <nav class="menu-accordion" id="menuAccordion">
+    <div class="menu-list">
+      <a href="https://sabi.london/about">About</a>
+      <a href="https://bio.site/sabi__ldn" target="_blank" rel="noopener">Services</a>
+      <a href="https://play.sabi.london/word-search/">Play</a>
+    </div>
+  </nav>
+
+  <div class="header-divider"></div>
+
+  <main>
+    <h1 class="page-title">About</h1>
+    <div class="page-body">
+      <p>
+        A London-based creative consultancy offering strategy and design for culture-shaping
+        presence and storytelling.
+      </p>
+      <p>
+        We have a special interest in brands with a strong lifestyle,
+        wellness, or social mission, and masstige to luxury positioning.
+      </p>
+      <p>
+        We believe that innovation, character, and beauty shouldn't be reserved for premium
+        brands; Our goal is to eliminate generic design and communications from everyday human
+        experiences, and push brands to their highest potential.
+      </p>
+      <p>
+        If you were to strip the signature elements from most brands today - the logos, font
+        packs, and colour schemes - you might be struck by the sameness and anonymity of what is
+        left behind. We collaborate with brands that want to change that. From the inside out.
+      </p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>© SABI London</p>
+    <p>BRAND STRATEGY REVIEW · WORLD BUILDING · COPY · COMMUNITY &amp; PARTNERSHIPS</p>
+  </footer>
+
+</div>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const menuAccordion = document.getElementById('menuAccordion');
+
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = menuAccordion.classList.toggle('open');
+    menuBtn.classList.toggle('open', isOpen);
+    menuBtn.setAttribute('aria-expanded', isOpen);
+  });
+</script>
+
+</body>
+</html>
