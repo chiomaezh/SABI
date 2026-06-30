@@ -264,6 +264,57 @@
       .station-icon { width: 22px; height: 22px; }
       .station { width: auto; }
     }
+
+    /* ── Phone landscape (short viewport): keep the compact single-row
+         footer instead of the tall stacked portrait layout. Capped at
+         max-height so tablets in landscape (which have plenty of room)
+         keep the normal desktop-style footer untouched. ── */
+    @media (orientation: landscape) and (max-height: 500px) {
+      img { max-width: 110px; }
+
+      .site-nav { padding: 14px 20px; }
+
+      .site-footer {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "desc weather" "contact weather";
+        align-items: end;
+        gap: 0;
+        padding: 14px 24px;
+      }
+
+      .footer-row { display: contents; }
+      .footer-col-left {
+        grid-area: contact;
+        align-items: flex-start;
+        transform: none;
+        align-self: end;
+      }
+      .footer-col-right {
+        grid-area: weather;
+        align-items: flex-end;
+        transform: none;
+        align-self: end;
+      }
+
+      .footer-desc {
+        text-align: left;
+        font-size: 12px;
+        line-height: 1.15;
+        max-width: 280px;
+        margin: 0 0 6px 0;
+        justify-self: start;
+      }
+
+      .contact-block { gap: 4px; text-align: left; }
+      .contact-label { font-size: 10px; letter-spacing: 1.5px; }
+      .contact-line { font-size: 11px; }
+
+      .station { gap: 3px; }
+      .station-city { font-size: 11px; letter-spacing: 1.5px; }
+      .station-time { font-size: 18px; }
+      .station-meta { font-size: 14px; gap: 4px; }
+      .station-icon { width: 14px; height: 14px; }
+    }
   </style>
 </head>
 <body>
