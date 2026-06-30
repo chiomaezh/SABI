@@ -383,15 +383,19 @@
       const metaIcon = metaEl.querySelector('.station-icon');
       const metaTemp = metaEl.querySelector('[data-temp]');
       if (metaIcon && metaTemp) {
-        const iconWidth = metaIcon.getBoundingClientRect().width;
+        metaIcon.style.width = '';
+        metaIcon.style.height = '';
+        const baseIconSize = metaIcon.getBoundingClientRect().width;
         const gapPx = parseFloat(getComputedStyle(metaEl).gap) || 0;
         const tempWidth = metaTemp.getBoundingClientRect().width;
         const tempFontSize = parseFloat(getComputedStyle(metaTemp).fontSize) || parseFloat(getComputedStyle(metaEl).fontSize);
-        const availableForText = cityWidth - iconWidth - gapPx;
-        if (tempWidth > 0 && availableForText > 0) {
-          const newTempSize = tempFontSize * (availableForText / tempWidth);
-          metaTemp.style.fontSize = newTempSize + 'px';
-        }
+        const totalMetaWidth = baseIconSize + gapPx + tempWidth;
+        const scale = cityWidth / totalMetaWidth;
+        const newIconSize = baseIconSize * scale;
+        const newTempSize = tempFontSize * scale;
+        metaIcon.style.width = newIconSize + 'px';
+        metaIcon.style.height = newIconSize + 'px';
+        metaTemp.style.fontSize = newTempSize + 'px';
       }
     }
 
