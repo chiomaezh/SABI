@@ -223,8 +223,10 @@
       padding-bottom: 1.4rem;
     }
     .service-sublist a,
-    .service-sublist span {
-      display: block;
+    .service-sublist .sub-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
       font-family: var(--font-body);
       font-weight: 500;
       font-size: 15px;
@@ -236,6 +238,17 @@
     }
     .service-sublist a:hover {
       opacity: 1;
+    }
+    .coming-soon {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text);
+      border: 0.5px solid var(--border);
+      padding: 0.2rem 0.5rem;
+      white-space: nowrap;
     }
 
     /* ── Site footer ── */
@@ -297,7 +310,7 @@
         </button>
         <div class="service-panel">
           <div class="service-sublist">
-            <span>Brand DNA</span>
+            <span class="sub-row">Brand DNA<span class="coming-soon">Coming Soon</span></span>
             <a href="https://sabi.london/services/brand-strategy-review">Brand Strategy Review</a>
             <a href="https://sabi.london/services/world-building">World Building</a>
           </div>
@@ -312,7 +325,7 @@
         <div class="service-panel">
           <div class="service-sublist">
             <a href="https://sabi.london/services/community-partnerships">Community &amp; Partnerships</a>
-            <span>Events</span>
+            <span class="sub-row">Events<span class="coming-soon">Coming Soon</span></span>
           </div>
         </div>
       </div>
@@ -325,8 +338,8 @@
         <div class="service-panel">
           <div class="service-sublist">
             <a href="https://sabi.london/services/copy">Copy</a>
-            <span>Campaign</span>
-            <span>Editions</span>
+            <span class="sub-row">Campaign<span class="coming-soon">Coming Soon</span></span>
+            <span class="sub-row">Editions<span class="coming-soon">Coming Soon</span></span>
           </div>
         </div>
       </div>
@@ -354,9 +367,7 @@
   document.querySelectorAll('.service-item').forEach((item) => {
     const toggle = item.querySelector('.service-toggle');
     toggle.addEventListener('click', () => {
-      const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.service-item').forEach((el) => el.classList.remove('open'));
-      if (!isOpen) item.classList.add('open');
+      item.classList.toggle('open');
     });
   });
 </script>
