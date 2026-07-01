@@ -233,8 +233,18 @@
 
 @media (max-width: 500px) {
   .site-footer {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1rem;
     row-gap: 1.75rem;
+  }
+  .footer-col:first-child {
+    grid-column: 1 / -1;
+  }
+  .footer-col--services {
+    margin-left: 0;
+  }
+  .footer-links a {
+    white-space: normal;
   }
   .footer-copyright {
     font-size: 10px;
