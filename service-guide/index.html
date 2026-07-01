@@ -41,8 +41,8 @@
 
     /* ── Header ── */
     .site-header {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
       padding-bottom: 1rem;
     }
@@ -54,16 +54,6 @@
       letter-spacing: 0px;
       color: var(--text);
       text-decoration: none;
-      justify-self: end;
-    }
-    .site-tag {
-      font-family: var(--font-body);
-      font-weight: 350;
-      font-size: 18px;
-      color: var(--text);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      justify-self: center;
     }
 
     /* ── Hamburger menu (accordion) ── */
@@ -431,7 +421,6 @@
       <span></span>
       <span></span>
     </button>
-    <span class="site-tag">Service Guide</span>
     <a href="https://www.sabi.london" class="site-name">S A B I</a>
   </header>
 
