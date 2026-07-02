@@ -131,6 +131,12 @@
       flex-direction: column;
       align-items: stretch;
       gap: 8px;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .station.is-ready {
+      opacity: 1;
     }
 
     .station-row {
@@ -406,6 +412,13 @@
         panel.querySelector('[data-icon]').innerHTML = iconForCode(code, isDay);
       } catch (e) {
         panel.querySelector('[data-temp]').textContent = '—';
+      } finally {
+        // Now that the real temperature text is in place, size everything once,
+        // then reveal the block — instead of resizing on a blind timer while it's
+        // already visible (which is what caused the glitch/rearrange).
+        matchStationRowWidths();
+        matchLeftColumnHeightToStation();
+        panel.classList.add('is-ready');
       }
     }
 
@@ -451,8 +464,6 @@
 
     window.addEventListener('load', matchStationRowWidths);
     window.addEventListener('resize', matchStationRowWidths);
-    // Re-run shortly after weather loads, since temp text changes width after fetch completes
-    setTimeout(matchStationRowWidths, 1500);
 
     // ── On mobile, centre the logo within the empty space between nav and footer ──
     function centreLogoInMainBlock() {
@@ -509,7 +520,6 @@
 
     window.addEventListener('load', matchLeftColumnHeightToStation);
     window.addEventListener('resize', matchLeftColumnHeightToStation);
-    setTimeout(matchLeftColumnHeightToStation, 1500);
 
   </script>
 </body>
