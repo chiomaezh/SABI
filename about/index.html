@@ -9,7 +9,7 @@
 
   <title>About — SABI</title>
   <meta name="description" content="A London-based creative consultancy offering strategy and design for culture-shaping presence and storytelling." />
-  
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -36,10 +36,36 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 3rem 1.5rem 5rem;
+      padding: 3rem 0 5rem;
     }
 
-    .page { width: 100%; max-width: 720px; }
+    /* .page is now full-bleed — no max-width, no side padding.
+       .container is the constrained wrapper (720px) reused inside every section
+       so text margins stay exactly as they were. */
+    .page { width: 100%; }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .container-wide {
+      width: 100%;
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+    }
+
+    /* Full-bleed horizontal rule, used between every section */
+    .full-divider {
+      width: 100%;
+      border-top: 0.5px solid var(--border);
+    }
+    .full-divider.light {
+      border-top-color: var(--bg);
+      opacity: 0.3;
+    }
 
     /* ── Header ── */
     .site-header {
@@ -47,6 +73,7 @@
       justify-content: space-between;
       align-items: center;
       padding-bottom: 1rem;
+      padding-top: 0;
     }
 
     .site-name {
@@ -85,31 +112,17 @@
       background: var(--text);
       transition: transform 0.25s ease, top 0.25s ease;
     }
-    .menu-btn span:first-child {
-      top: 2px;
-    }
-    .menu-btn span:last-child {
-      top: 12px;
-    }
-    .menu-btn.open span {
-      height: 1.8px;
-    }
-    .menu-btn.open span:first-child {
-      top: 7px;
-      transform: rotate(45deg);
-    }
-    .menu-btn.open span:last-child {
-      top: 7px;
-      transform: rotate(-45deg);
-    }
+    .menu-btn span:first-child { top: 2px; }
+    .menu-btn span:last-child { top: 12px; }
+    .menu-btn.open span { height: 1.8px; }
+    .menu-btn.open span:first-child { top: 7px; transform: rotate(45deg); }
+    .menu-btn.open span:last-child { top: 7px; transform: rotate(-45deg); }
     .menu-accordion {
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.25s ease;
     }
-    .menu-accordion.open {
-      max-height: 220px;
-    }
+    .menu-accordion.open { max-height: 220px; }
     .menu-list {
       display: flex;
       flex-direction: column;
@@ -132,13 +145,9 @@
       cursor: default;
     }
 
-    .header-divider {
-      border-top: 0.5px solid var(--border);
-      margin-bottom: 3.5rem;
-    }
-
-    /* ── Page title ── */
-    .page-title {
+    /* ── Section title (was .page-title) ──
+       Reused as the small eyebrow heading for every section except the first. */
+    .section-title {
       font-family: var(--font-mono);
       font-weight: 300;
       font-size: 14px;
@@ -148,6 +157,12 @@
       color: var(--text);
       margin-bottom: 1.4rem;
     }
+    .section-title.light { color: var(--bg); }
+    /* Gemeli Mono's glyphs sit further right inside their character box than
+       owners-text — this nudges the label back so it lines up with the row
+       names below it. Adjust the -Npx value if it's still off with the real font. */
+    .wwd-title { margin-left: -2px; }
+
     .page-body {
       font-family: var(--font-body);
       font-weight: 400;
@@ -156,19 +171,92 @@
       line-height: 1.9;
       max-width: 75%;
     }
-    .page-body p {
-      margin-bottom: 1.5rem;
+    .page-body p { margin-bottom: 1.5rem; }
+    .page-body p:last-child { margin-bottom: 0; }
+
+    .wwt-body {
+      position: relative;
     }
-    .page-body p:last-child {
-      margin-bottom: 0;
+
+    .industry-list {
+      list-style: none;
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 17px;
+      color: var(--text);
+      line-height: 1.9;
+      max-width: 75%;
     }
+
+    .start-link {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 15px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: underline;
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+    }
+
+    @media (max-width: 650px) {
+      .start-link {
+        position: static;
+        transform: none;
+        display: block;
+        text-align: right;
+        margin-top: 1.5rem;
+      }
+    }
+
+    /* ── Sections ── */
+    .section {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+    .section:first-of-type { padding-top: 0; }
+
+    /* ── What We Do (dark, full-bleed) ── */
+    .what-we-do {
+      background: var(--text);
+      padding-top: 3rem;
+      padding-bottom: 1rem;
+    }
+    .wwd-header { padding-bottom: 2rem; }
+    .wwd-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.8rem 0;
+      text-decoration: none;
+      color: var(--bg);
+    }
+    .wwd-name {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: clamp(18px, 2.2vw, 26px);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--bg);
+    }
+    .wwd-arrow {
+      font-size: 20px;
+      color: var(--bg);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      margin-left: 1rem;
+    }
+    .wwd-row:hover .wwd-arrow { transform: translateX(5px); }
 
     /* ── Site footer ──
          Three columns: About/copyright · Contact · Services */
     .site-footer {
-      border-top: 0.5px solid var(--border);
       padding-top: 1.5rem;
-      margin-top: 4rem;
+      margin-top: 1rem;
       display: grid;
       grid-template-columns: 1.4fr auto auto;
       column-gap: 0.75rem;
@@ -256,35 +344,37 @@
 <body>
 <div class="page">
 
-  <header class="site-header">
-    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
-      <span></span>
-      <span></span>
-    </button>
-    <a href="https://sabi.london/" class="site-name">S A B I</a>
-  </header>
+  <div class="container-wide">
+    <header class="site-header">
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+      </button>
+      <a href="https://sabi.london/" class="site-name">S A B I</a>
+    </header>
 
-  <nav class="menu-accordion" id="menuAccordion">
-    <div class="menu-list">
-      <a class="active" aria-current="page" aria-disabled="true">About</a>
-      <a href="https://bio.site/sabi__ldn" target="_blank" rel="noopener">Services</a>
-      <a href="https://play.sabi.london/word-search/">Play</a>
-    </div>
-  </nav>
+    <nav class="menu-accordion" id="menuAccordion">
+      <div class="menu-list">
+        <a class="active" aria-current="page" aria-disabled="true">About</a>
+        <a href="https://bio.site/sabi__ldn" target="_blank" rel="noopener">Services</a>
+        <a href="https://play.sabi.london/word-search/">Play</a>
+      </div>
+    </nav>
+  </div>
 
-  <div class="header-divider"></div>
+  <div class="full-divider"></div>
 
-  <main>
-    <h1 class="page-title">ABOUT</h1>
+  <!-- ── Section 1: About (no title) ── -->
+  <div class="container section">
     <div class="page-body">
       <p>
-        SABI is a London-based creative consultancy offering strategy and design for culture-shaping presence and storytelling. 
+        SABI is a London-based creative consultancy offering strategy and design for culture-shaping presence and storytelling.
       </p>
       <p>
         We have a special interest in brands with a strong lifestyle, wellness, or social mission, and masstige to luxury positioning.
       </p>
       <p>
-        A great signature is more than an aesthetic sign-off. If you were to strip the basic elements from many brands today – the logos, font packs, and colour schemes – you might be struck by the sameness and anonymity of what is left behind. We work with brands that want to change that. From the inside out. 
+        A great signature is more than an aesthetic sign-off. If you were to strip the basic elements from many brands today – the logos, font packs, and colour schemes – you might be struck by the sameness and anonymity of what is left behind. We work with brands that want to change that. From the inside out.
       </p>
       <p>
         We also believe that innovation and character shouldn’t be reserved for premium brands only; Our goal is to eliminate generic design and communication from everyday consumer experiences. No interaction is too casual or mundane to be considered and refined.
@@ -293,33 +383,94 @@
         Your brand’s cultural currency is the sum of every impression made – on passerbys and returning customers alike. Every detail counts.
       </p>
     </div>
-  </main>
+  </div>
 
-  <footer class="site-footer">
-    <div class="footer-col">
-      <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
-      <p class="footer-copyright">© 2026 SABI London</p>
+  <div class="full-divider"></div>
+
+  <!-- ── Section 3: What We Do (dark, full-bleed) ── -->
+  <section class="what-we-do">
+    <div class="container-wide wwd-header">
+      <h2 class="section-title light wwd-title">What We Do</h2>
     </div>
+    <div class="full-divider light"></div>
 
-    <div class="footer-col">
-      <p class="footer-heading">Contact</p>
-      <div class="footer-links">
-        <a href="mailto:office@sabi.london" target="_blank" rel="noopener">office@sabi.london</a>
-        <a href="tel:+447400192837">+44 7400 192837</a>
-        <a href="https://calendar.app.google/itHV85cwLfoDmH7x5">OOO Hours</a>
+    <a href="https://sabi.london/brand-strategy-review" class="wwd-row container-wide">
+      <span class="wwd-name">Brand Strategy</span>
+      <span class="wwd-arrow">→</span>
+    </a>
+    <div class="full-divider light"></div>
+
+    <a href="https://sabi.london/world-building" class="wwd-row container-wide">
+      <span class="wwd-name">World Building</span>
+      <span class="wwd-arrow">→</span>
+    </a>
+    <div class="full-divider light"></div>
+
+    <a href="https://sabi.london/copy" class="wwd-row container-wide">
+      <span class="wwd-name">Copy</span>
+      <span class="wwd-arrow">→</span>
+    </a>
+    <div class="full-divider light"></div>
+
+    <a href="https://sabi.london/community-and-partnerships" class="wwd-row container-wide">
+      <span class="wwd-name">Community &amp; Partnerships</span>
+      <span class="wwd-arrow">→</span>
+    </a>
+  </section>
+
+  <div class="full-divider"></div>
+
+  <!-- ── Section: Who We Work With ── -->
+  <div class="container section">
+    <h2 class="section-title">Who We Work With</h2>
+    <div class="wwt-body">
+      <ul class="industry-list">
+        <li>Arts, Culture &amp; Entertainment</li>
+        <li>Beauty &amp; Cosmetics</li>
+        <li>Consumer Services</li>
+        <li>Education</li>
+        <li>Fashion &amp; Accessories</li>
+        <li>Food &amp; Beverage</li>
+        <li>Health &amp; Wellness</li>
+        <li>Hospitality</li>
+        <li>Media &amp; Publishing</li>
+        <li>Real Estate</li>
+        <li>Technology</li>
+        <li>Travel</li>
+      </ul>
+      <a href="https://sabi.london/service-guide" class="start-link">Start a Project →</a>
+    </div>
+  </div>
+
+  <div class="full-divider"></div>
+
+  <div class="container">
+    <footer class="site-footer">
+      <div class="footer-col">
+        <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
+        <p class="footer-copyright">© 2026 SABI London</p>
       </div>
-    </div>
 
-    <div class="footer-col footer-col--services">
-      <p class="footer-heading">Services</p>
-      <div class="footer-links">
-        <a href="https://sabi.london/services/brand-strategy-review/">Brand Strategy Review</a>
-        <a href="https://sabi.london/services/world-building/">World Building</a>
-        <a href="https://sabi.london/services/copy/">Copy</a>
-        <a href="https://sabi.london/services/community-and-partnerships/">Community &amp; Partnerships</a>
+      <div class="footer-col">
+        <p class="footer-heading">Contact</p>
+        <div class="footer-links">
+          <a href="mailto:office@sabi.london" target="_blank" rel="noopener">office@sabi.london</a>
+          <a href="tel:+447400192837">+44 7400 192837</a>
+          <a href="https://calendar.app.google/itHV85cwLfoDmH7x5">OOO Hours</a>
+        </div>
       </div>
-    </div>
-  </footer>
+
+      <div class="footer-col footer-col--services">
+        <p class="footer-heading">Services</p>
+        <div class="footer-links">
+          <a href="https://sabi.london/services/brand-strategy-review/">Brand Strategy Review</a>
+          <a href="https://sabi.london/services/world-building/">World Building</a>
+          <a href="https://sabi.london/services/copy/">Copy</a>
+          <a href="https://sabi.london/services/community-and-partnerships/">Community &amp; Partnerships</a>
+        </div>
+      </div>
+    </footer>
+  </div>
 
 </div>
 
