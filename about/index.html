@@ -67,6 +67,15 @@
       opacity: 0.3;
     }
 
+    /* Inset divider — same left/right padding as the row text and arrows,
+       used inside What We Do instead of the full-bleed .full-divider */
+    .wwd-divider {
+      margin-left: 2.5rem;
+      margin-right: 2.5rem;
+      border-top: 0.5px solid var(--bg);
+      opacity: 0.3;
+    }
+
     /* ── Header ── */
     .site-header {
       display: flex;
@@ -158,10 +167,6 @@
       margin-bottom: 1.4rem;
     }
     .section-title.light { color: var(--bg); }
-    /* Gemeli Mono's glyphs sit further right inside their character box than
-       owners-text — this nudges the label back so it lines up with the row
-       names below it. Adjust the -Npx value if it's still off with the real font. */
-    .wwd-title { margin-left: -2px; }
 
     .page-body {
       font-family: var(--font-body);
@@ -390,27 +395,27 @@
   <!-- ── Section 3: What We Do (dark, full-bleed) ── -->
   <section class="what-we-do">
     <div class="container-wide wwd-header">
-      <h2 class="section-title light wwd-title">What We Do</h2>
+      <h2 class="section-title light">What We Do</h2>
     </div>
-    <div class="full-divider light"></div>
+    <div class="wwd-divider"></div>
 
     <a href="https://sabi.london/brand-strategy-review" class="wwd-row container-wide">
       <span class="wwd-name">Brand Strategy</span>
       <span class="wwd-arrow">→</span>
     </a>
-    <div class="full-divider light"></div>
+    <div class="wwd-divider"></div>
 
     <a href="https://sabi.london/world-building" class="wwd-row container-wide">
       <span class="wwd-name">World Building</span>
       <span class="wwd-arrow">→</span>
     </a>
-    <div class="full-divider light"></div>
+    <div class="wwd-divider"></div>
 
     <a href="https://sabi.london/copy" class="wwd-row container-wide">
       <span class="wwd-name">Copy</span>
       <span class="wwd-arrow">→</span>
     </a>
-    <div class="full-divider light"></div>
+    <div class="wwd-divider"></div>
 
     <a href="https://sabi.london/community-and-partnerships" class="wwd-row container-wide">
       <span class="wwd-name">Community &amp; Partnerships</span>
