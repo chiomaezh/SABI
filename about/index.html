@@ -486,6 +486,12 @@
 
     /* Secondary (smaller) stations — New York / Paris row */
     .ba-station--sub .ba-station-city { font-size: 13px; letter-spacing: 2px; }
+
+    /* New York's name is the longest of the three, so it needs a touch
+       less font size to sit closer to its rectangle's width. Paris gets
+       slightly wider letter-spacing. */
+    #stationNY .ba-station-city { font-size: 11px; }
+    #stationParis .ba-station-city { letter-spacing: 3px; }
     .ba-station--sub .ba-station-time { font-size: 22px; }
     .ba-station--sub .ba-station-meta { font-size: 17px; }
     .ba-station--sub .ba-station-icon { width: 20px; height: 20px; }
