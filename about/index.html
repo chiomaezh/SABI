@@ -226,11 +226,17 @@
     }
     .section:first-of-type { padding-top: 0; }
 
+    /* Who We Work With gets extra breathing room top and bottom */
+    .section--wwt {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+    }
+
     /* ── What We Do (dark, full-bleed) ── */
     .what-we-do {
       background: var(--text);
       padding-top: 3rem;
-      padding-bottom: 1rem;
+      padding-bottom: 3rem;
     }
     .wwd-header { padding-bottom: 2rem; }
     .wwd-row {
@@ -239,6 +245,7 @@
       justify-content: space-between;
       padding-top: 1.8rem;
       padding-bottom: 1.8rem;
+      padding-right: 3.5rem;
       text-decoration: none;
       color: var(--bg);
     }
@@ -325,6 +332,122 @@
 
     .footer-col--services .footer-links a {
       text-transform: uppercase;
+    }
+
+/* ── By Appointment (dark, full-bleed) ── */
+    .by-appointment {
+      background: var(--text);
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+    .ba-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 2rem;
+    }
+    .ba-left {
+      flex: 0 0 33%;
+      max-width: 33%;
+    }
+    .ba-text {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.9;
+      color: var(--bg);
+      margin-bottom: 1.2rem;
+    }
+    .ba-text:last-child {
+      margin-bottom: 0;
+    }
+    .ba-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2.75rem;
+    }
+    .ooo-link {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--bg);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+    .ba-clocks {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 2rem;
+    }
+
+    /* Station (clock) styles, adapted from the homepage for a dark background */
+    .ba-station {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .ba-station.is-ready { opacity: 1; }
+    .ba-station-city {
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--bg);
+      font-weight: 400;
+    }
+    .ba-station-time {
+      font-family: var(--font-body);
+      font-size: 34px;
+      letter-spacing: 1px;
+      color: var(--bg);
+      font-weight: 400;
+    }
+    .ba-station-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-body);
+      font-size: 26px;
+      letter-spacing: 1px;
+      color: var(--bg);
+    }
+    .ba-station-icon {
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+    .ba-station-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: var(--bg);
+      fill: none;
+      stroke-width: 1.3;
+    }
+
+    /* Secondary (smaller) stations — New York / Paris row */
+    .ba-station--sub .ba-station-city { font-size: 13px; letter-spacing: 2px; }
+    .ba-station--sub .ba-station-time { font-size: 22px; }
+    .ba-station--sub .ba-station-meta { font-size: 17px; }
+    .ba-station--sub .ba-station-icon { width: 20px; height: 20px; }
+
+    @media (max-width: 650px) {
+      .ba-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2.5rem;
+      }
+      .ba-left { flex: 1 1 auto; max-width: 100%; }
+      .ba-right { align-items: flex-start; width: 100%; }
+      .ba-clocks { align-items: flex-start; width: 100%; justify-content: space-between; gap: 1rem; }
+      .ba-station { align-items: flex-start; }
     }
 
 @media (max-width: 500px) {
@@ -429,7 +552,7 @@
   <div class="full-divider"></div>
 
   <!-- ── Section: Who We Work With ── -->
-  <div class="container section">
+  <div class="container section section--wwt">
     <h2 class="section-title">Who We Work With</h2>
     <div class="wwt-body">
       <ul class="industry-list">
@@ -449,6 +572,48 @@
       <a href="https://sabi.london/service-guide" class="start-link">Start a Project →</a>
     </div>
   </div>
+
+  <div class="full-divider"></div>
+
+  <!-- ── Section: By Appointment (dark, full-bleed) ── -->
+  <section class="by-appointment">
+    <div class="container-wide ba-inner">
+      <div class="ba-left">
+        <h2 class="section-title light">By Appointment</h2>
+        <p class="ba-text">London, anywhere. Out-of-office.</p>
+        <p class="ba-text">Book a discovery call to explore general questions about creative strategy, communications, and design.</p>
+      </div>
+      <div class="ba-right">
+        <a href="https://calendar.app.google/bSuyD2e3U2jy2S786" class="ooo-link" target="_blank" rel="noopener">OOO Hours →</a>
+        <div class="ba-clocks">
+          <div class="ba-station ba-station--sub" id="stationLondon">
+            <div class="ba-station-city">London</div>
+            <div class="ba-station-time" data-time>--:--</div>
+            <div class="ba-station-meta">
+              <span class="ba-station-icon" data-icon></span>
+              <span data-temp>--°C</span>
+            </div>
+          </div>
+          <div class="ba-station ba-station--sub" id="stationNY">
+            <div class="ba-station-city">New York</div>
+            <div class="ba-station-time" data-time>--:--</div>
+            <div class="ba-station-meta">
+              <span class="ba-station-icon" data-icon></span>
+              <span data-temp>--°C</span>
+            </div>
+          </div>
+          <div class="ba-station ba-station--sub" id="stationParis">
+            <div class="ba-station-city">Paris</div>
+            <div class="ba-station-time" data-time>--:--</div>
+            <div class="ba-station-meta">
+              <span class="ba-station-icon" data-icon></span>
+              <span data-temp>--°C</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="full-divider"></div>
 
@@ -491,6 +656,73 @@
     const isOpen = menuAccordion.classList.toggle('open');
     menuBtn.classList.toggle('open', isOpen);
     menuBtn.setAttribute('aria-expanded', isOpen);
+  });
+</script>
+
+<script>
+  // ── By Appointment: London / New York / Paris clocks + weather ──
+  const BA_ICONS = {
+    clear: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/></svg>',
+    moon: '<svg viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/></svg>',
+    partlyCloudy: '<svg viewBox="0 0 24 24"><circle cx="16" cy="6" r="3.5"/><line x1="16" y1="1" x2="16" y2="2.5"/><line x1="16" y1="9.5" x2="16" y2="11"/><line x1="11" y1="6" x2="12.5" y2="6"/><line x1="19.5" y1="6" x2="21" y2="6"/><line x1="12.5" y1="2.5" x2="13.6" y2="3.6"/><line x1="18.4" y1="8.4" x2="19.5" y2="9.5"/><line x1="19.5" y1="2.5" x2="18.4" y2="3.6"/><path d="M5 19a3.5 3.5 0 1 1 .6-6.95A4.8 4.8 0 0 1 15 14h.5a3 3 0 0 1 0 6H5z"/></svg>',
+    partlyCloudyNight: '<svg viewBox="0 0 24 24"><path d="M18.3 3.3a4.6 4.6 0 1 0 3 6.9 3.7 3.7 0 0 1-3-6.9z"/><path fill="var(--text)" d="M5 19a3.5 3.5 0 1 1 .6-6.95A4.8 4.8 0 0 1 15 14h.5a3 3 0 0 1 0 6H5z"/></svg>',
+    cloud: '<svg viewBox="0 0 24 24"><path d="M6 18a4 4 0 1 1 .7-7.94A5.5 5.5 0 0 1 17.5 12H18a3.5 3.5 0 0 1 0 7H6z"/></svg>',
+    fog: '<svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="9" y2="18"/><line x1="7" y1="6" x2="13" y2="18"/><line x1="11" y1="6" x2="17" y2="18"/><line x1="15" y1="6" x2="21" y2="18"/></svg>',
+    rain: '<svg viewBox="0 0 24 24"><path d="M6 14a4 4 0 1 1 .7-7.94A5.5 5.5 0 0 1 17.5 8H18a3.5 3.5 0 0 1 0 7H6z"/><line x1="7" y1="18" x2="9.5" y2="24" stroke-dasharray="2 1.5"/><line x1="12" y1="18" x2="14.5" y2="24" stroke-dasharray="2 1.5"/><line x1="17" y1="18" x2="19.5" y2="24" stroke-dasharray="2 1.5"/></svg>',
+    snow: '<svg viewBox="0 0 24 24"><line x1="12" y1="4" x2="12" y2="14"/><line x1="7.1" y1="6.5" x2="16.9" y2="11.5"/><line x1="16.9" y1="6.5" x2="7.1" y2="11.5"/><line x1="5" y1="14" x2="5" y2="20"/><line x1="2.3" y1="15.5" x2="7.7" y2="18.5"/><line x1="7.7" y1="15.5" x2="2.3" y2="18.5"/><line x1="19" y1="15" x2="19" y2="19"/><line x1="17" y1="16" x2="21" y2="18"/><line x1="21" y1="16" x2="17" y2="18"/></svg>',
+    storm: '<svg viewBox="0 0 24 24"><path d="M6 13a4 4 0 1 1 .7-7.94A5.5 5.5 0 0 1 17.5 7H18a3.5 3.5 0 0 1 0 7H6z"/><polyline points="11 16 9 20 12 20 10 24"/></svg>'
+  };
+
+  function baIconForCode(code, isDay) {
+    if (code === 0) return isDay ? BA_ICONS.clear : BA_ICONS.moon;
+    if ([1, 2].includes(code)) return isDay ? BA_ICONS.partlyCloudy : BA_ICONS.partlyCloudyNight;
+    if (code === 3) return BA_ICONS.cloud;
+    if ([45, 48].includes(code)) return BA_ICONS.fog;
+    if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return BA_ICONS.rain;
+    if ([71, 73, 75, 77, 85, 86].includes(code)) return BA_ICONS.snow;
+    if ([95, 96, 99].includes(code)) return BA_ICONS.storm;
+    return BA_ICONS.cloud;
+  }
+
+  const BA_CITIES = [
+    { id: 'stationLondon', lat: 51.5074, lon: -0.1278, tz: 'Europe/London' },
+    { id: 'stationNY', lat: 40.7128, lon: -74.0060, tz: 'America/New_York' },
+    { id: 'stationParis', lat: 48.8566, lon: 2.3522, tz: 'Europe/Paris' }
+  ];
+
+  function baUpdateClock(city, panel) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-GB', {
+      timeZone: city.tz,
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    panel.querySelector('[data-time]').textContent = timeStr;
+  }
+
+  async function baUpdateWeather(city, panel) {
+    try {
+      const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,weather_code,is_day`);
+      const data = await res.json();
+      const temp = Math.round(data.current.temperature_2m);
+      const code = data.current.weather_code;
+      const isDay = data.current.is_day === 1;
+      panel.querySelector('[data-temp]').textContent = `${temp}°C`;
+      panel.querySelector('[data-icon]').innerHTML = baIconForCode(code, isDay);
+    } catch (e) {
+      panel.querySelector('[data-temp]').textContent = '—';
+    } finally {
+      panel.classList.add('is-ready');
+    }
+  }
+
+  BA_CITIES.forEach((city) => {
+    const panel = document.getElementById(city.id);
+    if (!panel) return;
+    baUpdateClock(city, panel);
+    baUpdateWeather(city, panel);
+    setInterval(() => baUpdateClock(city, panel), 1000);
+    setInterval(() => baUpdateWeather(city, panel), 15 * 60 * 1000);
   });
 </script>
 
