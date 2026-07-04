@@ -724,14 +724,82 @@
     }
   }
 
-  BA_CITIES.forEach((city) => {
-    const panel = document.getElementById(city.id);
-    if (!panel) return;
-    baUpdateClock(city, panel);
-    baUpdateWeather(city, panel);
-    setInterval(() => baUpdateClock(city, panel), 1000);
-    setInterval(() => baUpdateWeather(city, panel), 15 * 60 * 1000);
-  });
+  // ── Force every weather row to share one common width, and every time
+  //    row to match that same width. City names are left as they are. ──
+  function matchBaRowWidths() {
+    const stations = document.querySelectorAll('.ba-station');
+    if (!stations.length) return;
+
+    // Reset any previous scaling before measuring fresh
+    stations.forEach((st) => {
+      const timeEl = st.querySelector('.ba-station-time');
+      const tempEl = st.querySelector('[data-temp]');
+      if (timeEl) timeEl.style.fontSize = '';
+      if (tempEl) tempEl.style.fontSize = '';
+    });
+
+    // Measure each station's natural weather-row width (icon + gap + temp text)
+    const measurements = [];
+    let target = 0;
+    stations.forEach((st) => {
+      const metaEl = st.querySelector('.ba-station-meta');
+      const iconEl = metaEl ? metaEl.querySelector('.ba-station-icon') : null;
+      const tempEl = metaEl ? metaEl.querySelector('[data-temp]') : null;
+      if (!metaEl || !iconEl || !tempEl) return;
+
+      const iconWidth = iconEl.getBoundingClientRect().width;
+      const gapPx = parseFloat(getComputedStyle(metaEl).gap) || 0;
+      const tempWidth = tempEl.getBoundingClientRect().width;
+      const tempFontSize = parseFloat(getComputedStyle(tempEl).fontSize);
+      const naturalWidth = iconWidth + gapPx + tempWidth;
+
+      measurements.push({ st, iconWidth, gapPx, tempWidth, tempFontSize, tempEl });
+      if (naturalWidth > target) target = naturalWidth;
+    });
+
+    if (!target) return;
+
+    // Scale each weather row's temp text so the row's total width hits the target
+    measurements.forEach((m) => {
+      const availableForText = target - m.iconWidth - m.gapPx;
+      if (m.tempWidth > 0 && availableForText > 0) {
+        const newTempSize = m.tempFontSize * (availableForText / m.tempWidth);
+        m.tempEl.style.fontSize = newTempSize + 'px';
+      }
+    });
+
+    // Scale each time row so its width also matches the same target
+    stations.forEach((st) => {
+      const timeEl = st.querySelector('.ba-station-time');
+      if (!timeEl) return;
+      const timeWidth = timeEl.getBoundingClientRect().width;
+      const timeFontSize = parseFloat(getComputedStyle(timeEl).fontSize);
+      if (timeWidth > 0) {
+        const newTimeSize = timeFontSize * (target / timeWidth);
+        timeEl.style.fontSize = newTimeSize + 'px';
+      }
+    });
+  }
+
+  async function baInit() {
+    const weatherPromises = BA_CITIES.map((city) => {
+      const panel = document.getElementById(city.id);
+      if (!panel) return Promise.resolve();
+      baUpdateClock(city, panel);
+      setInterval(() => baUpdateClock(city, panel), 1000);
+      return baUpdateWeather(city, panel).then(() => {
+        setInterval(async () => {
+          await baUpdateWeather(city, panel);
+          matchBaRowWidths();
+        }, 15 * 60 * 1000);
+      });
+    });
+    await Promise.all(weatherPromises);
+    matchBaRowWidths();
+  }
+
+  baInit();
+  window.addEventListener('resize', matchBaRowWidths);
 </script>
 
 </body>
