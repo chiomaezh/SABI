@@ -848,18 +848,22 @@
       if (metaEl) metaEl.style.width = target + 'px';
     });
 
-    // Scale each city name's font-size so it reaches the same extents as
-    // the time and weather rows — long names (New York) shrink down,
-    // short names (Paris) grow up — then pin its box to that width so
-    // the centred text sits on the rectangle's horizontal centre, while
-    // vertical position (top) is untouched.
+    // Scale each city name's font-size partway toward the target width —
+    // long names (New York) shrink a bit, short names (Paris) grow a bit —
+    // but only halfway, so short names don't balloon up to fill the full
+    // extents. Then pin its box to the target width so the centred text
+    // still sits on the rectangle's horizontal centre, while vertical
+    // position (top) is untouched.
+    const CITY_SCALE_DAMPING = 0.5; // 0 = no scaling, 1 = fill the extents fully
     stations.forEach((st) => {
       const cityEl = st.querySelector('.ba-station-city');
       if (!cityEl) return;
       const naturalWidth = cityEl.getBoundingClientRect().width;
       const currentFontSize = parseFloat(getComputedStyle(cityEl).fontSize);
       if (naturalWidth > 0) {
-        const newFontSize = currentFontSize * (target / naturalWidth);
+        const fullRatio = target / naturalWidth;
+        const dampedRatio = 1 + (fullRatio - 1) * CITY_SCALE_DAMPING;
+        const newFontSize = currentFontSize * dampedRatio;
         cityEl.style.fontSize = newFontSize + 'px';
       }
       cityEl.style.width = target + 'px';
