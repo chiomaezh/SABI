@@ -426,11 +426,9 @@
     /* City name row — shared alignment rules only. Font size is set
        per-city below so each one can be edited independently. */
     .ba-clocks-table .ba-cell-city {
-      text-align: justify;
-      text-align-last: justify;
-      vertical-align: bottom;
+      vertical-align: top;
       padding-top: 0;
-      padding-bottom: 10px;
+      padding-bottom: 0;
     }
     .ba-clocks-table .ba-cell-city-london {
       font-size: 13px;
@@ -441,13 +439,18 @@
     .ba-clocks-table .ba-cell-city-paris {
       font-size: 14.5px;
     }
+    .ba-city-inner {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
     .ba-clocks-table .ba-cell-time {
       font-size: 22px;
       letter-spacing: 1px;
       text-transform: none;
       font-variant-numeric: tabular-nums;
       vertical-align: bottom;
-      padding-top: 0;
+      padding-top: 10px;
       padding-bottom: 0;
     }
     .ba-time-inner {
@@ -636,11 +639,11 @@
           </colgroup>
           <tbody>
             <tr>
-              <td class="ba-cell ba-cell-city ba-cell-city-london" data-city="London">London</td>
+              <td class="ba-cell ba-cell-city ba-cell-city-london" data-city="London"><span class="ba-city-inner"><span>L</span><span>o</span><span>n</span><span>d</span><span>o</span><span>n</span></span></td>
               <td class="ba-spacer"></td>
-              <td class="ba-cell ba-cell-city ba-cell-city-ny" data-city="NY">New York</td>
+              <td class="ba-cell ba-cell-city ba-cell-city-ny" data-city="NY"><span class="ba-city-inner"><span>N</span><span>e</span><span>w</span><span>&nbsp;</span><span>Y</span><span>o</span><span>r</span><span>k</span></span></td>
               <td class="ba-spacer"></td>
-              <td class="ba-cell ba-cell-city ba-cell-city-paris" data-city="Paris">Paris</td>
+              <td class="ba-cell ba-cell-city ba-cell-city-paris" data-city="Paris"><span class="ba-city-inner"><span>P</span><span>a</span><span>r</span><span>i</span><span>s</span></span></td>
             </tr>
             <tr>
               <td class="ba-cell ba-cell-time" data-city="London" id="time-London"><span class="ba-time-inner"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></span></td>
