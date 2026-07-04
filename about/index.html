@@ -386,21 +386,21 @@
       text-underline-offset: 4px;
     }
     .ba-clocks {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-end;
-      gap: 3rem;
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, max-content);
+      grid-auto-rows: auto;
+      column-gap: 3rem;
+      row-gap: 6px;
     }
 
-    /* Station (clock) styles, adapted from the homepage for a dark background */
+    /* Station (clock) styles, adapted from the homepage for a dark background.
+       Each station is display:contents so its three children (city/time/weather)
+       become direct items of the shared .ba-clocks grid — that's what locks the
+       city row to the top and the weather row to the bottom across all three
+       clocks, regardless of how tall any individual block happens to be. */
     .ba-station {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
-      opacity: 0;
-      transition: opacity 0.35s ease;
-      position: relative;
+      display: contents;
     }
     .ba-debug-rect {
       position: absolute;
@@ -408,8 +408,21 @@
       box-sizing: border-box;
       pointer-events: none;
     }
-    .ba-station.is-ready { opacity: 1; }
+    .ba-station-city,
+    .ba-station-time,
+    .ba-station-meta {
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .ba-station.is-ready .ba-station-city,
+    .ba-station.is-ready .ba-station-time,
+    .ba-station.is-ready .ba-station-meta {
+      opacity: 1;
+    }
     .ba-station-city {
+      grid-row: 1;
+      justify-self: end;
+      align-self: start;
       font-family: var(--font-body);
       font-size: 18px;
       line-height: 1;
@@ -419,6 +432,8 @@
       font-weight: 400;
     }
     .ba-station-time {
+      grid-row: 2;
+      justify-self: end;
       font-family: var(--font-body);
       font-size: 34px;
       letter-spacing: 1px;
@@ -426,6 +441,9 @@
       font-weight: 400;
     }
     .ba-station-meta {
+      grid-row: 3;
+      justify-self: end;
+      align-self: end;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -731,17 +749,18 @@
     }
   }
 
-  // ── Force every weather row to share one common width, and every time
-  //    row to match that same width. City names are left as they are. ──
+  // ── Force every weather row to share one common width by scaling the
+  //    temperature text. Time rows are left at one uniform font size
+  //    (no per-station scaling) so they all render at the same size;
+  //    since the time string is always 5 characters, that alone keeps
+  //    their widths close to matching. City names are left as they are. ──
   function matchBaRowWidths() {
     const stations = document.querySelectorAll('.ba-station');
     if (!stations.length) return;
 
     // Reset any previous scaling before measuring fresh
     stations.forEach((st) => {
-      const timeEl = st.querySelector('.ba-station-time');
       const tempEl = st.querySelector('[data-temp]');
-      if (timeEl) timeEl.style.fontSize = '';
       if (tempEl) tempEl.style.fontSize = '';
     });
 
@@ -774,44 +793,37 @@
         m.tempEl.style.fontSize = newTempSize + 'px';
       }
     });
-
-    // Scale each time row so its width also matches the same target
-    stations.forEach((st) => {
-      const timeEl = st.querySelector('.ba-station-time');
-      if (!timeEl) return;
-      const timeWidth = timeEl.getBoundingClientRect().width;
-      const timeFontSize = parseFloat(getComputedStyle(timeEl).fontSize);
-      if (timeWidth > 0) {
-        const newTimeSize = timeFontSize * (target / timeWidth);
-        timeEl.style.fontSize = newTimeSize + 'px';
-      }
-    });
   }
 
   // ── Debug helper: draw a white rectangle around each weather block.
   //    Width = the weather line's left/right extent.
   //    Height = from the top of the city text down to the bottom of the weather line. ──
   function baDrawDebugRects() {
+    const container = document.querySelector('.ba-clocks');
+    if (!container) return;
+    const containerRect = container.getBoundingClientRect();
+
     document.querySelectorAll('.ba-station').forEach((st) => {
       const cityEl = st.querySelector('.ba-station-city');
       const metaEl = st.querySelector('.ba-station-meta');
       if (!cityEl || !metaEl) return;
 
-      const stRect = st.getBoundingClientRect();
       const cityRect = cityEl.getBoundingClientRect();
       const metaRect = metaEl.getBoundingClientRect();
 
-      let rect = st.querySelector('.ba-debug-rect');
+      const stationId = st.id;
+      let rect = container.querySelector(`.ba-debug-rect[data-for="${stationId}"]`);
       if (!rect) {
         rect = document.createElement('div');
         rect.className = 'ba-debug-rect';
-        st.appendChild(rect);
+        rect.dataset.for = stationId;
+        container.appendChild(rect);
       }
 
-      const left = metaRect.left - stRect.left;
-      const top = cityRect.top - stRect.top;
+      const left = metaRect.left - containerRect.left;
+      const top = cityRect.top - containerRect.top;
       const width = metaRect.width;
-      const height = (metaRect.bottom - stRect.top) - top;
+      const height = (metaRect.bottom - containerRect.top) - top;
 
       rect.style.left = left + 'px';
       rect.style.top = top + 'px';
