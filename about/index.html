@@ -883,18 +883,29 @@
     // centred on the rectangle like the others), just without the
     // font-size scaling above. Font-size stays fixed (see CSS); instead,
     // letter-spacing is calculated so the word visually spans the full
-    // width of the box, edge to edge. Natural width is measured with
-    // width:auto (not scrollWidth on the pinned element) because
-    // scrollWidth doesn't reliably reflect overflow when white-space is
-    // nowrap and overflow is visible (the default) — it under-reports.
+    // width of the box, edge to edge. Width is measured via a Range over
+    // the text node (not the element's own box) because some browsers —
+    // notably iOS Safari — add a sliver of blank space after the last
+    // character too when letter-spacing is set. That invisible sliver
+    // still counts toward the element's box width, so measuring the box
+    // was landing exactly on target numerically while visibly leaving a
+    // gap after the last letter. A Range only spans actual glyphs, so it
+    // isn't fooled by that trailing space.
     (() => {
       const parisStation = document.getElementById('stationParis');
       const cityEl = parisStation ? parisStation.querySelector('.ba-station-city') : null;
-      if (!cityEl) return;
+      const textNode = cityEl ? cityEl.firstChild : null;
+      if (!cityEl || !textNode) return;
+
+      const measureGlyphWidth = () => {
+        const range = document.createRange();
+        range.selectNodeContents(cityEl);
+        return range.getBoundingClientRect().width;
+      };
 
       cityEl.style.width = 'auto';
       cityEl.style.letterSpacing = '0px';
-      const naturalWidth = cityEl.getBoundingClientRect().width;
+      const naturalWidth = measureGlyphWidth();
 
       cityEl.style.width = target + 'px';
 
@@ -903,13 +914,10 @@
         let spacing = (target - naturalWidth) / charCount;
         cityEl.style.letterSpacing = spacing + 'px';
 
-        // Corrective second pass — browsers differ on whether trailing
-        // letter-spacing after the last character counts toward width,
-        // so re-measure (still with width:auto) and nudge to land exactly
-        // on the target.
-        cityEl.style.width = 'auto';
-        const actualWidth = cityEl.getBoundingClientRect().width;
-        cityEl.style.width = target + 'px';
+        // Corrective second pass — re-measure actual glyph width at this
+        // spacing and nudge so the visible text (not the invisible
+        // trailing sliver) lands exactly on the target width.
+        const actualWidth = measureGlyphWidth();
         if (actualWidth > naturalWidth) {
           spacing *= (target - naturalWidth) / (actualWidth - naturalWidth);
           cityEl.style.letterSpacing = spacing + 'px';
