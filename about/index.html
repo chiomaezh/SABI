@@ -797,6 +797,7 @@
       const tempEl = st.querySelector('[data-temp]');
       const timeEl = st.querySelector('.ba-station-time');
       const cityEl = st.querySelector('.ba-station-city');
+      const metaEl = st.querySelector('.ba-station-meta');
       if (tempEl) tempEl.style.fontSize = '';
       if (timeEl) {
         timeEl.style.fontSize = '';
@@ -808,6 +809,7 @@
         cityEl.style.letterSpacing = '';
         cityEl.style.transform = '';
       }
+      if (metaEl) metaEl.style.transform = '';
     });
 
     // Measure each station's natural weather-row width (icon + gap + temp text)
@@ -922,12 +924,28 @@
     // to a smaller degree on every city). Nudge each one right by half its
     // own effective letter-spacing to compensate — a transform, so it
     // can't affect box widths/grid layout or differ between phone and PC.
+    //
+    // On phone widths only, each rectangle reads a bit too elongated, so
+    // we also nudge the city name down and the weather line up by the
+    // same small amount (transforms again, so nothing else about the
+    // layout — including the desktop view — is affected).
+    const MOBILE_VERTICAL_NUDGE = 5; // px, phone only
+    const isMobile = window.matchMedia('(max-width: 650px)').matches;
+
     stations.forEach((st) => {
       const cityEl = st.querySelector('.ba-station-city');
       if (!cityEl) return;
       const effectiveSpacing = parseFloat(getComputedStyle(cityEl).letterSpacing) || 0;
-      cityEl.style.transform = `translateX(${effectiveSpacing / 2}px)`;
+      const verticalNudge = isMobile ? MOBILE_VERTICAL_NUDGE : 0;
+      cityEl.style.transform = `translate(${effectiveSpacing / 2}px, ${verticalNudge}px)`;
     });
+
+    if (isMobile) {
+      stations.forEach((st) => {
+        const metaEl = st.querySelector('.ba-station-meta');
+        if (metaEl) metaEl.style.transform = `translateY(-${MOBILE_VERTICAL_NUDGE}px)`;
+      });
+    }
   }
 
   // ── Debug helper: draw a white rectangle around each weather block.
