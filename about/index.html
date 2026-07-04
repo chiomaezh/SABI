@@ -489,18 +489,17 @@
 
     /* Paris only: fixed font-size (not auto-scaled like the others).
        Set to sit halfway between 15px and London's real rendered
-       font-size (13.3762px, checked in Chrome DevTools), so it's small
-       enough to fit its rectangle without overflowing. It reaches the
-       extents of its rectangle via text-justify rather than the JS
-       font-size scaling used for London/New York. The box itself
+       font-size (13.3762px, checked in Chrome DevTools). To span the
+       rectangle edge-to-edge, letter-spacing is calculated and applied
+       via JS (see the Paris block at the end of matchBaRowWidths())
+       rather than relying on text-align-last/text-justify, which don't
+       reliably justify a single non-wrapping line across browsers —
+       that's why it wasn't filling the box on mobile. The box itself
        stays pinned to the shared target width (so it's still centred
        on the rectangle) — only the text-fill technique differs. */
     #stationParis .ba-station-city {
       font-size: 14.1881px;
-      white-space: normal;
-      text-align: justify;
-      text-align-last: justify;
-      text-justify: inter-character;
+      white-space: nowrap;
     }
     .ba-station--sub .ba-station-time { font-size: 22px; }
     .ba-station--sub .ba-station-meta { font-size: 17px; }
@@ -888,11 +887,40 @@
 
     // Paris still gets its box pinned to the shared target width (so it's
     // centred on the rectangle like the others), just without the
-    // font-size scaling above.
+    // font-size scaling above. Font-size stays fixed (see CSS); instead,
+    // letter-spacing is calculated so the word visually spans the full
+    // width of the box, edge to edge. Natural width is measured with
+    // width:auto (not scrollWidth on the pinned element) because
+    // scrollWidth doesn't reliably reflect overflow when white-space is
+    // nowrap and overflow is visible (the default) — it under-reports.
     (() => {
       const parisStation = document.getElementById('stationParis');
       const cityEl = parisStation ? parisStation.querySelector('.ba-station-city') : null;
-      if (cityEl) cityEl.style.width = target + 'px';
+      if (!cityEl) return;
+
+      cityEl.style.width = 'auto';
+      cityEl.style.letterSpacing = '0px';
+      const naturalWidth = cityEl.getBoundingClientRect().width;
+
+      cityEl.style.width = target + 'px';
+
+      const charCount = (cityEl.textContent || '').length;
+      if (charCount > 1 && naturalWidth > 0 && naturalWidth < target) {
+        let spacing = (target - naturalWidth) / charCount;
+        cityEl.style.letterSpacing = spacing + 'px';
+
+        // Corrective second pass — browsers differ on whether trailing
+        // letter-spacing after the last character counts toward width,
+        // so re-measure (still with width:auto) and nudge to land exactly
+        // on the target.
+        cityEl.style.width = 'auto';
+        const actualWidth = cityEl.getBoundingClientRect().width;
+        cityEl.style.width = target + 'px';
+        if (actualWidth > naturalWidth) {
+          spacing *= (target - naturalWidth) / (actualWidth - naturalWidth);
+          cityEl.style.letterSpacing = spacing + 'px';
+        }
+      }
     })();
   }
 
