@@ -880,8 +880,13 @@
       if (!cityEl) return;
       const naturalWidth = cityEl.getBoundingClientRect().width;
       const currentFontSize = parseFloat(getComputedStyle(cityEl).fontSize);
+      // New York's name is the longest, so at the exact target width its
+      // last letter can visually brush the edge. Give it a small safety
+      // margin (aim for slightly less than the full target) so it stops
+      // just short instead of touching the boundary.
+      const stationTarget = st.id === 'stationNY' ? target * 0.95 : target;
       if (naturalWidth > 0) {
-        const newFontSize = currentFontSize * (target / naturalWidth);
+        const newFontSize = currentFontSize * (stationTarget / naturalWidth);
         cityEl.style.fontSize = newFontSize + 'px';
       }
       cityEl.style.width = target + 'px';
