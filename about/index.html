@@ -486,12 +486,6 @@
 
     /* Secondary (smaller) stations — New York / Paris row */
     .ba-station--sub .ba-station-city { font-size: 13px; letter-spacing: 2px; }
-
-    /* New York's name is the longest of the three, so it needs a touch
-       less font size to sit closer to its rectangle's width. Paris gets
-       slightly wider letter-spacing. */
-    #stationNY .ba-station-city { font-size: 11px; }
-    #stationParis .ba-station-city { letter-spacing: 3px; }
     .ba-station--sub .ba-station-time { font-size: 22px; }
     .ba-station--sub .ba-station-meta { font-size: 17px; }
     .ba-station--sub .ba-station-icon { width: 20px; height: 20px; }
@@ -795,7 +789,10 @@
         timeEl.style.fontSize = '';
         timeEl.style.width = '';
       }
-      if (cityEl) cityEl.style.width = '';
+      if (cityEl) {
+        cityEl.style.fontSize = '';
+        cityEl.style.width = '';
+      }
     });
 
     // Measure each station's natural weather-row width (icon + gap + temp text)
@@ -851,12 +848,21 @@
       if (metaEl) metaEl.style.width = target + 'px';
     });
 
-    // Pin the city name to that same width too. Its text is centre-aligned
-    // (via CSS), so this places it at the horizontal centre of the
-    // rectangle, while remaining at the top (unchanged).
+    // Scale each city name's font-size so it reaches the same extents as
+    // the time and weather rows — long names (New York) shrink down,
+    // short names (Paris) grow up — then pin its box to that width so
+    // the centred text sits on the rectangle's horizontal centre, while
+    // vertical position (top) is untouched.
     stations.forEach((st) => {
       const cityEl = st.querySelector('.ba-station-city');
-      if (cityEl) cityEl.style.width = target + 'px';
+      if (!cityEl) return;
+      const naturalWidth = cityEl.getBoundingClientRect().width;
+      const currentFontSize = parseFloat(getComputedStyle(cityEl).fontSize);
+      if (naturalWidth > 0) {
+        const newFontSize = currentFontSize * (target / naturalWidth);
+        cityEl.style.fontSize = newFontSize + 'px';
+      }
+      cityEl.style.width = target + 'px';
     });
   }
 
