@@ -10,7 +10,6 @@
   <title>About — SABI</title>
   <meta name="description" content="A London-based creative consultancy offering strategy and design for culture-shaping presence and storytelling." />
 
-  
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -397,35 +396,55 @@
     }
     .ba-clocks-table {
       border-collapse: collapse;
+      table-layout: fixed;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .ba-clocks-table.is-ready {
+      opacity: 1;
+    }
+    .ba-col {
+      /* width is set dynamically via JS to match the time row's actual
+         rendered width — see matchBaColumnWidths() */
+    }
+    .ba-col-spacer {
+      width: 30px;
     }
     .ba-clocks-table td {
       border: 1px solid #ffffff;
       box-sizing: border-box;
-      padding: 10px 16px;
+      padding: 10px 0;
       text-align: center;
       vertical-align: middle;
       font-family: var(--font-body);
       color: var(--bg);
-      opacity: 0;
-      transition: opacity 0.35s ease;
-    }
-    .ba-clocks-table td.is-ready {
-      opacity: 1;
-    }
-    .ba-clocks-table .ba-spacer {
-      opacity: 1; /* spacer cells have no content to fade in */
     }
     .ba-clocks-table .ba-cell {
-      font-size: 13px;
       letter-spacing: 2px;
       text-transform: uppercase;
       font-weight: 400;
+    }
+    /* City name row — font size lives here on its own, separate from
+       the shared .ba-cell rule above, so it can be tuned independently
+       of the time/weather rows. */
+    .ba-clocks-table .ba-cell-city {
+      font-size: 13px;
+      text-align: justify;
+      text-align-last: justify;
+      vertical-align: bottom;
     }
     .ba-clocks-table .ba-cell-time {
       font-size: 22px;
       letter-spacing: 1px;
       text-transform: none;
       font-variant-numeric: tabular-nums;
+      vertical-align: bottom;
+    }
+    .ba-time-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      width: 100%;
     }
     .ba-clocks-table .ba-cell-weather {
       font-size: 17px;
@@ -458,7 +477,7 @@
       .ba-left { flex: 1 1 auto; max-width: 100%; }
       .ba-right { align-items: flex-start; width: 100%; }
       .ba-clocks-table { width: 100%; }
-      .ba-clocks-table td { padding: 8px 6px; }
+      .ba-clocks-table td { padding: 8px 0; }
     }
 
 @media (max-width: 500px) {
@@ -597,34 +616,27 @@
       <div class="ba-right">
         <a href="https://calendar.app.google/bSuyD2e3U2jy2S786" class="ooo-link" target="_blank" rel="noopener">OOO Hours →</a>
         <table class="ba-clocks-table">
+          <colgroup>
+            <col class="ba-col">
+            <col class="ba-col-spacer">
+            <col class="ba-col">
+            <col class="ba-col-spacer">
+            <col class="ba-col">
+          </colgroup>
           <tbody>
             <tr>
-              <td class="ba-cell" data-city="London">London</td>
+              <td class="ba-cell ba-cell-city" data-city="London">London</td>
               <td class="ba-spacer"></td>
-              <td class="ba-cell" data-city="NY">New York</td>
+              <td class="ba-cell ba-cell-city" data-city="NY">New York</td>
               <td class="ba-spacer"></td>
-              <td class="ba-cell" data-city="Paris">Paris</td>
+              <td class="ba-cell ba-cell-city" data-city="Paris">Paris</td>
             </tr>
             <tr>
+              <td class="ba-cell ba-cell-time" data-city="London" id="time-London"><span class="ba-time-inner"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></span></td>
               <td class="ba-spacer"></td>
+              <td class="ba-cell ba-cell-time" data-city="NY" id="time-NY"><span class="ba-time-inner"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></span></td>
               <td class="ba-spacer"></td>
-              <td class="ba-spacer"></td>
-              <td class="ba-spacer"></td>
-              <td class="ba-spacer"></td>
-            </tr>
-            <tr>
-              <td class="ba-cell ba-cell-time" data-city="London" id="time-London"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></td>
-              <td class="ba-spacer"></td>
-              <td class="ba-cell ba-cell-time" data-city="NY" id="time-NY"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></td>
-              <td class="ba-spacer"></td>
-              <td class="ba-cell ba-cell-time" data-city="Paris" id="time-Paris"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></td>
-            </tr>
-            <tr>
-              <td class="ba-spacer"></td>
-              <td class="ba-spacer"></td>
-              <td class="ba-spacer"></td>
-              <td class="ba-spacer"></td>
-              <td class="ba-spacer"></td>
+              <td class="ba-cell ba-cell-time" data-city="Paris" id="time-Paris"><span class="ba-time-inner"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></span></td>
             </tr>
             <tr>
               <td class="ba-cell ba-cell-weather" data-city="London" id="weather-London"><span class="ba-icon" data-icon></span><span data-temp>--°C</span></td>
@@ -726,7 +738,6 @@
     const [hh, mm] = timeStr.split(':');
     timeCell.querySelector('[data-hh]').textContent = hh;
     timeCell.querySelector('[data-mm]').textContent = mm;
-    timeCell.classList.add('is-ready');
   }
 
   async function baUpdateWeather(city) {
@@ -742,18 +753,34 @@
       weatherCell.querySelector('[data-icon]').innerHTML = baIconForCode(code, isDay);
     } catch (e) {
       weatherCell.querySelector('[data-temp]').textContent = '—';
-    } finally {
-      weatherCell.classList.add('is-ready');
+    }
+  }
+
+  // Size the three filled columns (London/New York/Paris) to exactly
+  // match the time row's actual rendered width, so those three come out
+  // identical. The two empty spacer columns are sized separately in CSS
+  // (.ba-col-spacer) and left untouched here. Measured live rather than
+  // hardcoded, since the real width depends on the page's actual
+  // font/letter-spacing.
+  function matchBaColumnWidths() {
+    const table = document.querySelector('.ba-clocks-table');
+    const cols = table ? table.querySelectorAll('.ba-col') : [];
+    const timeCell = document.getElementById('time-London');
+    if (!table || !cols.length || !timeCell) return;
+
+    // Measure unconstrained first, so a previous run's fixed width
+    // doesn't distort this one.
+    cols.forEach((col) => { col.style.width = ''; });
+    table.style.tableLayout = 'auto';
+    const naturalWidth = timeCell.getBoundingClientRect().width;
+    table.style.tableLayout = 'fixed';
+
+    if (naturalWidth > 0) {
+      cols.forEach((col) => { col.style.width = naturalWidth + 'px'; });
     }
   }
 
   async function baInit() {
-    // Also fade in each city's name cell together with its own data —
-    // there's nothing async about it, so it can go live immediately.
-    document.querySelectorAll('.ba-cell:not(.ba-cell-time):not(.ba-cell-weather)').forEach((cell) => {
-      cell.classList.add('is-ready');
-    });
-
     const weatherPromises = BA_CITIES.map((city) => {
       baUpdateClock(city);
       setInterval(() => baUpdateClock(city), 1000);
@@ -762,9 +789,13 @@
       });
     });
     await Promise.all(weatherPromises);
+    matchBaColumnWidths();
+    const table = document.querySelector('.ba-clocks-table');
+    if (table) table.classList.add('is-ready');
   }
 
   baInit();
+  window.addEventListener('resize', matchBaColumnWidths);
 </script>
 
 </body>
