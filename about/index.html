@@ -9,6 +9,7 @@
 
   <title>About — SABI</title>
   <meta name="description" content="A London-based creative consultancy offering strategy and design for culture-shaping presence and storytelling." />
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -805,6 +806,7 @@
         cityEl.style.fontSize = '';
         cityEl.style.width = '';
         cityEl.style.letterSpacing = '';
+        cityEl.style.transform = '';
       }
     });
 
@@ -912,6 +914,20 @@
       // the rectangle, same as London/New York.
       cityEl.style.width = target + 'px';
     })();
+
+    // CSS letter-spacing adds a sliver of invisible space after the very
+    // last character too, not just between letters — so when the text is
+    // centred, the visible glyphs sit slightly left of true-centre (most
+    // noticeable on Paris, which has the most letter-spacing, but present
+    // to a smaller degree on every city). Nudge each one right by half its
+    // own effective letter-spacing to compensate — a transform, so it
+    // can't affect box widths/grid layout or differ between phone and PC.
+    stations.forEach((st) => {
+      const cityEl = st.querySelector('.ba-station-city');
+      if (!cityEl) return;
+      const effectiveSpacing = parseFloat(getComputedStyle(cityEl).letterSpacing) || 0;
+      cityEl.style.transform = `translateX(${effectiveSpacing / 2}px)`;
+    });
   }
 
   // ── Debug helper: draw a white rectangle around each weather block.
