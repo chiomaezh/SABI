@@ -434,12 +434,26 @@
     .ba-station-time {
       grid-row: 2;
       justify-self: end;
+      display: flex;
+      align-items: baseline;
+      box-sizing: border-box;
       font-family: var(--font-body);
       font-size: 34px;
       letter-spacing: 1px;
       color: var(--bg);
       font-weight: 400;
       font-variant-numeric: tabular-nums;
+    }
+    .ba-time-hh {
+      flex: 1 1 0;
+      text-align: right;
+    }
+    .ba-time-mm {
+      flex: 1 1 0;
+      text-align: left;
+    }
+    .ba-time-colon {
+      flex: 0 0 auto;
     }
     .ba-station-meta {
       grid-row: 3;
@@ -623,7 +637,7 @@
         <div class="ba-clocks">
           <div class="ba-station ba-station--sub" id="stationLondon">
             <div class="ba-station-city">London</div>
-            <div class="ba-station-time" data-time>--:--</div>
+            <div class="ba-station-time"><span class="ba-time-hh" data-hh>--</span><span class="ba-time-colon">:</span><span class="ba-time-mm" data-mm>--</span></div>
             <div class="ba-station-meta">
               <span class="ba-station-icon" data-icon></span>
               <span data-temp>--°C</span>
@@ -631,7 +645,7 @@
           </div>
           <div class="ba-station ba-station--sub" id="stationNY">
             <div class="ba-station-city">New York</div>
-            <div class="ba-station-time" data-time>--:--</div>
+            <div class="ba-station-time"><span class="ba-time-hh" data-hh>--</span><span class="ba-time-colon">:</span><span class="ba-time-mm" data-mm>--</span></div>
             <div class="ba-station-meta">
               <span class="ba-station-icon" data-icon></span>
               <span data-temp>--°C</span>
@@ -639,7 +653,7 @@
           </div>
           <div class="ba-station ba-station--sub" id="stationParis">
             <div class="ba-station-city">Paris</div>
-            <div class="ba-station-time" data-time>--:--</div>
+            <div class="ba-station-time"><span class="ba-time-hh" data-hh>--</span><span class="ba-time-colon">:</span><span class="ba-time-mm" data-mm>--</span></div>
             <div class="ba-station-meta">
               <span class="ba-station-icon" data-icon></span>
               <span data-temp>--°C</span>
@@ -732,7 +746,9 @@
       hour: '2-digit',
       minute: '2-digit'
     });
-    panel.querySelector('[data-time]').textContent = timeStr;
+    const [hh, mm] = timeStr.split(':');
+    panel.querySelector('[data-hh]').textContent = hh;
+    panel.querySelector('[data-mm]').textContent = mm;
   }
 
   async function baUpdateWeather(city, panel) {
@@ -763,7 +779,9 @@
     // Reset any previous scaling before measuring fresh
     stations.forEach((st) => {
       const tempEl = st.querySelector('[data-temp]');
+      const timeEl = st.querySelector('.ba-station-time');
       if (tempEl) tempEl.style.fontSize = '';
+      if (timeEl) timeEl.style.width = '';
     });
 
     // Measure each station's natural weather-row width (icon + gap + temp text)
@@ -794,6 +812,17 @@
         const newTempSize = m.tempFontSize * (availableForText / m.tempWidth);
         m.tempEl.style.fontSize = newTempSize + 'px';
       }
+    });
+
+    // Pin both the weather row and the time row to the exact same width.
+    // Since the time row is a flex split around the colon (equal-width
+    // hh/mm halves), giving it this width places the colon precisely at
+    // the horizontal centre of the weather rectangle.
+    stations.forEach((st) => {
+      const metaEl = st.querySelector('.ba-station-meta');
+      const timeEl = st.querySelector('.ba-station-time');
+      if (metaEl) metaEl.style.width = target + 'px';
+      if (timeEl) timeEl.style.width = target + 'px';
     });
   }
 
