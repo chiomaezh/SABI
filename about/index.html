@@ -402,12 +402,6 @@
     .ba-station {
       display: contents;
     }
-    .ba-debug-rect {
-      position: absolute;
-      border: 1px solid #ffffff;
-      box-sizing: border-box;
-      pointer-events: none;
-    }
     .ba-station-city,
     .ba-station-time,
     .ba-station-meta {
@@ -953,43 +947,6 @@
     }
   }
 
-  // ── Debug helper: draw a white rectangle around each weather block.
-  //    Width = the weather line's left/right extent.
-  //    Height = from the top of the city text down to the bottom of the weather line. ──
-  function baDrawDebugRects() {
-    const container = document.querySelector('.ba-clocks');
-    if (!container) return;
-    const containerRect = container.getBoundingClientRect();
-
-    document.querySelectorAll('.ba-station').forEach((st) => {
-      const cityEl = st.querySelector('.ba-station-city');
-      const metaEl = st.querySelector('.ba-station-meta');
-      if (!cityEl || !metaEl) return;
-
-      const cityRect = cityEl.getBoundingClientRect();
-      const metaRect = metaEl.getBoundingClientRect();
-
-      const stationId = st.id;
-      let rect = container.querySelector(`.ba-debug-rect[data-for="${stationId}"]`);
-      if (!rect) {
-        rect = document.createElement('div');
-        rect.className = 'ba-debug-rect';
-        rect.dataset.for = stationId;
-        container.appendChild(rect);
-      }
-
-      const left = metaRect.left - containerRect.left;
-      const top = cityRect.top - containerRect.top;
-      const width = metaRect.width;
-      const height = (metaRect.bottom - containerRect.top) - top;
-
-      rect.style.left = left + 'px';
-      rect.style.top = top + 'px';
-      rect.style.width = width + 'px';
-      rect.style.height = height + 'px';
-    });
-  }
-
   async function baInit() {
     const weatherPromises = BA_CITIES.map((city) => {
       const panel = document.getElementById(city.id);
@@ -1000,19 +957,16 @@
         setInterval(async () => {
           await baUpdateWeather(city, panel);
           matchBaRowWidths();
-          baDrawDebugRects();
         }, 15 * 60 * 1000);
       });
     });
     await Promise.all(weatherPromises);
     matchBaRowWidths();
-    baDrawDebugRects();
   }
 
   baInit();
   window.addEventListener('resize', () => {
     matchBaRowWidths();
-    baDrawDebugRects();
   });
 </script>
 
