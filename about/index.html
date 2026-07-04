@@ -402,12 +402,6 @@
     .ba-station {
       display: contents;
     }
-    .ba-debug-rect {
-      position: absolute;
-      border: 1px solid #ffffff;
-      box-sizing: border-box;
-      pointer-events: none;
-    }
     .ba-station-city,
     .ba-station-time,
     .ba-station-meta {
@@ -487,18 +481,19 @@
     /* Secondary (smaller) stations — New York / Paris row */
     .ba-station--sub .ba-station-city { font-size: 13px; letter-spacing: 2px; }
 
-    /* Paris only: fixed font-size (not auto-scaled like the others),
-       just a touch bigger than the London reference size. It reaches
-       the extents of its rectangle via text-justify rather than the
-       JS font-size scaling used for London/New York. The box itself
+    /* Paris only: fixed font-size (not auto-scaled like the others).
+       Set to sit halfway between 15px and London's real rendered
+       font-size (13.3762px, checked in Chrome DevTools). To span the
+       rectangle edge-to-edge, letter-spacing is calculated and applied
+       via JS (see the Paris block at the end of matchBaRowWidths())
+       rather than relying on text-align-last/text-justify, which don't
+       reliably justify a single non-wrapping line across browsers —
+       that's why it wasn't filling the box on mobile. The box itself
        stays pinned to the shared target width (so it's still centred
        on the rectangle) — only the text-fill technique differs. */
     #stationParis .ba-station-city {
-      font-size: 15px;
-      white-space: normal;
-      text-align: justify;
-      text-align-last: justify;
-      text-justify: inter-character;
+      font-size: 14.1881px;
+      white-space: nowrap;
     }
     .ba-station--sub .ba-station-time { font-size: 22px; }
     .ba-station--sub .ba-station-meta { font-size: 17px; }
@@ -512,7 +507,7 @@
       }
       .ba-left { flex: 1 1 auto; max-width: 100%; }
       .ba-right { align-items: flex-start; width: 100%; }
-      .ba-clocks { align-items: flex-start; width: 100%; justify-content: space-between; gap: 1rem; }
+      .ba-clocks { align-items: flex-start; width: 100%; justify-content: space-between; row-gap: 6px; column-gap: 1rem; }
       .ba-station { align-items: flex-start; }
     }
 
@@ -886,49 +881,49 @@
 
     // Paris still gets its box pinned to the shared target width (so it's
     // centred on the rectangle like the others), just without the
-    // font-size scaling above.
+    // font-size scaling above. Font-size stays fixed (see CSS); instead,
+    // letter-spacing is calculated so the word visually spans the full
+    // width of the box, edge to edge. Width is measured via a Range over
+    // the text node (not the element's own box) because some browsers —
+    // notably iOS Safari — add a sliver of blank space after the last
+    // character too when letter-spacing is set. That invisible sliver
+    // still counts toward the element's box width, so measuring the box
+    // was landing exactly on target numerically while visibly leaving a
+    // gap after the last letter. A Range only spans actual glyphs, so it
+    // isn't fooled by that trailing space.
     (() => {
       const parisStation = document.getElementById('stationParis');
       const cityEl = parisStation ? parisStation.querySelector('.ba-station-city') : null;
-      if (cityEl) cityEl.style.width = target + 'px';
-    })();
-  }
+      const textNode = cityEl ? cityEl.firstChild : null;
+      if (!cityEl || !textNode) return;
 
-  // ── Debug helper: draw a white rectangle around each weather block.
-  //    Width = the weather line's left/right extent.
-  //    Height = from the top of the city text down to the bottom of the weather line. ──
-  function baDrawDebugRects() {
-    const container = document.querySelector('.ba-clocks');
-    if (!container) return;
-    const containerRect = container.getBoundingClientRect();
+      const measureGlyphWidth = () => {
+        const range = document.createRange();
+        range.selectNodeContents(cityEl);
+        return range.getBoundingClientRect().width;
+      };
 
-    document.querySelectorAll('.ba-station').forEach((st) => {
-      const cityEl = st.querySelector('.ba-station-city');
-      const metaEl = st.querySelector('.ba-station-meta');
-      if (!cityEl || !metaEl) return;
+      cityEl.style.width = 'auto';
+      cityEl.style.letterSpacing = '0px';
+      const naturalWidth = measureGlyphWidth();
 
-      const cityRect = cityEl.getBoundingClientRect();
-      const metaRect = metaEl.getBoundingClientRect();
+      cityEl.style.width = target + 'px';
 
-      const stationId = st.id;
-      let rect = container.querySelector(`.ba-debug-rect[data-for="${stationId}"]`);
-      if (!rect) {
-        rect = document.createElement('div');
-        rect.className = 'ba-debug-rect';
-        rect.dataset.for = stationId;
-        container.appendChild(rect);
+      const charCount = (cityEl.textContent || '').length;
+      if (charCount > 1 && naturalWidth > 0 && naturalWidth < target) {
+        let spacing = (target - naturalWidth) / charCount;
+        cityEl.style.letterSpacing = spacing + 'px';
+
+        // Corrective second pass — re-measure actual glyph width at this
+        // spacing and nudge so the visible text (not the invisible
+        // trailing sliver) lands exactly on the target width.
+        const actualWidth = measureGlyphWidth();
+        if (actualWidth > naturalWidth) {
+          spacing *= (target - naturalWidth) / (actualWidth - naturalWidth);
+          cityEl.style.letterSpacing = spacing + 'px';
+        }
       }
-
-      const left = metaRect.left - containerRect.left;
-      const top = cityRect.top - containerRect.top;
-      const width = metaRect.width;
-      const height = (metaRect.bottom - containerRect.top) - top;
-
-      rect.style.left = left + 'px';
-      rect.style.top = top + 'px';
-      rect.style.width = width + 'px';
-      rect.style.height = height + 'px';
-    });
+    })();
   }
 
   async function baInit() {
@@ -941,19 +936,16 @@
         setInterval(async () => {
           await baUpdateWeather(city, panel);
           matchBaRowWidths();
-          baDrawDebugRects();
         }, 15 * 60 * 1000);
       });
     });
     await Promise.all(weatherPromises);
     matchBaRowWidths();
-    baDrawDebugRects();
   }
 
   baInit();
   window.addEventListener('resize', () => {
     matchBaRowWidths();
-    baDrawDebugRects();
   });
 </script>
 
