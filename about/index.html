@@ -781,7 +781,10 @@
       const tempEl = st.querySelector('[data-temp]');
       const timeEl = st.querySelector('.ba-station-time');
       if (tempEl) tempEl.style.fontSize = '';
-      if (timeEl) timeEl.style.width = '';
+      if (timeEl) {
+        timeEl.style.fontSize = '';
+        timeEl.style.width = '';
+      }
     });
 
     // Measure each station's natural weather-row width (icon + gap + temp text)
@@ -814,15 +817,27 @@
       }
     });
 
-    // Pin both the weather row and the time row to the exact same width.
-    // Since the time row is a flex split around the colon (equal-width
-    // hh/mm halves), giving it this width places the colon precisely at
-    // the horizontal centre of the weather rectangle.
+    // Scale each time row's font-size so the digits actually reach the
+    // full width of the box (edge to edge), not just sit centred inside
+    // extra empty space. Then lock the box to that same target width so
+    // the colon still lands exactly in the middle.
+    stations.forEach((st) => {
+      const timeEl = st.querySelector('.ba-station-time');
+      if (!timeEl) return;
+      const naturalWidth = timeEl.getBoundingClientRect().width;
+      const currentFontSize = parseFloat(getComputedStyle(timeEl).fontSize);
+      if (naturalWidth > 0) {
+        const newFontSize = currentFontSize * (target / naturalWidth);
+        timeEl.style.fontSize = newFontSize + 'px';
+      }
+      timeEl.style.width = target + 'px';
+    });
+
+    // Pin the weather row to that same width too, so both rows share an
+    // identical footprint.
     stations.forEach((st) => {
       const metaEl = st.querySelector('.ba-station-meta');
-      const timeEl = st.querySelector('.ba-station-time');
       if (metaEl) metaEl.style.width = target + 'px';
-      if (timeEl) timeEl.style.width = target + 'px';
     });
   }
 
