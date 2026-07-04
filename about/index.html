@@ -6,9 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <link rel="stylesheet" href="https://use.typekit.net/bwp0bbg.css">
-  
+
   <title>About — SABI</title>
   <meta name="description" content="A London-based creative consultancy offering strategy and design for culture-shaping presence and storytelling." />
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -422,6 +423,9 @@
       grid-row: 1;
       justify-self: end;
       align-self: start;
+      box-sizing: border-box;
+      text-align: center;
+      white-space: nowrap;
       font-family: var(--font-body);
       font-size: 18px;
       line-height: 1;
@@ -779,11 +783,13 @@
     stations.forEach((st) => {
       const tempEl = st.querySelector('[data-temp]');
       const timeEl = st.querySelector('.ba-station-time');
+      const cityEl = st.querySelector('.ba-station-city');
       if (tempEl) tempEl.style.fontSize = '';
       if (timeEl) {
         timeEl.style.fontSize = '';
         timeEl.style.width = '';
       }
+      if (cityEl) cityEl.style.width = '';
     });
 
     // Measure each station's natural weather-row width (icon + gap + temp text)
@@ -837,6 +843,14 @@
     stations.forEach((st) => {
       const metaEl = st.querySelector('.ba-station-meta');
       if (metaEl) metaEl.style.width = target + 'px';
+    });
+
+    // Pin the city name to that same width too. Its text is centre-aligned
+    // (via CSS), so this places it at the horizontal centre of the
+    // rectangle, while remaining at the top (unchanged).
+    stations.forEach((st) => {
+      const cityEl = st.querySelector('.ba-station-city');
+      if (cityEl) cityEl.style.width = target + 'px';
     });
   }
 
