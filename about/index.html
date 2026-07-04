@@ -489,16 +489,15 @@
 
     /* Paris only: fixed font-size (not auto-scaled like the others),
        just a touch bigger than the London reference size. It reaches
-       the extents of its rectangle via text-justify rather than the
-       JS font-size scaling used for London/New York. The box itself
-       stays pinned to the shared target width (so it's still centred
-       on the rectangle) — only the text-fill technique differs. */
+       the extents of its rectangle via JS-computed letter-spacing
+       (see the Paris-only block in matchBaRowWidths) rather than the
+       font-size scaling used for London/New York — text-justify isn't
+       reliably supported on Safari/iOS, so we don't rely on it. The
+       box itself stays pinned to the shared target width (so it's
+       still centred on the rectangle) — only the text-fill technique
+       differs. */
     #stationParis .ba-station-city {
-      font-size: 15px;
-      white-space: normal;
-      text-align: justify;
-      text-align-last: justify;
-      text-justify: inter-character;
+      font-size: 14px;
     }
     .ba-station--sub .ba-station-time { font-size: 22px; }
     .ba-station--sub .ba-station-meta { font-size: 17px; }
@@ -806,6 +805,7 @@
       if (cityEl) {
         cityEl.style.fontSize = '';
         cityEl.style.width = '';
+        cityEl.style.letterSpacing = '';
       }
     });
 
@@ -884,13 +884,34 @@
       cityEl.style.width = target + 'px';
     });
 
-    // Paris still gets its box pinned to the shared target width (so it's
-    // centred on the rectangle like the others), just without the
-    // font-size scaling above.
+    // Paris: fixed font-size, box pinned to the shared target width like
+    // the others, but instead of scaling font-size (like London/New York)
+    // or relying on text-justify (which Safari/iOS doesn't support), we
+    // compute the extra letter-spacing needed so "PARIS" itself stretches
+    // to reach the target width, keeping its font-size untouched.
     (() => {
       const parisStation = document.getElementById('stationParis');
       const cityEl = parisStation ? parisStation.querySelector('.ba-station-city') : null;
-      if (cityEl) cityEl.style.width = target + 'px';
+      if (!cityEl) return;
+
+      const text = cityEl.textContent || '';
+      const charCount = text.length;
+
+      // Measure the natural (unconstrained) width first — width/letter-spacing
+      // were both reset to '' earlier in this function, so this reflects the
+      // text at its plain fixed font-size before any adjustment.
+      const naturalWidth = cityEl.getBoundingClientRect().width;
+      const currentLetterSpacing = parseFloat(getComputedStyle(cityEl).letterSpacing) || 0;
+
+      if (charCount >= 2 && naturalWidth > 0 && naturalWidth < target) {
+        const extraTotal = target - naturalWidth;
+        const newLetterSpacing = currentLetterSpacing + extraTotal / charCount;
+        cityEl.style.letterSpacing = newLetterSpacing + 'px';
+      }
+
+      // Now pin the box to the shared target width so it's centred on
+      // the rectangle, same as London/New York.
+      cityEl.style.width = target + 'px';
     })();
   }
 
