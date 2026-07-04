@@ -67,6 +67,11 @@
       opacity: 0.3;
     }
 
+    /* Header divider reverts to the narrow, constrained width (not full-bleed) */
+    .header-divider-inset {
+      width: 100%;
+    }
+
     /* Inset divider — same left/right padding as the row text and arrows,
        used inside What We Do instead of the full-bleed .full-divider */
     .wwd-divider {
@@ -477,7 +482,7 @@
 <body>
 <div class="page">
 
-  <div class="container-wide">
+  <div class="container">
     <header class="site-header">
       <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
         <span></span>
@@ -493,9 +498,9 @@
         <a href="https://play.sabi.london/word-search/">Play</a>
       </div>
     </nav>
-  </div>
 
-  <div class="full-divider"></div>
+    <div class="full-divider header-divider-inset"></div>
+  </div>
 
   <!-- ── Section 1: About (no title) ── -->
   <div class="container section">
