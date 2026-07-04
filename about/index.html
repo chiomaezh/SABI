@@ -394,105 +394,59 @@
       text-decoration: underline;
       text-underline-offset: 4px;
     }
-    .ba-clocks {
-      position: relative;
-      display: grid;
-      grid-template-columns: repeat(2, max-content);
-      grid-auto-rows: auto;
-      column-gap: 3rem;
-      row-gap: 6px;
+    .ba-clocks-table {
+      border-collapse: collapse;
     }
-
-    /* Station (clock) styles, adapted from the homepage for a dark background.
-       Each station is display:contents so its three children (city/time/weather)
-       become direct items of the shared .ba-clocks grid — that's what locks the
-       city row to the top and the weather row to the bottom across all three
-       clocks, regardless of how tall any individual block happens to be. */
-    .ba-station {
-      display: contents;
-    }
-    .ba-station-city,
-    .ba-station-time,
-    .ba-station-meta {
+    .ba-clocks-table td {
+      border: 1px solid #ffffff;
+      box-sizing: border-box;
+      padding: 10px 16px;
+      text-align: center;
+      vertical-align: middle;
+      font-family: var(--font-body);
+      color: var(--bg);
       opacity: 0;
       transition: opacity 0.35s ease;
     }
-    .ba-station.is-ready .ba-station-city,
-    .ba-station.is-ready .ba-station-time,
-    .ba-station.is-ready .ba-station-meta {
+    .ba-clocks-table td.is-ready {
       opacity: 1;
     }
-    .ba-station-city {
-      grid-row: 1;
-      justify-self: end;
-      align-self: start;
-      box-sizing: border-box;
-      text-align: center;
-      white-space: nowrap;
-      font-family: var(--font-body);
-      font-size: 18px;
-      line-height: 1;
-      letter-spacing: 3px;
+    .ba-clocks-table .ba-spacer {
+      opacity: 1; /* spacer cells have no content to fade in */
+    }
+    .ba-clocks-table .ba-cell {
+      font-size: 13px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--bg);
       font-weight: 400;
     }
-    .ba-station-time {
-      grid-row: 2;
-      justify-self: end;
-      display: flex;
-      align-items: baseline;
-      box-sizing: border-box;
-      font-family: var(--font-body);
-      font-size: 34px;
+    .ba-clocks-table .ba-cell-time {
+      font-size: 22px;
       letter-spacing: 1px;
-      color: var(--bg);
-      font-weight: 400;
+      text-transform: none;
       font-variant-numeric: tabular-nums;
     }
-    .ba-time-hh {
-      flex: 1 1 0;
-      text-align: right;
-    }
-    .ba-time-mm {
-      flex: 1 1 0;
-      text-align: left;
-    }
-    .ba-time-colon {
-      flex: 0 0 auto;
-    }
-    .ba-station-meta {
-      grid-row: 3;
-      justify-self: end;
-      align-self: end;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-family: var(--font-body);
-      font-size: 26px;
+    .ba-clocks-table .ba-cell-weather {
+      font-size: 17px;
       letter-spacing: 1px;
-      color: var(--bg);
+      text-transform: none;
       font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
-    .ba-station-icon {
-      width: 30px;
-      height: 30px;
-      flex-shrink: 0;
+    .ba-icon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 6px;
     }
-    .ba-station-icon svg {
+    .ba-icon svg {
       width: 100%;
       height: 100%;
       stroke: var(--bg);
       fill: none;
       stroke-width: 1.3;
     }
-
-    /* Secondary (smaller) stations — New York row */
-    .ba-station--sub .ba-station-city { font-size: 13px; letter-spacing: 2px; }
-
-    .ba-station--sub .ba-station-time { font-size: 22px; }
-    .ba-station--sub .ba-station-meta { font-size: 17px; }
-    .ba-station--sub .ba-station-icon { width: 20px; height: 20px; }
 
     @media (max-width: 650px) {
       .ba-inner {
@@ -502,8 +456,8 @@
       }
       .ba-left { flex: 1 1 auto; max-width: 100%; }
       .ba-right { align-items: flex-start; width: 100%; }
-      .ba-clocks { align-items: flex-start; width: 100%; justify-content: space-between; gap: 1rem; }
-      .ba-station { align-items: flex-start; }
+      .ba-clocks-table { width: 100%; }
+      .ba-clocks-table td { padding: 8px 6px; }
     }
 
 @media (max-width: 500px) {
@@ -641,24 +595,45 @@
       </div>
       <div class="ba-right">
         <a href="https://calendar.app.google/bSuyD2e3U2jy2S786" class="ooo-link" target="_blank" rel="noopener">OOO Hours →</a>
-        <div class="ba-clocks">
-          <div class="ba-station ba-station--sub" id="stationLondon">
-            <div class="ba-station-city">London</div>
-            <div class="ba-station-time"><span class="ba-time-hh" data-hh>--</span><span class="ba-time-colon">:</span><span class="ba-time-mm" data-mm>--</span></div>
-            <div class="ba-station-meta">
-              <span class="ba-station-icon" data-icon></span>
-              <span data-temp>--°C</span>
-            </div>
-          </div>
-          <div class="ba-station ba-station--sub" id="stationNY">
-            <div class="ba-station-city">New York</div>
-            <div class="ba-station-time"><span class="ba-time-hh" data-hh>--</span><span class="ba-time-colon">:</span><span class="ba-time-mm" data-mm>--</span></div>
-            <div class="ba-station-meta">
-              <span class="ba-station-icon" data-icon></span>
-              <span data-temp>--°C</span>
-            </div>
-          </div>
-        </div>
+        <table class="ba-clocks-table">
+          <tbody>
+            <tr>
+              <td class="ba-cell" data-city="London">London</td>
+              <td class="ba-spacer"></td>
+              <td class="ba-cell" data-city="NY">New York</td>
+              <td class="ba-spacer"></td>
+              <td class="ba-cell" data-city="Paris">Paris</td>
+            </tr>
+            <tr>
+              <td class="ba-spacer"></td>
+              <td class="ba-spacer"></td>
+              <td class="ba-spacer"></td>
+              <td class="ba-spacer"></td>
+              <td class="ba-spacer"></td>
+            </tr>
+            <tr>
+              <td class="ba-cell ba-cell-time" data-city="London" id="time-London"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></td>
+              <td class="ba-spacer"></td>
+              <td class="ba-cell ba-cell-time" data-city="NY" id="time-NY"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></td>
+              <td class="ba-spacer"></td>
+              <td class="ba-cell ba-cell-time" data-city="Paris" id="time-Paris"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></td>
+            </tr>
+            <tr>
+              <td class="ba-spacer"></td>
+              <td class="ba-spacer"></td>
+              <td class="ba-spacer"></td>
+              <td class="ba-spacer"></td>
+              <td class="ba-spacer"></td>
+            </tr>
+            <tr>
+              <td class="ba-cell ba-cell-weather" data-city="London" id="weather-London"><span class="ba-icon" data-icon></span><span data-temp>--°C</span></td>
+              <td class="ba-spacer"></td>
+              <td class="ba-cell ba-cell-weather" data-city="NY" id="weather-NY"><span class="ba-icon" data-icon></span><span data-temp>--°C</span></td>
+              <td class="ba-spacer"></td>
+              <td class="ba-cell ba-cell-weather" data-city="Paris" id="weather-Paris"><span class="ba-icon" data-icon></span><span data-temp>--°C</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
@@ -733,11 +708,14 @@
   }
 
   const BA_CITIES = [
-    { id: 'stationLondon', lat: 51.5074, lon: -0.1278, tz: 'Europe/London' },
-    { id: 'stationNY', lat: 40.7128, lon: -74.0060, tz: 'America/New_York' }
+    { id: 'London', lat: 51.5074, lon: -0.1278, tz: 'Europe/London' },
+    { id: 'NY', lat: 40.7128, lon: -74.0060, tz: 'America/New_York' },
+    { id: 'Paris', lat: 48.8566, lon: 2.3522, tz: 'Europe/Paris' }
   ];
 
-  function baUpdateClock(city, panel) {
+  function baUpdateClock(city) {
+    const timeCell = document.getElementById('time-' + city.id);
+    if (!timeCell) return;
     const now = new Date();
     const timeStr = now.toLocaleTimeString('en-GB', {
       timeZone: city.tz,
@@ -745,181 +723,47 @@
       minute: '2-digit'
     });
     const [hh, mm] = timeStr.split(':');
-    panel.querySelector('[data-hh]').textContent = hh;
-    panel.querySelector('[data-mm]').textContent = mm;
+    timeCell.querySelector('[data-hh]').textContent = hh;
+    timeCell.querySelector('[data-mm]').textContent = mm;
+    timeCell.classList.add('is-ready');
   }
 
-  async function baUpdateWeather(city, panel) {
+  async function baUpdateWeather(city) {
+    const weatherCell = document.getElementById('weather-' + city.id);
+    if (!weatherCell) return;
     try {
       const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,weather_code,is_day`);
       const data = await res.json();
       const temp = Math.round(data.current.temperature_2m);
       const code = data.current.weather_code;
       const isDay = data.current.is_day === 1;
-      panel.querySelector('[data-temp]').textContent = `${temp}°C`;
-      panel.querySelector('[data-icon]').innerHTML = baIconForCode(code, isDay);
+      weatherCell.querySelector('[data-temp]').textContent = `${temp}°C`;
+      weatherCell.querySelector('[data-icon]').innerHTML = baIconForCode(code, isDay);
     } catch (e) {
-      panel.querySelector('[data-temp]').textContent = '—';
+      weatherCell.querySelector('[data-temp]').textContent = '—';
     } finally {
-      panel.classList.add('is-ready');
-    }
-  }
-
-  // ── Force every weather row to share one common width by scaling the
-  //    temperature text. Time rows are left at one uniform font size
-  //    (no per-station scaling) so they all render at the same size;
-  //    since the time string is always 5 characters, that alone keeps
-  //    their widths close to matching. City names are left as they are. ──
-  function matchBaRowWidths() {
-    const stations = document.querySelectorAll('.ba-station');
-    if (!stations.length) return;
-
-    // Reset any previous scaling before measuring fresh
-    stations.forEach((st) => {
-      const tempEl = st.querySelector('[data-temp]');
-      const timeEl = st.querySelector('.ba-station-time');
-      const cityEl = st.querySelector('.ba-station-city');
-      const metaEl = st.querySelector('.ba-station-meta');
-      if (tempEl) tempEl.style.fontSize = '';
-      if (timeEl) {
-        timeEl.style.fontSize = '';
-        timeEl.style.width = '';
-      }
-      if (cityEl) {
-        cityEl.style.fontSize = '';
-        cityEl.style.width = '';
-        cityEl.style.letterSpacing = '';
-        cityEl.style.transform = '';
-      }
-      if (metaEl) metaEl.style.transform = '';
-    });
-
-    // Measure each station's natural weather-row width (icon + gap + temp text)
-    const measurements = [];
-    let target = 0;
-    stations.forEach((st) => {
-      const metaEl = st.querySelector('.ba-station-meta');
-      const iconEl = metaEl ? metaEl.querySelector('.ba-station-icon') : null;
-      const tempEl = metaEl ? metaEl.querySelector('[data-temp]') : null;
-      if (!metaEl || !iconEl || !tempEl) return;
-
-      const iconWidth = iconEl.getBoundingClientRect().width;
-      const gapPx = parseFloat(getComputedStyle(metaEl).gap) || 0;
-      const tempWidth = tempEl.getBoundingClientRect().width;
-      const tempFontSize = parseFloat(getComputedStyle(tempEl).fontSize);
-      const naturalWidth = iconWidth + gapPx + tempWidth;
-
-      measurements.push({ st, iconWidth, gapPx, tempWidth, tempFontSize, tempEl });
-      if (naturalWidth > target) target = naturalWidth;
-    });
-
-    if (!target) return;
-
-    // Scale each weather row's temp text so the row's total width hits the target
-    measurements.forEach((m) => {
-      const availableForText = target - m.iconWidth - m.gapPx;
-      if (m.tempWidth > 0 && availableForText > 0) {
-        const newTempSize = m.tempFontSize * (availableForText / m.tempWidth);
-        m.tempEl.style.fontSize = newTempSize + 'px';
-      }
-    });
-
-    // Scale each time row's font-size so the digits actually reach the
-    // full width of the box (edge to edge), not just sit centred inside
-    // extra empty space. Then lock the box to that same target width so
-    // the colon still lands exactly in the middle.
-    stations.forEach((st) => {
-      const timeEl = st.querySelector('.ba-station-time');
-      if (!timeEl) return;
-      const naturalWidth = timeEl.getBoundingClientRect().width;
-      const currentFontSize = parseFloat(getComputedStyle(timeEl).fontSize);
-      if (naturalWidth > 0) {
-        const newFontSize = currentFontSize * (target / naturalWidth);
-        timeEl.style.fontSize = newFontSize + 'px';
-      }
-      timeEl.style.width = target + 'px';
-    });
-
-    // Pin the weather row to that same width too, so both rows share an
-    // identical footprint.
-    stations.forEach((st) => {
-      const metaEl = st.querySelector('.ba-station-meta');
-      if (metaEl) metaEl.style.width = target + 'px';
-    });
-
-    // Scale each city name's font-size so it reaches the same extents as
-    // the time and weather rows — the longer name (New York) shrinks
-    // down — then pin its box to that width so the centred text sits on
-    // the rectangle's horizontal centre, while vertical position (top)
-    // is untouched.
-    stations.forEach((st) => {
-      const cityEl = st.querySelector('.ba-station-city');
-      if (!cityEl) return;
-      const naturalWidth = cityEl.getBoundingClientRect().width;
-      const currentFontSize = parseFloat(getComputedStyle(cityEl).fontSize);
-      // New York's name is the longest, so at the exact target width its
-      // last letter can visually brush the edge. Give it a small safety
-      // margin (aim for slightly less than the full target) so it stops
-      // just short instead of touching the boundary.
-      const stationTarget = st.id === 'stationNY' ? target * 0.95 : target;
-      if (naturalWidth > 0) {
-        const newFontSize = currentFontSize * (stationTarget / naturalWidth);
-        cityEl.style.fontSize = newFontSize + 'px';
-      }
-      cityEl.style.width = target + 'px';
-    });
-
-    // CSS letter-spacing adds a sliver of invisible space after the very
-    // last character too, not just between letters — so when the text is
-    // centred, the visible glyphs sit slightly left of true-centre. Nudge
-    // each one right by half its own effective letter-spacing to
-    // compensate — a transform, so it can't affect box widths/grid layout
-    // or differ between phone and PC.
-    //
-    // On phone widths only, each rectangle reads a bit too elongated, so
-    // we also nudge the city name down and the weather line up by the
-    // same small amount (transforms again, so nothing else about the
-    // layout — including the desktop view — is affected).
-    const MOBILE_VERTICAL_NUDGE = 5; // px, phone only
-    const isMobile = window.matchMedia('(max-width: 650px)').matches;
-
-    stations.forEach((st) => {
-      const cityEl = st.querySelector('.ba-station-city');
-      if (!cityEl) return;
-      const effectiveSpacing = parseFloat(getComputedStyle(cityEl).letterSpacing) || 0;
-      const verticalNudge = isMobile ? MOBILE_VERTICAL_NUDGE : 0;
-      cityEl.style.transform = `translate(${effectiveSpacing / 2}px, ${verticalNudge}px)`;
-    });
-
-    if (isMobile) {
-      stations.forEach((st) => {
-        const metaEl = st.querySelector('.ba-station-meta');
-        if (metaEl) metaEl.style.transform = `translateY(-${MOBILE_VERTICAL_NUDGE}px)`;
-      });
+      weatherCell.classList.add('is-ready');
     }
   }
 
   async function baInit() {
+    // Also fade in each city's name cell together with its own data —
+    // there's nothing async about it, so it can go live immediately.
+    document.querySelectorAll('.ba-cell:not(.ba-cell-time):not(.ba-cell-weather)').forEach((cell) => {
+      cell.classList.add('is-ready');
+    });
+
     const weatherPromises = BA_CITIES.map((city) => {
-      const panel = document.getElementById(city.id);
-      if (!panel) return Promise.resolve();
-      baUpdateClock(city, panel);
-      setInterval(() => baUpdateClock(city, panel), 1000);
-      return baUpdateWeather(city, panel).then(() => {
-        setInterval(async () => {
-          await baUpdateWeather(city, panel);
-          matchBaRowWidths();
-        }, 15 * 60 * 1000);
+      baUpdateClock(city);
+      setInterval(() => baUpdateClock(city), 1000);
+      return baUpdateWeather(city).then(() => {
+        setInterval(() => baUpdateWeather(city), 15 * 60 * 1000);
       });
     });
     await Promise.all(weatherPromises);
-    matchBaRowWidths();
   }
 
   baInit();
-  window.addEventListener('resize', () => {
-    matchBaRowWidths();
-  });
 </script>
 
 </body>
