@@ -486,6 +486,20 @@
 
     /* Secondary (smaller) stations — New York / Paris row */
     .ba-station--sub .ba-station-city { font-size: 13px; letter-spacing: 2px; }
+
+    /* Paris only: fixed font-size (not auto-scaled like the others),
+       just a touch bigger than the London reference size. It reaches
+       the extents of its rectangle via text-justify rather than the
+       JS font-size scaling used for London/New York. The box itself
+       stays pinned to the shared target width (so it's still centred
+       on the rectangle) — only the text-fill technique differs. */
+    #stationParis .ba-station-city {
+      font-size: 15px;
+      white-space: normal;
+      text-align: justify;
+      text-align-last: justify;
+      text-justify: inter-character;
+    }
     .ba-station--sub .ba-station-time { font-size: 22px; }
     .ba-station--sub .ba-station-meta { font-size: 17px; }
     .ba-station--sub .ba-station-icon { width: 20px; height: 20px; }
@@ -848,26 +862,36 @@
       if (metaEl) metaEl.style.width = target + 'px';
     });
 
-    // Scale each city name's font-size partway toward the target width —
-    // long names (New York) shrink a bit, short names (Paris) grow a bit —
-    // but only halfway, so short names don't balloon up to fill the full
-    // extents. Then pin its box to the target width so the centred text
-    // still sits on the rectangle's horizontal centre, while vertical
-    // position (top) is untouched.
-    const CITY_SCALE_DAMPING = 0.5; // 0 = no scaling, 1 = fill the extents fully
+    // Scale each city name's font-size so it reaches the same extents as
+    // the time and weather rows — long names (New York) shrink down,
+    // short names (Paris) grow up — then pin its box to that width so
+    // the centred text sits on the rectangle's horizontal centre, while
+    // vertical position (top) is untouched.
+    // NOTE: Paris is deliberately excluded from this auto-scaling — it
+    // uses a fixed font-size plus CSS justification instead (see
+    // #stationParis .ba-station-city below), so this loop must not
+    // touch it, and London/New York must not be touched by that either.
     stations.forEach((st) => {
+      if (st.id === 'stationParis') return;
       const cityEl = st.querySelector('.ba-station-city');
       if (!cityEl) return;
       const naturalWidth = cityEl.getBoundingClientRect().width;
       const currentFontSize = parseFloat(getComputedStyle(cityEl).fontSize);
       if (naturalWidth > 0) {
-        const fullRatio = target / naturalWidth;
-        const dampedRatio = 1 + (fullRatio - 1) * CITY_SCALE_DAMPING;
-        const newFontSize = currentFontSize * dampedRatio;
+        const newFontSize = currentFontSize * (target / naturalWidth);
         cityEl.style.fontSize = newFontSize + 'px';
       }
       cityEl.style.width = target + 'px';
     });
+
+    // Paris still gets its box pinned to the shared target width (so it's
+    // centred on the rectangle like the others), just without the
+    // font-size scaling above.
+    (() => {
+      const parisStation = document.getElementById('stationParis');
+      const cityEl = parisStation ? parisStation.querySelector('.ba-station-city') : null;
+      if (cityEl) cityEl.style.width = target + 'px';
+    })();
   }
 
   // ── Debug helper: draw a white rectangle around each weather block.
