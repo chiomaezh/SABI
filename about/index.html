@@ -487,12 +487,14 @@
     /* Secondary (smaller) stations — New York / Paris row */
     .ba-station--sub .ba-station-city { font-size: 13px; letter-spacing: 2px; }
 
-    /* Paris only: fixed font-size (not auto-scaled like the others),
-       just a touch bigger than the London reference size. It reaches
-       the extents of its rectangle via text-justify rather than the
-       JS font-size scaling used for London/New York. The box itself
-       stays pinned to the shared target width (so it's still centred
-       on the rectangle) — only the text-fill technique differs. */
+    /* Paris only: not auto-scaled like London/New York. Its font-size is
+       set by JS to sit halfway between 15px and London's (auto-scaled)
+       city font-size — see the Paris block at the end of
+       matchBaRowWidths(). The 15px here is just the pre-JS fallback.
+       It reaches the extents of its rectangle via text-justify rather
+       than the JS font-size scaling used for London/New York. The box
+       itself stays pinned to the shared target width (so it's still
+       centred on the rectangle) — only the text-fill technique differs. */
     #stationParis .ba-station-city {
       font-size: 15px;
       white-space: normal;
@@ -886,11 +888,30 @@
 
     // Paris still gets its box pinned to the shared target width (so it's
     // centred on the rectangle like the others), just without the
-    // font-size scaling above.
+    // font-size scaling above. Its font-size is instead set halfway
+    // between 15px and London's actual (auto-scaled) city font-size —
+    // read straight off the London element above, so this stays correct
+    // at any viewport/breakpoint rather than being a hardcoded guess.
     (() => {
       const parisStation = document.getElementById('stationParis');
       const cityEl = parisStation ? parisStation.querySelector('.ba-station-city') : null;
-      if (cityEl) cityEl.style.width = target + 'px';
+      if (!cityEl) return;
+
+      cityEl.style.width = target + 'px';
+
+      const londonCityEl = document.querySelector('#stationLondon .ba-station-city');
+      const londonFontSize = londonCityEl ? parseFloat(getComputedStyle(londonCityEl).fontSize) : 15;
+      let parisFontSize = (15 + londonFontSize) / 2;
+      cityEl.style.fontSize = parisFontSize + 'px';
+
+      // Safety net: inter-character justify can only stretch text that's
+      // narrower than its box — it can never shrink text that's wider.
+      // If "Paris" still overflows the target width at the halfway size,
+      // scale it down further so it always stays inside its rectangle.
+      if (cityEl.scrollWidth > target) {
+        parisFontSize *= target / cityEl.scrollWidth;
+        cityEl.style.fontSize = parisFontSize + 'px';
+      }
     })();
   }
 
