@@ -397,7 +397,7 @@
     .ba-clocks {
       position: relative;
       display: grid;
-      grid-template-columns: repeat(3, max-content);
+      grid-template-columns: repeat(2, max-content);
       grid-auto-rows: auto;
       column-gap: 3rem;
       row-gap: 6px;
@@ -487,21 +487,9 @@
       stroke-width: 1.3;
     }
 
-    /* Secondary (smaller) stations — New York / Paris row */
+    /* Secondary (smaller) stations — New York row */
     .ba-station--sub .ba-station-city { font-size: 13px; letter-spacing: 2px; }
 
-    /* Paris only: fixed font-size (not auto-scaled like the others),
-       just a touch bigger than the London reference size. It reaches
-       the extents of its rectangle via JS-computed letter-spacing
-       (see the Paris-only block in matchBaRowWidths) rather than the
-       font-size scaling used for London/New York — text-justify isn't
-       reliably supported on Safari/iOS, so we don't rely on it. The
-       box itself stays pinned to the shared target width (so it's
-       still centred on the rectangle) — only the text-fill technique
-       differs. */
-    #stationParis .ba-station-city {
-      font-size: 14px;
-    }
     .ba-station--sub .ba-station-time { font-size: 22px; }
     .ba-station--sub .ba-station-meta { font-size: 17px; }
     .ba-station--sub .ba-station-icon { width: 20px; height: 20px; }
@@ -670,14 +658,6 @@
               <span data-temp>--°C</span>
             </div>
           </div>
-          <div class="ba-station ba-station--sub" id="stationParis">
-            <div class="ba-station-city">Paris</div>
-            <div class="ba-station-time"><span class="ba-time-hh" data-hh>--</span><span class="ba-time-colon">:</span><span class="ba-time-mm" data-mm>--</span></div>
-            <div class="ba-station-meta">
-              <span class="ba-station-icon" data-icon></span>
-              <span data-temp>--°C</span>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -728,7 +708,7 @@
 </script>
 
 <script>
-  // ── By Appointment: London / New York / Paris clocks + weather ──
+  // ── By Appointment: London / New York clocks + weather ──
   const BA_ICONS = {
     clear: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/></svg>',
     moon: '<svg viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/></svg>',
@@ -754,8 +734,7 @@
 
   const BA_CITIES = [
     { id: 'stationLondon', lat: 51.5074, lon: -0.1278, tz: 'Europe/London' },
-    { id: 'stationNY', lat: 40.7128, lon: -74.0060, tz: 'America/New_York' },
-    { id: 'stationParis', lat: 48.8566, lon: 2.3522, tz: 'Europe/Paris' }
+    { id: 'stationNY', lat: 40.7128, lon: -74.0060, tz: 'America/New_York' }
   ];
 
   function baUpdateClock(city, panel) {
@@ -869,16 +848,11 @@
     });
 
     // Scale each city name's font-size so it reaches the same extents as
-    // the time and weather rows — long names (New York) shrink down,
-    // short names (Paris) grow up — then pin its box to that width so
-    // the centred text sits on the rectangle's horizontal centre, while
-    // vertical position (top) is untouched.
-    // NOTE: Paris is deliberately excluded from this auto-scaling — it
-    // uses a fixed font-size plus CSS justification instead (see
-    // #stationParis .ba-station-city below), so this loop must not
-    // touch it, and London/New York must not be touched by that either.
+    // the time and weather rows — the longer name (New York) shrinks
+    // down — then pin its box to that width so the centred text sits on
+    // the rectangle's horizontal centre, while vertical position (top)
+    // is untouched.
     stations.forEach((st) => {
-      if (st.id === 'stationParis') return;
       const cityEl = st.querySelector('.ba-station-city');
       if (!cityEl) return;
       const naturalWidth = cityEl.getBoundingClientRect().width;
@@ -895,43 +869,12 @@
       cityEl.style.width = target + 'px';
     });
 
-    // Paris: fixed font-size, box pinned to the shared target width like
-    // the others, but instead of scaling font-size (like London/New York)
-    // or relying on text-justify (which Safari/iOS doesn't support), we
-    // compute the extra letter-spacing needed so "PARIS" itself stretches
-    // to reach the target width, keeping its font-size untouched.
-    (() => {
-      const parisStation = document.getElementById('stationParis');
-      const cityEl = parisStation ? parisStation.querySelector('.ba-station-city') : null;
-      if (!cityEl) return;
-
-      const text = cityEl.textContent || '';
-      const charCount = text.length;
-
-      // Measure the natural (unconstrained) width first — width/letter-spacing
-      // were both reset to '' earlier in this function, so this reflects the
-      // text at its plain fixed font-size before any adjustment.
-      const naturalWidth = cityEl.getBoundingClientRect().width;
-      const currentLetterSpacing = parseFloat(getComputedStyle(cityEl).letterSpacing) || 0;
-
-      if (charCount >= 2 && naturalWidth > 0 && naturalWidth < target) {
-        const extraTotal = target - naturalWidth;
-        const newLetterSpacing = currentLetterSpacing + extraTotal / charCount;
-        cityEl.style.letterSpacing = newLetterSpacing + 'px';
-      }
-
-      // Now pin the box to the shared target width so it's centred on
-      // the rectangle, same as London/New York.
-      cityEl.style.width = target + 'px';
-    })();
-
     // CSS letter-spacing adds a sliver of invisible space after the very
     // last character too, not just between letters — so when the text is
-    // centred, the visible glyphs sit slightly left of true-centre (most
-    // noticeable on Paris, which has the most letter-spacing, but present
-    // to a smaller degree on every city). Nudge each one right by half its
-    // own effective letter-spacing to compensate — a transform, so it
-    // can't affect box widths/grid layout or differ between phone and PC.
+    // centred, the visible glyphs sit slightly left of true-centre. Nudge
+    // each one right by half its own effective letter-spacing to
+    // compensate — a transform, so it can't affect box widths/grid layout
+    // or differ between phone and PC.
     //
     // On phone widths only, each rectangle reads a bit too elongated, so
     // we also nudge the city name down and the weather line up by the
@@ -954,28 +897,6 @@
         if (metaEl) metaEl.style.transform = `translateY(-${MOBILE_VERTICAL_NUDGE}px)`;
       });
     }
-
-    // Paris's city text can sit a hair higher or lower than London/New
-    // York's, because a different rendered font-size shifts where the
-    // glyph's visual top lands within its own line box. Measure the
-    // actual gap against London (read-only — London itself is never
-    // touched) and nudge only Paris's text vertically to close it,
-    // layered on top of whatever transform it already has.
-    (() => {
-      const londonCity = document.querySelector('#stationLondon .ba-station-city');
-      const parisCity = document.querySelector('#stationParis .ba-station-city');
-      if (!londonCity || !parisCity) return;
-
-      const londonTop = londonCity.getBoundingClientRect().top;
-      const parisTop = parisCity.getBoundingClientRect().top;
-      const verticalCorrection = londonTop - parisTop;
-
-      const currentTransform = parisCity.style.transform || '';
-      const match = currentTransform.match(/translate\(\s*(-?[\d.]+)px\s*,\s*(-?[\d.]+)px\s*\)/);
-      const tx = match ? match[1] : '0';
-      const ty = match ? parseFloat(match[2]) : 0;
-      parisCity.style.transform = `translate(${tx}px, ${ty + verticalCorrection}px)`;
-    })();
   }
 
   async function baInit() {
