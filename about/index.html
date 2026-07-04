@@ -9,6 +9,7 @@
 
   <title>About — SABI</title>
   <meta name="description" content="A London-based creative consultancy offering strategy and design for culture-shaping presence and storytelling." />
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -407,7 +408,7 @@
          rendered width — see matchBaColumnWidths() */
     }
     .ba-col-spacer {
-      width: 30px;
+      width: 28px;
     }
     .ba-clocks-table td {
       border: 1px solid #ffffff;
@@ -423,15 +424,23 @@
       text-transform: uppercase;
       font-weight: 400;
     }
-    /* City name row — font size lives here on its own, separate from
-       the shared .ba-cell rule above, so it can be tuned independently
-       of the time/weather rows. */
+    /* City name row — shared alignment rules only. Font size is set
+       per-city below so each one can be edited independently. */
     .ba-clocks-table .ba-cell-city {
-      font-size: 13px;
       text-align: justify;
       text-align-last: justify;
       vertical-align: bottom;
-      padding-bottom: 0;
+      padding-top: 0;
+      padding-bottom: 10px;
+    }
+    .ba-clocks-table .ba-cell-city-london {
+      font-size: 13px;
+    }
+    .ba-clocks-table .ba-cell-city-ny {
+      font-size: 13px;
+    }
+    .ba-clocks-table .ba-cell-city-paris {
+      font-size: 13px;
     }
     .ba-clocks-table .ba-cell-time {
       font-size: 22px;
@@ -439,6 +448,7 @@
       text-transform: none;
       font-variant-numeric: tabular-nums;
       vertical-align: bottom;
+      padding-top: 0;
       padding-bottom: 0;
     }
     .ba-time-inner {
@@ -453,6 +463,7 @@
       text-transform: none;
       font-variant-numeric: tabular-nums;
       white-space: nowrap;
+      padding-bottom: 0;
     }
     .ba-icon {
       display: inline-block;
@@ -626,11 +637,11 @@
           </colgroup>
           <tbody>
             <tr>
-              <td class="ba-cell ba-cell-city" data-city="London">London</td>
+              <td class="ba-cell ba-cell-city ba-cell-city-london" data-city="London">London</td>
               <td class="ba-spacer"></td>
-              <td class="ba-cell ba-cell-city" data-city="NY">New York</td>
+              <td class="ba-cell ba-cell-city ba-cell-city-ny" data-city="NY">New York</td>
               <td class="ba-spacer"></td>
-              <td class="ba-cell ba-cell-city" data-city="Paris">Paris</td>
+              <td class="ba-cell ba-cell-city ba-cell-city-paris" data-city="Paris">Paris</td>
             </tr>
             <tr>
               <td class="ba-cell ba-cell-time" data-city="London" id="time-London"><span class="ba-time-inner"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></span></td>
@@ -762,7 +773,10 @@
   // identical. The two empty spacer columns are sized separately in CSS
   // (.ba-col-spacer) and left untouched here. Measured live rather than
   // hardcoded, since the real width depends on the page's actual
-  // font/letter-spacing.
+  // font/letter-spacing. NARROW_BY trims a bit off that measured width
+  // so the time's hh/mm don't spread too far apart.
+  const BA_COL_NARROW_BY = 14;
+
   function matchBaColumnWidths() {
     const table = document.querySelector('.ba-clocks-table');
     const cols = table ? table.querySelectorAll('.ba-col') : [];
@@ -777,7 +791,8 @@
     table.style.tableLayout = 'fixed';
 
     if (naturalWidth > 0) {
-      cols.forEach((col) => { col.style.width = naturalWidth + 'px'; });
+      const narrowedWidth = Math.max(0, naturalWidth - BA_COL_NARROW_BY);
+      cols.forEach((col) => { col.style.width = narrowedWidth + 'px'; });
     }
   }
 
