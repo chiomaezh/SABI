@@ -51,6 +51,15 @@
       padding-right: 1.5rem;
     }
 
+    /* The footer's own reference layout gives it the full 720px of usable
+       width (no padding eating into that box) — our shared .container
+       bakes 1.5rem of padding into its 720px max-width, leaving only
+       672px. Bump just the footer's wrapper back up so it matches,
+       without affecting the About text or Who We Work With sections. */
+    .container--footer {
+      max-width: 768px;
+    }
+
     .container-wide {
       width: 100%;
       padding-left: 2.5rem;
@@ -676,7 +685,7 @@
 
   <div class="full-divider"></div>
 
-  <div class="container">
+  <div class="container container--footer">
     <footer class="site-footer">
       <div class="footer-col">
         <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
