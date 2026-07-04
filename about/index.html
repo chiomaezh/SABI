@@ -954,6 +954,28 @@
         if (metaEl) metaEl.style.transform = `translateY(-${MOBILE_VERTICAL_NUDGE}px)`;
       });
     }
+
+    // Paris's city text can sit a hair higher or lower than London/New
+    // York's, because a different rendered font-size shifts where the
+    // glyph's visual top lands within its own line box. Measure the
+    // actual gap against London (read-only — London itself is never
+    // touched) and nudge only Paris's text vertically to close it,
+    // layered on top of whatever transform it already has.
+    (() => {
+      const londonCity = document.querySelector('#stationLondon .ba-station-city');
+      const parisCity = document.querySelector('#stationParis .ba-station-city');
+      if (!londonCity || !parisCity) return;
+
+      const londonTop = londonCity.getBoundingClientRect().top;
+      const parisTop = parisCity.getBoundingClientRect().top;
+      const verticalCorrection = londonTop - parisTop;
+
+      const currentTransform = parisCity.style.transform || '';
+      const match = currentTransform.match(/translate\(\s*(-?[\d.]+)px\s*,\s*(-?[\d.]+)px\s*\)/);
+      const tx = match ? match[1] : '0';
+      const ty = match ? parseFloat(match[2]) : 0;
+      parisCity.style.transform = `translate(${tx}px, ${ty + verticalCorrection}px)`;
+    })();
   }
 
   async function baInit() {
