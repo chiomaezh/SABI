@@ -246,34 +246,25 @@
       padding-bottom: 5rem;
     }
 
-    /* ── Manifesto (full page span) ──
-       The text column's RIGHT edge is pinned to line up with the RIGHT
-       edge of the header divider (which lives inside the centred 720px
-       .container, padded 1.5rem/24px each side). That reference point,
-       measured from the left of the viewport, is (100vw + 720px)/2 - 24px
-       — i.e. 50vw + 336px. Margin-left:auto (push right) plus a
-       margin-right of the complementary distance (50vw - 336px, measured
-       from the *right* of the viewport instead) lands the column's right
-       edge exactly there, for any viewport width, with no JS needed. */
+    /* ── Manifesto ──
+       Same width as the About section (lives inside .container), so the
+       label and text naturally line up with the container's own left/
+       right edges — no viewport-width math needed anymore. */
     .manifesto {
-      width: 100%;
-      padding-top: 3rem;
       padding-bottom: 6rem;
     }
     .manifesto-inner {
       display: grid;
       grid-template-columns: auto 1fr;
       align-items: start;
-      padding-left: calc(50vw - 336px);
     }
     .manifesto-label {
       margin-bottom: 0;
     }
     .manifesto-text {
       width: 400px;
-      max-width: calc(100% - 1.5rem);
+      max-width: 100%;
       margin-left: auto;
-      margin-right: calc(50vw - 336px);
       font-family: var(--font-body);
       font-weight: 400;
       font-size: 17px;
@@ -288,11 +279,9 @@
       margin-bottom: 0;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 650px) {
       .manifesto-inner {
         display: block;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
       }
       .manifesto-label {
         margin-bottom: 1.5rem;
@@ -301,7 +290,6 @@
         width: 100%;
         max-width: 100%;
         margin-left: 0;
-        margin-right: 0;
       }
     }
 
@@ -618,8 +606,8 @@
     </div>
   </div>
 
-  <!-- ── Section: Manifesto (full page span) ── -->
-  <section class="manifesto">
+  <!-- ── Section: Manifesto ── -->
+  <div class="container section manifesto">
     <div class="manifesto-inner">
       <h2 class="section-title manifesto-label">Manifesto<br>(Est. 2026)</h2>
       <div class="manifesto-text">
@@ -634,7 +622,7 @@
         </p>
       </div>
     </div>
-  </section>
+  </div>
 
   <div class="full-divider"></div>
 
