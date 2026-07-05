@@ -246,13 +246,72 @@
       padding-bottom: 5rem;
     }
 
+    /* ── Manifesto (full page span) ──
+       The text column's RIGHT edge is pinned to line up with the RIGHT
+       edge of the header divider (which lives inside the centred 720px
+       .container, padded 1.5rem/24px each side). That reference point,
+       measured from the left of the viewport, is (100vw + 720px)/2 - 24px
+       — i.e. 50vw + 336px. Margin-left:auto (push right) plus a
+       margin-right of the complementary distance (50vw - 336px, measured
+       from the *right* of the viewport instead) lands the column's right
+       edge exactly there, for any viewport width, with no JS needed. */
+    .manifesto {
+      width: 100%;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+    .manifesto-inner {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: start;
+      padding-left: calc(50vw - 336px);
+    }
+    .manifesto-label {
+      margin-bottom: 0;
+    }
+    .manifesto-text {
+      width: 400px;
+      max-width: calc(100% - 1.5rem);
+      margin-left: auto;
+      margin-right: calc(50vw - 336px);
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 17px;
+      line-height: 1.9;
+      color: var(--text);
+      text-align: justify;
+    }
+    .manifesto-text p {
+      margin-bottom: 1.5rem;
+    }
+    .manifesto-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 900px) {
+      .manifesto-inner {
+        display: block;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+      .manifesto-label {
+        margin-bottom: 1.5rem;
+      }
+      .manifesto-text {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+
     /* ── What We Do (dark, full-bleed) ── */
     .what-we-do {
       background: var(--text);
       padding-top: 3rem;
       padding-bottom: 3rem;
     }
-    .wwd-header { padding-bottom: 2rem; }
+    .wwd-header { padding-bottom: 0.75rem; }
     .wwd-row {
       display: flex;
       align-items: center;
@@ -546,8 +605,9 @@
     <div class="full-divider header-divider-inset"></div>
   </div>
 
-  <!-- ── Section 1: About (no title) ── -->
+  <!-- ── Section: About ── -->
   <div class="container section">
+    <h2 class="section-title">About</h2>
     <div class="page-body">
       <p>
         SABI is a London-based creative consultancy offering strategy and design for culture-shaping presence and storytelling.
@@ -555,17 +615,26 @@
       <p>
         We have a special interest in brands with a strong lifestyle, wellness, or social mission, and masstige to luxury positioning.
       </p>
-      <p>
-        A great signature is more than an aesthetic sign-off. If you were to strip the basic elements from many brands today – the logos, font packs, and colour schemes – you might be struck by the sameness and anonymity of what is left behind. We work with brands that want to change that. From the inside out.
-      </p>
-      <p>
-        We also believe that innovation and character shouldn’t be reserved for premium brands only; Our goal is to eliminate generic design and communication from everyday consumer experiences. No interaction is too casual or mundane to be considered and refined.
-      </p>
-      <p>
-        Your brand’s cultural currency is the sum of every impression made – on passerbys and returning customers alike. Every detail counts.
-      </p>
     </div>
   </div>
+
+  <!-- ── Section: Manifesto (full page span) ── -->
+  <section class="manifesto">
+    <div class="manifesto-inner">
+      <h2 class="section-title manifesto-label">Manifesto<br>(Est. 2026)</h2>
+      <div class="manifesto-text">
+        <p>
+          A great signature is more than an aesthetic sign-off. If you were to strip the basic elements from many brands today – the logos, font packs, and colour schemes – you might be struck by the sameness and anonymity of what is left behind. We work with brands that want to change that. From the inside out.
+        </p>
+        <p>
+          We also believe that innovation and character shouldn’t be reserved for premium brands only; Our goal is to eliminate generic design and communication from everyday consumer experiences. No interaction is too casual or mundane to be considered and refined.
+        </p>
+        <p>
+          Your brand’s cultural currency is the sum of every impression made – on passerbys and returning customers alike. Every detail counts.
+        </p>
+      </div>
+    </div>
+  </section>
 
   <div class="full-divider"></div>
 
