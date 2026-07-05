@@ -648,11 +648,11 @@
               <td class="ba-cell ba-cell-city ba-cell-city-paris" data-city="Paris"><span class="ba-city-inner"><span>P</span><span>a</span><span>r</span><span>i</span><span>s</span></span></td>
             </tr>
             <tr>
-              <td class="ba-cell ba-cell-time" data-city="London" id="time-London"><span class="ba-time-inner"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></span></td>
+              <td class="ba-cell ba-cell-time" data-city="London" id="time-London"><span class="ba-time-inner"><span data-h1>-</span><span data-h2>-</span><span class="ba-time-colon">:</span><span data-m1>-</span><span data-m2>-</span></span></td>
               <td class="ba-spacer"></td>
-              <td class="ba-cell ba-cell-time" data-city="NY" id="time-NY"><span class="ba-time-inner"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></span></td>
+              <td class="ba-cell ba-cell-time" data-city="NY" id="time-NY"><span class="ba-time-inner"><span data-h1>-</span><span data-h2>-</span><span class="ba-time-colon">:</span><span data-m1>-</span><span data-m2>-</span></span></td>
               <td class="ba-spacer"></td>
-              <td class="ba-cell ba-cell-time" data-city="Paris" id="time-Paris"><span class="ba-time-inner"><span data-hh>--</span><span class="ba-time-colon">:</span><span data-mm>--</span></span></td>
+              <td class="ba-cell ba-cell-time" data-city="Paris" id="time-Paris"><span class="ba-time-inner"><span data-h1>-</span><span data-h2>-</span><span class="ba-time-colon">:</span><span data-m1>-</span><span data-m2>-</span></span></td>
             </tr>
             <tr>
               <td class="ba-cell ba-cell-weather" data-city="London" id="weather-London"><span class="ba-icon" data-icon></span><span data-temp>--°C</span></td>
@@ -752,8 +752,10 @@
       minute: '2-digit'
     });
     const [hh, mm] = timeStr.split(':');
-    timeCell.querySelector('[data-hh]').textContent = hh;
-    timeCell.querySelector('[data-mm]').textContent = mm;
+    timeCell.querySelector('[data-h1]').textContent = hh[0];
+    timeCell.querySelector('[data-h2]').textContent = hh[1];
+    timeCell.querySelector('[data-m1]').textContent = mm[0];
+    timeCell.querySelector('[data-m2]').textContent = mm[1];
   }
 
   async function baUpdateWeather(city) {
