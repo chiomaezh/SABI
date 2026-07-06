@@ -251,6 +251,16 @@
       padding-bottom: 2.25rem;
     }
 
+    /* Desktop only: nudge About's top padding back up by 0.4rem to
+       compensate for the manifesto-text upward shift (see
+       .manifesto-text margin-top), keeping the same amount of content
+       visible above the fold as before that change. Mobile is untouched. */
+    @media (min-width: 651px) {
+      .section--about {
+        padding-top: 2.65rem;
+      }
+    }
+
     /* ── Manifesto ──
        Same width as the About section (lives inside .container), so the
        label and text naturally line up with the container's own left/
