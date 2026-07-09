@@ -411,7 +411,7 @@
 /* ── By Appointment (dark, full-bleed) ── */
     .by-appointment {
       background: var(--text);
-      padding-top: 5.5rem;
+      padding-top: 3rem;
       padding-bottom: 5.5rem;
     }
     .ba-inner {
@@ -586,7 +586,7 @@
 
     .services-hero {
       padding-top: 4rem;
-      padding-bottom: 4rem;
+      padding-bottom: 3rem;
     }
     .services-hero .page-body {
       margin: 0 auto;
@@ -594,7 +594,7 @@
     }
     .services-hero .page-body {
       max-width: 85%;
-      font-size: 19px;
+      font-size: 16px;
       font-weight: 400;
     }
     @media (max-width: 650px) {
@@ -604,21 +604,23 @@
       }
       .services-hero .page-body {
         max-width: 100%;
-        font-size: 17.5px;
+        font-size: 16px;
       }
     }
 
     .category-section {
-      padding-top: 4rem;
-      padding-bottom: 4rem;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
     }
+    /* Own class, styled like .section-title (mono, small, uppercase),
+       used specifically for the Brand / Experience / Production labels */
     .category-heading {
-      font-family: var(--font-body);
-      font-weight: 400;
-      font-size: 18px;
-      letter-spacing: 1.5px;
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 1.1;
+      letter-spacing: 1.3px;
       text-transform: uppercase;
-      line-height: 1.2;
       color: var(--text);
       margin-bottom: 2.2rem;
     }
@@ -641,33 +643,49 @@
       list-style: none;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.7rem;
     }
     .service-item summary::-webkit-details-marker { display: none; }
     .service-item summary::marker { content: ""; }
-    .service-item summary::before {
-      content: "+";
-      font-family: var(--font-mono);
-      font-size: 28px;
-      font-weight: 400;
-      line-height: 1;
-      color: var(--text);
+
+    .service-toggle {
+      position: relative;
+      width: 15px;
+      height: 15px;
       flex-shrink: 0;
+    }
+    .service-toggle::before,
+    .service-toggle::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      background: var(--text);
+      transform: translate(-50%, -50%);
+    }
+    .service-toggle::before {
+      width: 15px;
+      height: 1px;
+    }
+    .service-toggle::after {
+      width: 1px;
+      height: 15px;
       transition: transform 0.2s ease;
-      width: 1.1rem;
     }
-    .service-item.inactive summary::before {
-      color: #8B8C78;
+    details[open] .service-toggle::after {
+      transform: translate(-50%, -50%) scaleY(0);
+    }
+    .service-item.inactive .service-toggle::before,
+    .service-item.inactive .service-toggle::after {
+      background: #8B8C78;
       opacity: 0.65;
-    }
-    .service-item[open] summary::before,
-    .service-item details[open] summary::before {
-      content: "–";
     }
     .service-name {
       font-family: var(--font-body);
       font-weight: 400;
       font-size: 18px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
       color: var(--text);
     }
     a.service-name {
@@ -769,20 +787,20 @@
     <ul class="service-list">
       <li class="service-item inactive">
         <details>
-          <summary><span class="service-name">Brand DNA</span></summary>
+          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Brand DNA</span></summary>
           <p class="service-desc">Brand design covering identity, guidelines, and the core assets that hold it together.</p>
         </details>
       </li>
       <li class="service-item">
         <details>
-          <summary><span class="service-name">Brand Strategy</span></summary>
+          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Brand Strategy</span></summary>
           <p class="service-desc">A strategic audit of where your brand stands today, and where it&rsquo;s stretched thin.</p>
           <a href="https://sabi.london/services/brand-strategy/" class="service-more-link">More info →</a>
         </details>
       </li>
       <li class="service-item">
         <details>
-          <summary><span class="service-name">World Building</span></summary>
+          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">World Building</span></summary>
           <p class="service-desc">Brand strategy that expands into the wider world your brand lives inside.</p>
           <a href="https://sabi.london/services/world-building/" class="service-more-link">More info →</a>
         </details>
@@ -793,14 +811,14 @@
     <ul class="service-list">
       <li class="service-item">
         <details>
-          <summary><span class="service-name">Community &amp; Partnerships</span></summary>
+          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Community &amp; Partnerships</span></summary>
           <p class="service-desc">Relationship-building across your network, press, and partnerships.</p>
           <a href="https://sabi.london/services/community-and-partnerships/" class="service-more-link">More info →</a>
         </details>
       </li>
       <li class="service-item inactive">
         <details>
-          <summary><span class="service-name">Events</span></summary>
+          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Events</span></summary>
           <p class="service-desc">Programming, styling, and design for live events, from concept to room.</p>
         </details>
       </li>
@@ -810,20 +828,20 @@
     <ul class="service-list">
       <li class="service-item">
         <details>
-          <summary><span class="service-name">Copy</span></summary>
+          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Copy</span></summary>
           <p class="service-desc">Copywriting for brand and campaign messaging, written to sound like you.</p>
           <a href="https://sabi.london/services/copy/" class="service-more-link">More info →</a>
         </details>
       </li>
       <li class="service-item inactive">
         <details>
-          <summary><span class="service-name">Campaign</span></summary>
+          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Campaign</span></summary>
           <p class="service-desc">Creative direction for advertising campaigns, from idea to execution.</p>
         </details>
       </li>
       <li class="service-item inactive">
         <details>
-          <summary><span class="service-name">Editions</span></summary>
+          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Editions</span></summary>
           <p class="service-desc">Production of print collateral and merchandise, made to be kept.</p>
         </details>
       </li>
