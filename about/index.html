@@ -246,19 +246,17 @@
       padding-bottom: 5rem;
     }
 
-    /* About section: slightly reduced padding top and bottom */
+    /* About section: top padding now matches the Services page's
+       header-to-hero gap exactly (3rem mobile / 4rem desktop) */
     .section--about {
-      padding-top: 2.25rem;
+      padding-top: 3rem;
       padding-bottom: 2.25rem;
     }
 
-    /* Desktop only: nudge About's top padding back up by 0.4rem to
-       compensate for the manifesto-text upward shift (see
-       .manifesto-text margin-top), keeping the same amount of content
-       visible above the fold as before that change. Mobile is untouched. */
+    /* Desktop: match Services page's 4rem top padding */
     @media (min-width: 651px) {
       .section--about {
-        padding-top: 2.65rem;
+        padding-top: 4rem;
       }
     }
 
