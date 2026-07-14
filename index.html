@@ -198,6 +198,7 @@
       letter-spacing: 1px;
       color: #000000;
       font-weight: 400;
+      font-variant-numeric: tabular-nums;
     }
 
     .station-meta {
@@ -316,6 +317,12 @@
       img { max-width: 110px; }
 
       .site-nav { padding: 14px 20px; }
+
+      /* The desktop-only negative margin on Services (used to halve the
+         gap on wide screens) is too aggressive on narrower landscape
+         phone widths and was collapsing into About. Reset it here so
+         Services keeps its natural, non-overlapping spacing. */
+      .nav-link-services { margin-left: 0; }
 
       .site-footer {
         grid-template-columns: 1fr 1fr;
@@ -511,6 +518,18 @@
     }
 
     window.addEventListener('load', matchStationRowWidths);
+
+    // The very first measurement can run before the Typekit font
+    // ('owners-text') has actually finished loading — if it measures
+    // against the browser's fallback font instead, the font-size scale
+    // it calculates is wrong once the real font swaps in. Re-run once
+    // the real webfont is confirmed loaded to correct for that.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        matchStationRowWidths();
+        matchLeftColumnHeightToStation();
+      });
+    }
 
     // Debounced instead of running on every single resize tick — rotating
     // a phone fires a burst of resize events while the viewport is still
