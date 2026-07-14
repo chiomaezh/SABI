@@ -133,6 +133,12 @@
       gap: 8px;
       opacity: 0;
       transition: opacity 0.35s ease;
+      /* Small uniform nudge down to match the contact block's top/bottom —
+         purely visual (transform), doesn't touch layout, alignment, or
+         font-size, and applies consistently across every breakpoint since
+         it's on .station itself rather than a per-breakpoint wrapper.
+         Adjust this single value up/down if it needs to move further. */
+      transform: translateY(3px);
     }
 
     .station.is-ready {
@@ -153,6 +159,8 @@
       text-transform: uppercase;
       color: #000000;
       font-weight: 400;
+      position: relative;
+      top: -1px;
     }
 
     .station-time {
@@ -472,7 +480,17 @@
     }
 
     window.addEventListener('load', matchStationRowWidths);
-    window.addEventListener('resize', matchStationRowWidths);
+
+    // Debounced instead of running on every single resize tick — rotating
+    // a phone fires a burst of resize events while the viewport is still
+    // mid-transition, and measuring during that burst risks writing an
+    // unstable font-size value.
+    let stationResizeTimer;
+    function scheduleMatchStationRowWidths() {
+      clearTimeout(stationResizeTimer);
+      stationResizeTimer = setTimeout(matchStationRowWidths, 250);
+    }
+    window.addEventListener('resize', scheduleMatchStationRowWidths);
 
     // ── On mobile, centre the logo within the empty space between nav and footer ──
     function centreLogoInMainBlock() {
@@ -498,15 +516,23 @@
 
     // ── Desktop only: match total height of (description + contact) to the weather block ──
     function matchLeftColumnHeightToStation() {
-      if (window.innerWidth <= 760) return;
       const desc = document.querySelector('.footer-desc');
       const contact = document.querySelector('.footer-col-left');
       const station = document.querySelector('.station');
       if (!desc || !contact || !station) return;
 
-      // Reset both to CSS-defined base values before measuring
+      // Always clear any previously-written inline values FIRST, before the
+      // desktop-only check below. Rotating a phone to landscape can push its
+      // width over 760px, letting this function run and write a custom
+      // gap/margin for that wide layout — then rotating back to portrait
+      // (width <= 760) was hitting the early return below and leaving that
+      // leftover landscape-calculated spacing permanently baked in. This is
+      // the actual cause of the block appearing taller after rotating back.
       desc.style.marginBottom = '';
       station.style.gap = '';
+
+      if (window.innerWidth <= 760) return;
+
       const baseMarginBottom = parseFloat(getComputedStyle(desc).marginBottom);
       const baseStationGap = parseFloat(getComputedStyle(station).gap) || 8;
 
@@ -528,7 +554,21 @@
     }
 
     window.addEventListener('load', matchLeftColumnHeightToStation);
-    window.addEventListener('resize', matchLeftColumnHeightToStation);
+
+    let leftColumnResizeTimer;
+    function scheduleMatchLeftColumnHeightToStation() {
+      clearTimeout(leftColumnResizeTimer);
+      leftColumnResizeTimer = setTimeout(matchLeftColumnHeightToStation, 250);
+    }
+    window.addEventListener('resize', scheduleMatchLeftColumnHeightToStation);
+
+    // Settle delay after rotation, same reasoning as the station width matcher above.
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        matchStationRowWidths();
+        matchLeftColumnHeightToStation();
+      }, 300);
+    });
 
   </script>
 </body>
