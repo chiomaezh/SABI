@@ -94,7 +94,7 @@
       left: 0;
       display: flex;
       justify-content: space-between;
-      width: 33.33vw;
+      width: calc(20vw + 96px); /* was 33.33vw — narrower container = ~0.6x the space-between gap, same on both sides by construction */
       padding: 28px 32px;
       opacity: 0;
       animation: fadeIn 1.8s ease forwards;
@@ -341,7 +341,7 @@
       .ticker-seq { font-size: 12px; letter-spacing: 1.6px; }
       .ticker-seq > span { padding: 0 18px; }
 
-      .site-nav { top: 24px; padding: 36px 20px 14px 20px; }
+      .site-nav { top: 24px; padding: 36px 20px 14px 20px; width: 33.33vw; }
 
       .site-footer {
         grid-template-columns: 1fr 1fr;
