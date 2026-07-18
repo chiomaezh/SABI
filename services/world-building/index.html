@@ -13,6 +13,11 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
     :root {
       --bg: #FAFBE3;
       --surface: #FAFBE3;
@@ -72,6 +77,19 @@
         margin-right: 0;
         padding-left: 0;
         padding-right: 0;
+      }
+    }
+
+    /* .service-title's font-size uses a vw-based clamp() for its desktop/
+       tablet scaling. That's fine in portrait, where 3.8vw stays small and
+       hits the 21px floor — but on phone landscape the viewport is much
+       wider, so the same formula computes a noticeably larger size (up to
+       the 27px ceiling), even though it's still "a phone". Pin it back to
+       the portrait value here so phone stays visually consistent in both
+       orientations. */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .service-title {
+        font-size: 21px;
       }
     }
 
