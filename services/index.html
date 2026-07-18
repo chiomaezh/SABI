@@ -1083,7 +1083,7 @@
       baUpdateClock(city);
       setInterval(() => baUpdateClock(city), 1000);
       return baUpdateWeather(city).then(() => {
-        setInterval(() => baUpdateWeather(city), 15 * 60 * 1000);
+        setInterval(() => baUpdateWeather(city), 5 * 60 * 1000);
       });
     });
     await Promise.all(weatherPromises);
