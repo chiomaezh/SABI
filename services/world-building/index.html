@@ -41,6 +41,40 @@
 
     .page { width: 100%; max-width: 720px; }
 
+    /* ── Full-bleed utility ──
+       Used for the header row and the footer's top divider so both are
+       guaranteed to be exactly the same width. Base state matches the
+       normal centered .page column (i.e. mobile is unaffected, since on
+       mobile .page is already just 100% of the available width). On
+       desktop/tablet it breaks out of body's 1.5rem padding and re-adds
+       its own small 2.5rem padding, reaching much closer to the true
+       page edges. Phone landscape is reset back to the normal capped
+       width so it stays identical to portrait. */
+    .full-bleed-row {
+      width: 100%;
+      max-width: 720px;
+    }
+    @media (min-width: 721px) {
+      .full-bleed-row {
+        max-width: none;
+        width: calc(100% + 3rem);
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+      }
+    }
+    @media (min-width: 721px) and (orientation: landscape) and (max-height: 500px) {
+      .full-bleed-row {
+        max-width: 720px;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
     /* ── Header ── */
     .site-header {
       display: flex;
@@ -162,13 +196,15 @@
     }
 
     .section-label {
-      font-family: var(--font-body);
-      font-weight: 400;
+      font-family: var(--font-mono);
+      font-weight: 300;
       font-size: 15px;
+      line-height: 1.1;
       text-transform: uppercase;
-      letter-spacing: 2.5px;
+      letter-spacing: 1.3px;
       color: var(--text);
-      margin-bottom: 1.6rem;
+      margin-top: 3.8rem;
+      margin-bottom: 1.8rem;
     }
 
     /* ── Approach items ── */
@@ -191,13 +227,13 @@
       font-size: 14px;
       line-height: 1.8;
       color: var(--text);
+      max-width: 75%;
     }
 
     /* ── Service / pricing table ── */
     .phase-block {
       margin-bottom: 2rem;
     }
-    .phase-block:last-child { margin-bottom: 0; }
     .phase-title {
       font-family: var(--font-body);
       font-weight: 400;
@@ -232,7 +268,7 @@
     }
     .phase-list {
       list-style: none;
-      margin-top: 0.4rem;
+      margin-top: 1.45rem;
     }
     .phase-list li {
       font-family: var(--font-body);
@@ -287,13 +323,16 @@
 
     /* ── Site footer ── */
 .site-footer {
-  border-top: 0.5px solid var(--border);
   padding-top: 1.5rem;
-  margin-top: 4rem;
   display: grid;
   grid-template-columns: 1.4fr auto auto;
   column-gap: 0.75rem;
   align-items: start;
+}
+
+.footer-divider {
+  border-top: 0.5px solid var(--border);
+  margin-top: 4rem;
 }
 
 .footer-col {
@@ -375,8 +414,7 @@
   </style>
 </head>
 <body>
-<div class="page">
-
+<div class="full-bleed-row">
   <header class="site-header">
     <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
       <span></span>
@@ -394,6 +432,9 @@
   </nav>
 
   <div class="header-divider"></div>
+</div>
+
+<div class="page">
 
   <main>
     <div class="service-nav-top">
@@ -407,8 +448,6 @@
       moves through your brand universe. This strategy exercise follows a fixed structure, with
       scope adjusted to the needs of your business.
     </p>
-
-    <div class="divider"></div>
 
     <p class="section-label">Our Approach</p>
 
@@ -465,8 +504,6 @@
       </p>
     </div>
 
-    <div class="divider"></div>
-
     <p class="section-label">Service</p>
 
     <div class="phase-block">
@@ -496,7 +533,13 @@
       <a href="https://form.typeform.com/to/ctPwVdo0" target="_blank" rel="noopener" class="btn btn-primary">Start the questionnaire</a>
     </div>
   </main>
+</div>
 
+<div class="full-bleed-row">
+  <div class="footer-divider"></div>
+</div>
+
+<div class="page">
   <footer class="site-footer">
   <div class="footer-col">
     <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
