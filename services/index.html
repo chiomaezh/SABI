@@ -1044,7 +1044,7 @@
       weatherCell.querySelector('[data-temp]').textContent = `${temp}°C`;
       const iconName = baIconForCode(code, isDay);
       weatherCell.querySelector('[data-icon]').innerHTML =
-        `<img src="/icons-cream/${iconName}.png" alt="" width="256" height="256">`;
+        `<img src="/icons-cream/${iconName}.png" alt="" width="256" height="256" onerror="this.style.display='none'">`;
     } catch (e) {
       weatherCell.querySelector('[data-temp]').textContent = '—';
     }
