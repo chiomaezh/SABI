@@ -13,6 +13,11 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
     :root {
       --bg: #FAFBE3;
       --surface: #FAFBE3;
@@ -72,6 +77,652 @@
         margin-right: 0;
         padding-left: 0;
         padding-right: 0;
+      }
+    }
+
+    /* .service-title's font-size uses a vw-based clamp() for its desktop/
+       tablet scaling. That's fine in portrait, where 3.8vw stays small and
+       hits the 21px floor — but on phone landscape the viewport is much
+       wider, so the same formula computes a noticeably larger size (up to
+       the 27px ceiling), even though it's still "a phone". Pin it back to
+       the portrait value here so phone stays visually consistent in both
+       orientations. */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .service-title {
+        font-size: 21px;
+      }
+    }
+
+    /* ── Header ── */
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+    }
+    .header-divider {
+      border-top: 0.5px solid var(--border);
+      margin-bottom: 1.75rem;
+    }
+    .site-name {
+      font-family: "all-round-gothic", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .site-tag {
+      font-family: var(--font-body);
+      font-weight: 350;
+      font-size: 18px;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* ── Hamburger menu ── */
+    .menu-btn {
+      position: relative;
+      width: 22px;
+      height: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .menu-btn span {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--text);
+      transition: transform 0.25s ease, top 0.25s ease;
+    }
+    .menu-btn span:first-child { top: 2px; }
+    .menu-btn span:last-child { top: 12px; }
+    .menu-btn.open span { height: 1.8px; }
+    .menu-btn.open span:first-child { top: 7px; transform: rotate(45deg); }
+    .menu-btn.open span:last-child { top: 7px; transform: rotate(-45deg); }
+    .menu-accordion {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .menu-accordion.open { max-height: 220px; }
+    .menu-list {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 1rem;
+    }
+    .menu-list a {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.5rem 0;
+    }
+
+    /* ── Back to services nav (same visual language as game pagination) ── */
+    .service-nav-top {
+      display: flex;
+      margin-top: 0;
+      margin-bottom: 3rem;
+    }
+    .service-nav-top a {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 0.5px solid var(--border);
+      padding-bottom: 2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .service-nav-top a:hover { opacity: 0.7; }
+
+    /* ── Service header ── */
+    .service-title {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: clamp(21px, 3.8vw, 27px);
+      line-height: 1.1;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 1.4rem;
+    }
+    .service-overview {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.9;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── Section divider ── */
+    .divider {
+      border-top: 0.5px solid var(--border);
+      margin: 2.5rem 0;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      color: var(--text);
+      margin-top: 3.8rem;
+      margin-bottom: 1.8rem;
+    }
+
+    /* ── Approach items ── */
+    .approach-item {
+      margin-bottom: 1.8rem;
+    }
+    .approach-item:last-child { margin-bottom: 0; }
+    .approach-number {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .approach-desc {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text);
+      max-width: 75%;
+    }
+    .approach-list {
+      list-style: none;
+      margin-top: 0.7rem;
+    }
+    .approach-list li {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 1.9;
+      color: var(--text);
+      padding-left: 1rem;
+      position: relative;
+    }
+    .approach-list li::before {
+      content: "+";
+      position: absolute;
+      left: 0;
+    }
+
+    /* ── Service / pricing table ── */
+    .phase-block {
+      margin-bottom: 2rem;
+    }
+    .phase-title {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.9rem;
+    }
+    .phase-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      padding: 0.55rem 0;
+    }
+    .phase-row-text {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .phase-row-price {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 13.5px;
+      letter-spacing: 0.5px;
+      color: var(--text);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .phase-list {
+      list-style: none;
+      margin-top: 1.45rem;
+    }
+    .phase-list li {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13.5px;
+      line-height: 1.9;
+      color: var(--text);
+      padding-left: 1rem;
+      position: relative;
+    }
+    .phase-list li::before {
+      content: "–";
+      position: absolute;
+      left: 0;
+    }
+    .phase-price-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+    .phase-footnote {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-style: italic;
+      font-size: 13.5px;
+      color: var(--text);
+      margin-top: 1rem;
+      line-height: 1.7;
+    }
+
+    /* ── CTA ── */
+    .cta-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+    .btn {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 12px 22px;
+      border-radius: 0;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-primary {
+      color: var(--found-text);
+      background: #2E000D;
+      border: 0.5px solid #2E000D;
+    }
+    .btn-primary:hover { background: #1f0009; }
+
+    /* ── Site footer ── */
+.site-footer {
+  padding-top: 1.5rem;
+  display: grid;
+  grid-template-columns: 1.4fr auto auto;
+  column-gap: 0.75rem;
+  align-items: start;
+}
+
+.footer-divider {
+  border-top: 0.5px solid var(--border);
+  margin-top: 4rem;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+}
+
+.footer-desc {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text);
+  margin-bottom: 0.9rem;
+  margin-top: -0.2em;
+}
+
+.footer-copyright {
+  font-family: var(--font-mono);
+  font-weight: 300;
+  font-size: 14px;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+
+.footer-heading {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 0.7rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.footer-links a {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 13px;
+  color: var(--text);
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.footer-col--services {
+  margin-left: 2rem;
+}
+
+.footer-col--services .footer-links a {
+  text-transform: uppercase;
+}
+
+@media (max-width: 500px) {
+  .site-footer {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1rem;
+    row-gap: 1.75rem;
+  }
+  .footer-col:first-child {
+    grid-column: 1 / -1;
+  }
+  .footer-col--services {
+    margin-left: 0;
+  }
+  .footer-links a {
+    white-space: normal;
+  }
+  .footer-copyright {
+    font-size: 12px;
+  }
+}
+  </style>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9ZHK592471"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9ZHK592471');
+</script>
+
+</head>
+<body>
+<div class="full-bleed-row">
+  <header class="site-header">
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+    </button>
+    <a href="https://sabi.london/" class="site-name">S A B I</a>
+  </header>
+
+  <nav class="menu-accordion" id="menuAccordion">
+    <div class="menu-list">
+      <a href="https://sabi.london/about">About</a>
+      <a href="https://sabi.london/services/">Services</a>
+      <a href="https://play.sabi.london/word-search/">Play</a>
+    </div>
+  </nav>
+
+  <div class="header-divider"></div>
+</div>
+
+<div class="page">
+
+  <main>
+    <div class="service-nav-top">
+      <a href="https://sabi.london/services/">← All Services</a>
+    </div>
+
+    <h1 class="service-title">Community &amp; Partnerships</h1>
+    <p class="service-overview">
+      Strategy for discoverability and cultural currency. Analysing your brand identity, market
+      segment, and short term goals to curate a bespoke dossier of 50 industry contacts to
+      platform and endorse your brand. Looking beyond the biggest names, and redirecting you to
+      more niche, specialised leads. This service follows a fixed structure and rate.
+    </p>
+
+    <p class="section-label">Our Approach</p>
+
+    <div class="approach-item">
+      <p class="approach-number">01 — Brand Positioning</p>
+      <p class="approach-desc">
+        Mapping your brand alongside 15 direct competitor brands. Identifying the cultural cues
+        and associations that shape your brand identity.
+      </p>
+    </div>
+
+    <div class="approach-item">
+      <p class="approach-number">02 — Discoverability</p>
+      <p class="approach-desc">
+        Defining the profile of your target customer or client. Notes on visibility, narrative
+        consistency, community signals, and market reach across all acquisition channels.
+      </p>
+    </div>
+
+    <div class="approach-item">
+      <p class="approach-number">03 — Whitespace</p>
+      <p class="approach-desc">
+        Reviewing your short-term business objectives. Scouting untapped market opportunities,
+        unmet customer or client needs, and potential to differentiate from competitors.
+      </p>
+    </div>
+
+    <div class="approach-item">
+      <p class="approach-number">04 — Strategic Alignment</p>
+      <p class="approach-desc">
+        Identifying 15 complementary brands — indirect competitors or peers who share your
+        target audience — for collaborative projects and shared initiatives that boost cultural
+        relevance.
+      </p>
+    </div>
+
+    <div class="approach-item">
+      <p class="approach-number">05 — Referrals</p>
+      <p class="approach-desc">
+        A dossier of 50 industry contacts curated to support the growth, visibility, and cultural
+        integration of your brand. Leads are drawn from across the following categories,
+        according to your business's priorities:
+      </p>
+      <ul class="approach-list">
+        <li>Press &amp; Media</li>
+        <li>Sales &amp; Merchandising</li>
+        <li>Concierge Services &amp; Booking Platforms</li>
+        <li>Members' Clubs &amp; Community Spaces</li>
+        <li>Influencer Partnerships</li>
+        <li>VIP &amp; Guest Network</li>
+        <li>PR &amp; Talent Management</li>
+        <li>Awards &amp; Accreditations</li>
+      </ul>
+    </div>
+
+    <p class="section-label">Service</p>
+
+    <div class="phase-block">
+      <p class="phase-title">Phase I</p>
+      <div class="phase-row">
+        <p class="phase-row-text">Pre-consultation questionnaire</p>
+        <p class="phase-row-price">FREE</p>
+      </div>
+      <div class="phase-row">
+        <p class="phase-row-text">First consultation up to 45 minutes to outline your priorities and objectives</p>
+        <p class="phase-row-price">£75</p>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <p class="phase-title">Phase II</p>
+      <ul class="phase-list">
+        <li>Up to 3 hours of meeting time for analysis and strategy</li>
+        <li>A dossier of 50 industry contact referrals</li>
+        <li class="phase-price-row">
+          <span>4–6 weeks delivery</span>
+          <span class="phase-row-price">£2700</span>
+    </li>
+  </ul>
+</div>
+
+    <div class="cta-row">
+      <a href="https://form.typeform.com/to/Doak3mPe" target="_blank" rel="noopener" class="btn btn-primary">Start the questionnaire</a>
+    </div>
+  </main>
+</div>
+
+<div class="full-bleed-row">
+  <div class="footer-divider"></div>
+</div>
+
+<div class="page">
+<footer class="site-footer">
+  <div class="footer-col">
+    <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
+    <p class="footer-copyright">© 2026 SABI London</p>
+  </div>
+
+  <div class="footer-col">
+    <p class="footer-heading">Contact</p>
+    <div class="footer-links">
+      <a href="mailto:office@sabi.london">office@sabi.london</a>
+      <a href="tel:+447400192837">+44 7400 192837</a>
+      <a href="https://calendar.app.google/itHV85cwLfoDmH7x5">OOO Hours</a>
+    </div>
+  </div>
+
+  <div class="footer-col footer-col--services">
+    <p class="footer-heading">Services</p>
+    <div class="footer-links">
+      <a href="https://sabi.london/services/brand-strategy">Brand Strategy</a>
+      <a href="https://sabi.london/services/world-building">World Building</a>
+      <a href="https://sabi.london/services/copy">Copy</a>
+      <a href="https://sabi.london/services/community-and-partnerships">Community &amp; Partnerships</a>
+    </div>
+  </div>
+</footer>
+  
+</div>
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const menuAccordion = document.getElementById('menuAccordion');
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = menuAccordion.classList.toggle('open');
+    menuBtn.classList.toggle('open', isOpen);
+    menuBtn.setAttribute('aria-expanded', isOpen);
+  });
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="https://use.typekit.net/bwp0bbg.css">
+
+  <title>Community & Partnerships — SABI</title>
+  <meta name="description" content="Strategy for discoverability and cultural currency. Analysing your brand identity, market segment, and short term goals to curate a bespoke dossier of 50 industry contacts to platform and endorse your brand." />
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    :root {
+      --bg: #FAFBE3;
+      --surface: #FAFBE3;
+      --border: #423A3A;
+      --border-light: #423A3A;
+      --text: #211D1D;
+      --found-bg: #211D1D;
+      --found-text: #FAFBE3;
+      --select-bg: #E8E9C8;
+      --select-text: #211D1D;
+      --font-body: 'owners-text', sans-serif;
+      --font-mono: 'gemeli-mono', serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 350;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    .page { width: 100%; max-width: 720px; }
+
+    /* ── Full-bleed utility ──
+       Used for the header row and the footer's top divider so both are
+       guaranteed to be exactly the same width. Base state matches the
+       normal centered .page column (i.e. mobile is unaffected, since on
+       mobile .page is already just 100% of the available width). On
+       desktop/tablet it breaks out of body's 1.5rem padding and re-adds
+       its own small 2.5rem padding, reaching much closer to the true
+       page edges. Phone landscape is reset back to the normal capped
+       width so it stays identical to portrait. */
+    .full-bleed-row {
+      width: 100%;
+      max-width: 720px;
+    }
+    @media (min-width: 721px) {
+      .full-bleed-row {
+        max-width: none;
+        width: calc(100% + 3rem);
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+      }
+    }
+    @media (min-width: 721px) and (orientation: landscape) and (max-height: 500px) {
+      .full-bleed-row {
+        max-width: 720px;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    /* .service-title's font-size uses a vw-based clamp() for its desktop/
+       tablet scaling. That's fine in portrait, where 3.8vw stays small and
+       hits the 21px floor — but on phone landscape the viewport is much
+       wider, so the same formula computes a noticeably larger size (up to
+       the 27px ceiling), even though it's still "a phone". Pin it back to
+       the portrait value here so phone stays visually consistent in both
+       orientations. */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .service-title {
+        font-size: 21px;
       }
     }
 
