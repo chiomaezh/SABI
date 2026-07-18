@@ -515,7 +515,7 @@
     updateClock();
     updateWeather();
     setInterval(updateClock, 1000);
-    setInterval(updateWeather, 15 * 60 * 1000); // refresh weather every 15 min
+    setInterval(updateWeather, 5 * 60 * 1000); // refresh weather every 5 min
 
     // ── Force all three station rows (city/time/meta) to share the exact same width ──
     function matchStationRowWidths() {
