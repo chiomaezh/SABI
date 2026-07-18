@@ -499,7 +499,7 @@
         panel.querySelector('[data-temp]').textContent = `${temp}°C`;
         const iconName = iconForCode(code, isDay);
         panel.querySelector('[data-icon]').innerHTML =
-          `<img src="icons/${iconName}.png" alt="" width="256" height="256">`;
+          `<img src="icons/${iconName}.png" alt="" width="256" height="256" onerror="this.style.display='none'">`;
       } catch (e) {
         panel.querySelector('[data-temp]').textContent = '—';
       } finally {
