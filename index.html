@@ -11,10 +11,21 @@
   <style>
     * { box-sizing: border-box; }
 
+    ::selection {
+      background: var(--text-select-bg);
+      color: var(--text-select-text);
+    }
+    ::-moz-selection {
+      background: var(--text-select-bg);
+      color: var(--text-select-text);
+    }
+
     :root {
       --bg: #FAFBE3;
       --text: #211D1D;
       --border: #423A3A;
+      --text-select-bg: #170006;
+      --text-select-text: #FFFFFF;
       --font-body: 'owners-text', sans-serif;
       --font-mono: 'gemeli-mono', serif;
     }
