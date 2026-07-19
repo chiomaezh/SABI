@@ -165,13 +165,28 @@
       letter-spacing: 2px;
     }
 
-    /* ── Back to services nav (same visual language as game pagination) ── */
-    .service-nav-top {
-      display: flex;
-      margin-top: 0;
-      margin-bottom: 3rem;
+    /* ── Back to services nav + title row ──
+       Below 1200px there usually isn't a real margin to work with, so the
+       back link stacks above the title exactly as before — this keeps the
+       title itself untouched at every width. From 1200px up, there's
+       enough empty margin beside the 720px content column for the back
+       link to live in it: .title-full-row breaks out of the page column
+       the same way the header's full-bleed-row does (same 2.5rem inset),
+       then a 3-column grid puts the back link in the left margin column
+       and the title in a center column that lines up exactly with .page
+       below it (both resolve to the same (100vw - 720px)/2 inset, so the
+       title never moves). */
+    .title-full-row {
+      width: 100%;
+      max-width: 720px;
+      margin-bottom: 1.4rem;
     }
-    .service-nav-top a {
+    .title-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .back-link {
       font-family: var(--font-body);
       font-weight: 400;
       font-size: 12px;
@@ -184,8 +199,35 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
+      align-self: flex-start;
     }
-    .service-nav-top a:hover { opacity: 0.7; }
+    .back-link:hover { opacity: 0.7; }
+    @media (min-width: 1200px) {
+      .title-full-row {
+        max-width: none;
+        width: calc(100% + 3rem);
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+      }
+      .title-grid {
+        display: grid;
+        grid-template-columns: 1fr minmax(0, 720px) 1fr;
+        align-items: start;
+        column-gap: 1.5rem;
+      }
+      .back-link {
+        grid-column: 1;
+        justify-self: start;
+        margin-top: 6px;
+      }
+      .service-title {
+        grid-column: 2;
+        margin-top: 3rem;
+      }
+    }
 
     /* ── Service header ── */
     .service-title {
@@ -196,7 +238,7 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--text);
-      margin-bottom: 1.4rem;
+      margin-bottom: 0;
     }
     .service-overview {
       font-family: var(--font-body);
@@ -246,6 +288,8 @@
       line-height: 1.8;
       color: var(--text);
       max-width: 75%;
+      text-align: justify;
+      text-justify: inter-word;
     }
 
     /* ── Service / pricing table ── */
@@ -452,14 +496,16 @@
   <div class="header-divider"></div>
 </div>
 
+<div class="title-full-row">
+  <div class="title-grid">
+    <a href="https://sabi.london/services/" class="back-link">← All Services</a>
+    <h1 class="service-title">World Building</h1>
+  </div>
+</div>
+
 <div class="page">
 
   <main>
-    <div class="service-nav-top">
-      <a href="https://sabi.london/services/">← All Services</a>
-    </div>
-
-    <h1 class="service-title">World Building</h1>
     <p class="service-overview">
       Deep research to map your brand's position in the cultural landscape. Profiling your
       audience, and constructing a clear model for how your customer discovers, enters, and
