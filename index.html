@@ -53,37 +53,143 @@
       z-index: 10;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      padding: 0 20px 0 32px;
       opacity: 0;
       animation: fadeIn 1.8s ease forwards;
     }
 
-    .ticker-track {
-      display: flex;
-      width: max-content;
-      animation: ticker-scroll 34s linear infinite;
-    }
-
-    .ticker-seq {
+    /* ── Typewriter quote (replaces the old scrolling reel) ── */
+    .ticker-quote-wrap {
+      flex: 1 1 auto;
+      min-width: 0;
       display: flex;
       align-items: center;
-      white-space: nowrap;
+      justify-content: flex-start;
+      overflow: hidden;
       font-family: var(--font-mono);
       font-weight: 300;
       font-size: 13.5px;
       letter-spacing: 1.8px;
-      text-transform: uppercase;
+      line-height: 1;
       color: var(--bg);
     }
 
-    .ticker-seq > span { padding: 0 50px; }
+    .ticker-quote {
+      font: inherit;
+      letter-spacing: inherit;
+      color: inherit;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: clip;
+    }
 
-    @keyframes ticker-scroll {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
+    .ticker-cursor {
+      display: inline-block;
+      align-self: center;
+      width: 0.13em;
+      height: 1.35em;
+      margin-left: 3px;
+      background: currentColor;
+      animation: cursor-blink 0.9s step-end infinite;
+    }
+
+    @keyframes cursor-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .ticker-track { animation: none; }
+      .ticker-cursor { animation: none; }
+    }
+
+    /* ── Send icon, top right of the strip, links to Substack ── */
+    .ticker-icon-btn {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      margin-left: 12px;
+      padding: 0;
+      background: none;
+      border: none;
+      color: var(--bg);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .ticker-icon-btn svg {
+      width: 22px;
+      height: 22px;
+      display: block;
+      fill: var(--bg);
+      shape-rendering: geometricPrecision;
+    }
+
+    .ticker-icon-btn:focus-visible {
+      outline: 1px solid var(--bg);
+      outline-offset: 2px;
+    }
+
+    /* ── Lightbox (blank shell — wire up Klaviyo or a form here later) ── */
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(33, 29, 29, 0.75);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+
+    .lightbox-overlay.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox-box {
+      position: relative;
+      width: min(480px, 88vw);
+      min-height: 320px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 48px 32px 32px;
+      transform: translateY(12px);
+      transition: transform 0.3s ease;
+    }
+
+    .lightbox-overlay.is-open .lightbox-box {
+      transform: translateY(0);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    /* Placeholder content — swap this inner markup for the Klaviyo embed */
+    .lightbox-placeholder {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--border);
     }
 
     /* ── Top navigation ── */
@@ -116,9 +222,8 @@
     }
 
     @media (max-width: 560px) {
-      .ticker { height: 36px; }
-      .ticker-seq { font-size: 12px; letter-spacing: 1.6px; }
-      .ticker-seq > span { padding: 0 18px; }
+      .ticker { height: 36px; padding: 0 12px 0 20px; }
+      .ticker-quote-wrap { font-size: 12px; letter-spacing: 1.6px; }
 
       .site-nav {
         top: 30px;
@@ -333,9 +438,8 @@
     @media (orientation: landscape) and (max-height: 500px) {
       img { max-width: 110px; }
 
-      .ticker { height: 36px; }
-      .ticker-seq { font-size: 12px; letter-spacing: 1.6px; }
-      .ticker-seq > span { padding: 0 18px; }
+      .ticker { height: 36px; padding: 0 12px 0 20px; }
+      .ticker-quote-wrap { font-size: 12px; letter-spacing: 1.6px; }
 
       .site-nav { top: 24px; padding: 36px 20px 14px 20px; width: 33.33vw; }
 
@@ -392,22 +496,22 @@
 </script>
 </head>
 <body>
-  <div class="ticker" aria-hidden="true">
-    <div class="ticker-track">
-      <div class="ticker-seq">
-        <span>No detail too casual</span>
-        <span>Signed, on and off paper</span>
-        <span>We saw you see it first</span>
-        <span>Tuesday afternoons are cancelled</span>
-        <span>The business of good impressions</span>
-      </div>
-      <div class="ticker-seq">
-        <span>No detail too casual</span>
-        <span>Signed, on and off paper</span>
-        <span>We saw you see it first</span>
-        <span>Tuesday afternoons are cancelled</span>
-        <span>The business of good impressions</span>
-      </div>
+  <div class="ticker">
+    <div class="ticker-quote-wrap">
+      <span class="ticker-quote" id="tickerQuote" aria-live="polite"></span><span class="ticker-cursor" aria-hidden="true"></span>
+    </div>
+    <a class="ticker-icon-btn" href="https://offpaper.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Subscribe on Substack">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M3,6 L21,12 L3,18 L6.2,12 Z"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="lightbox-overlay" id="smsLightbox" role="dialog" aria-modal="true" aria-label="Text prompt sign up">
+    <div class="lightbox-box">
+      <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+      <!-- Blank on purpose — drop the Klaviyo SMS sign-up embed (or your own form) in here -->
+      <div class="lightbox-placeholder"></div>
     </div>
   </div>
 
@@ -451,6 +555,82 @@
   </footer>
 
   <script>
+    // ── Typewriter quote reel (replaces the old scrolling ticker) ──
+    const TICKER_QUOTES = [
+      'No detail too casual',
+      'Signed, on and off paper',
+      'We saw you see it first',
+      'Tuesday afternoons are cancelled',
+      'The business of good impressions'
+      // Add a 6th quote here as another string in the array, if needed.
+    ];
+
+    const TYPE_SPEED_MS = 83;      // per character, typing (1.5x slower than before)
+    const DELETE_SPEED_MS = 45;    // per character, deleting (1.5x slower than before)
+    const HOLD_MS = 5000;          // pause once fully typed
+    const GAP_MS = 400;            // pause once fully deleted, before next quote
+
+    const tickerQuoteEl = document.getElementById('tickerQuote');
+
+    function typewriterLoop(index = 0) {
+      const quote = TICKER_QUOTES[index];
+      let charIndex = 0;
+
+      function typeChar() {
+        tickerQuoteEl.textContent = quote.slice(0, charIndex);
+        charIndex++;
+        if (charIndex <= quote.length) {
+          setTimeout(typeChar, TYPE_SPEED_MS);
+        } else {
+          setTimeout(deleteChar, HOLD_MS);
+        }
+      }
+
+      function deleteChar() {
+        charIndex--;
+        tickerQuoteEl.textContent = quote.slice(0, charIndex);
+        if (charIndex > 0) {
+          setTimeout(deleteChar, DELETE_SPEED_MS);
+        } else {
+          const nextIndex = (index + 1) % TICKER_QUOTES.length;
+          setTimeout(() => typewriterLoop(nextIndex), GAP_MS);
+        }
+      }
+
+      typeChar();
+    }
+
+    if (tickerQuoteEl && TICKER_QUOTES.length) {
+      typewriterLoop(0);
+    }
+
+    // ── Lightbox (currently unused — text icon is just an image for now.
+    //    Wire openLightbox() up to a trigger again whenever you're ready.) ──
+    const smsLightbox = document.getElementById('smsLightbox');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    function openLightbox() {
+      smsLightbox.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      smsLightbox.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+
+    smsLightbox.addEventListener('click', (e) => {
+      if (e.target === smsLightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && smsLightbox.classList.contains('is-open')) {
+        closeLightbox();
+      }
+    });
+
     // ── Hairline weather icons, matched to Open-Meteo WMO weather codes ──
     const ICONS = {
       clear: 'clear',
