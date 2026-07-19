@@ -48,6 +48,37 @@
 
     .page { width: 100%; max-width: 720px; }
 
+    /* ── Full-bleed row (header/footer dividers) ──
+       Base state matches the normal centered .page column (mobile is
+       unaffected). On desktop/tablet it breaks out of body's 1.5rem
+       padding and re-adds its own small 2.5rem padding, reaching much
+       closer to the true page edges. Phone landscape is reset back to
+       the normal capped width so it stays identical to portrait. */
+    .full-bleed-row {
+      width: 100%;
+      max-width: 720px;
+    }
+    @media (min-width: 721px) {
+      .full-bleed-row {
+        max-width: none;
+        width: calc(100% + 3rem);
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+      }
+    }
+    @media (min-width: 721px) and (orientation: landscape) and (max-height: 500px) {
+      .full-bleed-row {
+        max-width: 720px;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
     /* ── Header ── */
     .site-header {
       display: flex;
@@ -150,7 +181,6 @@
   line-height: 1.9;
   margin-bottom: 2rem;
   padding-bottom: 2rem;
-  border-bottom: 0.5px solid var(--border);
 }
     /* ── Flow ── */
     .flow {
@@ -213,7 +243,7 @@
     }
 
     .branch-answer {
-      font-family: var(--font-body);
+      font-family: var(--font-mono);
       font-weight: 400;
       font-size: 13px;
       letter-spacing: 1px;
@@ -334,10 +364,12 @@
     }
 
     /* ── Site footer ── */
-.site-footer {
+.footer-divider {
   border-top: 0.5px solid var(--border);
-  padding-top: 1.5rem;
   margin-top: 4rem;
+}
+.site-footer {
+  padding-top: 1.5rem;
   display: grid;
   grid-template-columns: 1.4fr auto auto;
   column-gap: 0.75rem;
@@ -432,8 +464,7 @@
 </script>
 </head>
 <body>
-<div class="page">
-
+<div class="full-bleed-row">
   <header class="site-header">
     <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
       <span></span>
@@ -451,6 +482,9 @@
   </nav>
 
   <div class="header-divider"></div>
+</div>
+
+<div class="page">
 
   <main>
     <p class="game-label">Service Guide</p>
@@ -631,7 +665,13 @@
 
     </div>
   </main>
+</div>
 
+<div class="full-bleed-row">
+  <div class="footer-divider"></div>
+</div>
+
+<div class="page">
   <footer class="site-footer">
   <div class="footer-col">
     <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
