@@ -13,6 +13,15 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    ::selection {
+      background: var(--select-bg);
+      color: var(--select-text);
+    }
+    ::-moz-selection {
+      background: var(--select-bg);
+      color: var(--select-text);
+    }
+
     html {
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
@@ -26,8 +35,8 @@
       --text: #211D1D;
       --found-bg: #211D1D;
       --found-text: #FAFBE3;
-      --select-bg: #E8E9C8;
-      --select-text: #211D1D;
+      --select-bg: #170006;
+      --select-text: #FFFFFF;
       --font-body: 'owners-text', sans-serif;
       --font-mono: 'gemeli-mono', serif;
     }
