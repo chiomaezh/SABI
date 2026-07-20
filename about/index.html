@@ -7,8 +7,9 @@
   
   <link rel="stylesheet" href="https://use.typekit.net/bwp0bbg.css">
   
-  <title>Services — SABI</title>
-  <meta name="description" content="Strategy and design services from SABI, organised across Brand, Experience, and Production." />
+  <title>About — SABI</title>
+  <meta name="description" content="A London-based creative consultancy offering strategy, production, and design for culture-shaping presence and storytelling." />
+  
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -50,9 +51,9 @@
       padding: 3rem 0 5rem;
     }
 
-    /* .page is full-bleed. .container is the narrow, centered wrapper —
-       the same convention used on every other page of the site. Only
-       By Appointment and the footer stay wide. */
+    /* .page is now full-bleed — no max-width, no side padding.
+       .container is the constrained wrapper (720px) reused inside every section
+       so text margins stay exactly as they were. */
     .page { width: 100%; }
 
     .container {
@@ -62,6 +63,11 @@
       padding-right: 1.5rem;
     }
 
+    /* The footer's own reference layout gives it the full 720px of usable
+       width (no padding eating into that box) — our shared .container
+       bakes 1.5rem of padding into its 720px max-width, leaving only
+       672px. Bump just the footer's wrapper back up so it matches,
+       without affecting the About text or Who We Work With sections. */
     .container--footer {
       max-width: 768px;
     }
@@ -168,7 +174,7 @@
       padding: 0.5rem 0;
     }
     .menu-list a.active {
-      color: rgba(139, 140, 120, 0.5);
+      color: rgba(139, 140, 120, 0.6);
       opacity: 0.35;
       pointer-events: none;
       cursor: default;
@@ -190,7 +196,7 @@
 
     .page-body {
       font-family: var(--font-body);
-      font-weight: 300;
+      font-weight: 400;
       font-size: 17.5px;
       color: var(--text);
       line-height: 1.9;
@@ -278,19 +284,17 @@
       padding-bottom: 5rem;
     }
 
-    /* About section: slightly reduced padding top and bottom */
+    /* About section: top padding now matches the Services page's
+       header-to-hero gap exactly (3rem mobile / 4rem desktop) */
     .section--about {
-      padding-top: 2.25rem;
+      padding-top: 3rem;
       padding-bottom: 2.25rem;
     }
 
-    /* Desktop only: nudge About's top padding back up by 0.4rem to
-       compensate for the manifesto-text upward shift (see
-       .manifesto-text margin-top), keeping the same amount of content
-       visible above the fold as before that change. Mobile is untouched. */
+    /* Desktop: match Services page's 4rem top padding */
     @media (min-width: 651px) {
       .section--about {
-        padding-top: 2.65rem;
+        padding-top: 4rem;
       }
     }
 
@@ -368,6 +372,11 @@
       letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--bg);
+      opacity: 1;
+      transition: opacity 2s ease;
+    }
+    .wwd-name:hover {
+      opacity: 0.55;
     }
     .wwd-arrow {
       font-size: 20px;
@@ -448,7 +457,7 @@
 
 /* ── By Appointment (dark, full-bleed) ── */
     .by-appointment {
-      background: #1C1013;
+      background: #170006;
       padding-top: 5.5rem;
       padding-bottom: 5.5rem;
     }
@@ -618,175 +627,6 @@
     font-size: 12px;
   }
 }
-
-    /* ── Services page additions ── */
-
-    .services-hero {
-      padding-top: 4rem;
-      padding-bottom: 2rem;
-    }
-    .page-title {
-      font-family: var(--font-body);
-      font-weight: 400;
-      font-size: clamp(22px, 3.8vw, 27px);
-      line-height: 1.1;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--text);
-    }
-    .services-hero .page-title {
-      max-width: 85%;
-      margin: 0 0 1.4rem;
-    }
-    .services-hero .page-body {
-      margin: 0;
-      text-align: left;
-    }
-    .services-hero .page-body {
-      max-width: 85%;
-      font-size: 17.5px;
-      font-weight: 400;
-    }
-    @media (max-width: 650px) {
-      .services-hero {
-        padding-top: 3rem;
-        padding-bottom: 3rem;
-      }
-      .services-hero .page-body {
-        max-width: 100%;
-        font-size: 17.5px;
-      }
-    }
-
-    .category-section {
-      padding-top: 2rem;
-      padding-bottom: 7rem;
-    }
-    /* Own class, styled like .section-title (mono, small, uppercase),
-       used specifically for the Brand / Experience / Production labels */
-    .category-heading {
-      font-family: var(--font-mono);
-      font-weight: 300;
-      font-size: 15px;
-      line-height: 1.1;
-      letter-spacing: 1.3px;
-      text-transform: uppercase;
-      color: var(--text);
-      margin-bottom: 3.25rem;
-    }
-    .category-heading--spaced {
-      margin-top: 5.5rem;
-    }
-
-    .service-list {
-      list-style: none;
-      padding-left: 2.5rem;
-    }
-    .service-item {
-      margin-bottom: 3.25rem;
-    }
-    .service-item:last-child {
-      margin-bottom: 0;
-    }
-    .service-item summary {
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-    }
-    .service-item summary::-webkit-details-marker { display: none; }
-    .service-item summary::marker { content: ""; }
-
-    .service-toggle {
-      position: relative;
-      width: 15px;
-      height: 15px;
-      flex-shrink: 0;
-    }
-    .service-toggle::before,
-    .service-toggle::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      background: var(--text);
-      transform: translate(-50%, -50%);
-    }
-    .service-toggle::before {
-      width: 15px;
-      height: 1px;
-    }
-    .service-toggle::after {
-      width: 1px;
-      height: 15px;
-      transition: transform 0.2s ease;
-    }
-    details[open] .service-toggle::after {
-      transform: translate(-50%, -50%) scaleY(0);
-    }
-    .service-item.inactive .service-toggle::before,
-    .service-item.inactive .service-toggle::after {
-      background: #8B8C78;
-      opacity: 0.7;
-    }
-    .service-name {
-      font-family: var(--font-body);
-      font-weight: 400;
-      font-size: 16px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: var(--text);
-    }
-    a.service-name {
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-    .service-desc {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 15.5px;
-      line-height: 1.8;
-      color: var(--text);
-      max-width: 100%;
-      margin-top: 0.7rem;
-      padding-left: 1.5rem;
-    }
-    .service-item.inactive .service-name,
-    .service-item.inactive .service-desc {
-      color: #8B8C78;
-      opacity: 0.65;
-    }
-    .service-more-link {
-      display: inline-block;
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 12px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      margin-top: 0.9rem;
-      margin-left: 1.5rem;
-    }
-    @media (max-width: 650px) {
-      .service-list { padding-left: 1.25rem; }
-      .service-desc { max-width: 100%; }
-    }
-
-    .service-guide-link {
-      display: inline-block;
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 14px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text);
-      text-decoration: underline;
-      text-underline-offset: 4px;
-      margin-top: 1.5rem;
-    }
   </style>
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ZHK592471"></script>
@@ -812,8 +652,8 @@
 
     <nav class="menu-accordion" id="menuAccordion">
       <div class="menu-list">
-        <a href="https://sabi.london/about">About</a>
-        <a class="active" aria-current="page" aria-disabled="true">Services</a>
+        <a class="active" aria-current="page" aria-disabled="true">About</a>
+        <a href="https://sabi.london/services/">Services</a>
         <a href="https://play.sabi.london/word-search/">Play</a>
       </div>
     </nav>
@@ -821,86 +661,95 @@
     <div class="full-divider header-divider-inset"></div>
   </div>
 
-  <!-- ── Section: Services intro (tall, editorial) ── -->
-  <div class="container section services-hero">
+  <!-- ── Section: About ── -->
+  <div class="container section section--about">
     <div class="page-body">
       <p>
-        We see you. The niche-cool brands for the kind of consumer that finds things before everyone else does. The early adopters. The Particular.<br>Nothing gets past them, so we’ve got ideas for everything: End-to-end creative services from strategy to design.
+        SABI is a London-based creative consultancy offering strategy and design for culture-shaping presence and storytelling.
+      </p>
+      <p>
+        We have a special interest in brands with a strong lifestyle, wellness, or social mission, and masstige to luxury positioning.
       </p>
     </div>
   </div>
 
-  <!-- ── Section: All services, grouped but not divided ── -->
-  <div class="container category-section">
-
-    <h3 class="category-heading">Brand</h3>
-    <ul class="service-list">
-      <li class="service-item inactive">
-        <details>
-          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Brand DNA</span></summary>
-          <p class="service-desc">Designing your brand identity from first principles: A full suite of assets and the guidelines that hold them together.
-</p>
-        </details>
-      </li>
-      <li class="service-item">
-        <details>
-          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Brand Strategy</span></summary>
-          <p class="service-desc">Scouting unique opportunities for your intellectual property, content strategy, and market presence. </p>
-          <a href="https://sabi.london/services/brand-strategy/" class="service-more-link">More info →</a>
-        </details>
-      </li>
-      <li class="service-item">
-        <details>
-          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">World Building</span></summary>
-          <p class="service-desc">Imagining a universe with your target customer at the centre of it; How do they live, and where is their attention?
-</p>
-          <a href="https://sabi.london/services/world-building/" class="service-more-link">More info →</a>
-        </details>
-      </li>
-    </ul>
-
-    <h3 class="category-heading category-heading--spaced">Experience</h3>
-    <ul class="service-list">
-      <li class="service-item">
-        <details>
-          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Community &amp; Partnerships</span></summary>
-          <p class="service-desc">50 first impressions – peers, partners, and platforms – for cultural currency.</p>
-          <a href="https://sabi.london/services/community-and-partnerships/" class="service-more-link">More info →</a>
-        </details>
-      </li>
-      <li class="service-item inactive">
-        <details>
-          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Events</span></summary>
-          <p class="service-desc">Designing and programming real-world occasions for your community; Social moments for brand legacy.
-</p>
-        </details>
-      </li>
-    </ul>
-
-    <h3 class="category-heading category-heading--spaced">Production</h3>
-    <ul class="service-list">
-      <li class="service-item">
-        <details>
-          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Copy</span></summary>
-          <p class="service-desc">Scripting your brand voice and framing your message for emotional resonance.</p>
-          <a href="https://sabi.london/services/copy/" class="service-more-link">More info →</a>
-        </details>
-      </li>
-      <li class="service-item inactive">
-        <details>
-          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Campaign</span></summary>
-          <p class="service-desc">Concept development and direction for visual narratives.</p>
-        </details>
-      </li>
-      <li class="service-item inactive">
-        <details>
-          <summary><span class="service-toggle" aria-hidden="true"></span><span class="service-name">Editions</span></summary>
-          <p class="service-desc">Your brand signature made tactile; merch, collateral and other special editions to remember you by.
-</p>
-        </details>
-      </li>
-    </ul>
+  <!-- ── Section: Manifesto ── -->
+  <div class="container section manifesto">
+    <div class="manifesto-inner">
+      <h2 class="section-title manifesto-label">Manifesto<br>Est. 2026</h2>
+      <div class="manifesto-text">
+        <p>
+          A great signature is more than an aesthetic sign-off.<br>If you were to strip the basic elements from many brands today – the logos, font packs, and colour schemes – you might be struck by the sameness and anonymity of what is left behind. We work with brands that want to change that. From the inside out.
+        </p>
+        <p>
+          We also believe that innovation and character shouldn’t be reserved for premium brands only; Our goal is to eliminate generic design and communication from everyday consumer experiences. No interaction is too casual or mundane to be considered and refined.
+        </p>
+        <p>
+          Your brand’s cultural currency is the sum of every impression made – on passerbys and returning customers alike. Every detail counts.
+        </p>
+      </div>
+    </div>
   </div>
+
+  <div class="full-divider"></div>
+
+  <!-- ── Section 3: What We Do (dark, full-bleed) ── -->
+  <section class="what-we-do">
+    <div class="container-wide wwd-header">
+      <h2 class="section-title light">What We Do</h2>
+    </div>
+    <div class="wwd-divider"></div>
+
+    <a href="https://sabi.london/services/brand-strategy" class="wwd-row container-wide">
+      <span class="wwd-name">Brand Strategy</span>
+      <span class="wwd-arrow">→</span>
+    </a>
+    <div class="wwd-divider"></div>
+
+    <a href="https://sabi.london/services/world-building" class="wwd-row container-wide">
+      <span class="wwd-name">World Building</span>
+      <span class="wwd-arrow">→</span>
+    </a>
+    <div class="wwd-divider"></div>
+
+    <a href="https://sabi.london/services/copy" class="wwd-row container-wide">
+      <span class="wwd-name">Copywriting</span>
+      <span class="wwd-arrow">→</span>
+    </a>
+    <div class="wwd-divider"></div>
+
+    <a href="https://sabi.london/services/community-and-partnerships" class="wwd-row container-wide">
+      <span class="wwd-name">Community Strategy</span>
+      <span class="wwd-arrow">→</span>
+    </a>
+    <div class="wwd-divider"></div>
+  </section>
+
+  <div class="full-divider"></div>
+
+  <!-- ── Section: Who We Work With ── -->
+  <div class="container section section--wwt">
+    <h2 class="section-title">Who We Work With</h2>
+    <div class="wwt-body">
+      <ul class="industry-list">
+        <li>Arts, Culture &amp; Entertainment</li>
+        <li>Beauty &amp; Cosmetics</li>
+        <li>Consumer Services</li>
+        <li>Education</li>
+        <li>Fashion &amp; Accessories</li>
+        <li>Food &amp; Beverage</li>
+        <li>Health &amp; Wellness</li>
+        <li>Hospitality</li>
+        <li>Media &amp; Publishing</li>
+        <li>Real Estate</li>
+        <li>Technology</li>
+        <li>Travel</li>
+      </ul>
+      <a href="https://sabi.london/services" class="start-link">Start a Project →</a>
+    </div>
+  </div>
+
+  <div class="full-divider"></div>
 
   <!-- ── Section: By Appointment (dark, full-bleed) ── -->
   <section class="by-appointment">
