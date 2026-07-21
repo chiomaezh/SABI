@@ -774,6 +774,9 @@
       .service-list { padding-left: 1.25rem; }
       .service-desc { max-width: 100%; }
     }
+    @media (max-width: 650px) and (orientation: portrait) {
+      .service-desc { max-width: calc(80% - 0.25rem); }
+    }
 
     .service-guide-link {
       display: inline-block;
