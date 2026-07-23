@@ -694,9 +694,16 @@
       } catch (e) {
         panel.querySelector('[data-temp]').textContent = '—';
       } finally {
-        // Now that the real temperature text is in place, size everything once,
-        // then reveal the block — instead of resizing on a blind timer while it's
-        // already visible (which is what caused the glitch/rearrange).
+        // Wait for the real webfont ('owners-text') to finish loading before
+        // measuring anything. The weather fetch usually resolves faster than
+        // Typekit delivers the font, so measuring here against the browser's
+        // fallback font produced a wrong (too-small) scale that only got
+        // corrected later, causing a visible size jump right after reveal.
+        // Waiting on document.fonts.ready first means we only ever measure
+        // and reveal once against the real font metrics.
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
+        }
         matchStationRowWidths();
         matchLeftColumnHeightToStation();
         panel.classList.add('is-ready');
@@ -721,24 +728,7 @@
 
       const cityWidth = cityEl.getBoundingClientRect().width;
 
-      // Measure the time row against a FIXED reference ("88:88") instead
-      // of whatever the clock actually reads at this exact instant. Even
-      // with tabular-nums set, individual digit advance widths aren't
-      // guaranteed identical (and definitely aren't while the webfont is
-      // still swapping in), so measuring the live clock meant the scale
-      // factor calculated here — and therefore the time row's final
-      // rendered width — quietly depended on which digits happened to be
-      // on screen the moment this ran. "11:11" measures narrower than
-      // "17:38" would, so the resulting font-size differed load to load.
-      // Swapping in a constant reference string just for the measurement
-      // (then restoring the real clock text immediately after) makes the
-      // scale factor identical every time, regardless of the actual time
-      // or font-load timing.
-      const originalTimeText = timeEl.textContent;
-      timeEl.textContent = '88:88';
       const timeWidth = timeEl.getBoundingClientRect().width;
-      timeEl.textContent = originalTimeText;
-
       const timeFontSize = parseFloat(getComputedStyle(timeEl).fontSize);
       if (timeWidth > 0) {
         const newTimeSize = timeFontSize * (cityWidth / timeWidth);
