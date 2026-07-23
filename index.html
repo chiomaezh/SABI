@@ -721,7 +721,24 @@
 
       const cityWidth = cityEl.getBoundingClientRect().width;
 
+      // Measure the time row against a FIXED reference ("88:88") instead
+      // of whatever the clock actually reads at this exact instant. Even
+      // with tabular-nums set, individual digit advance widths aren't
+      // guaranteed identical (and definitely aren't while the webfont is
+      // still swapping in), so measuring the live clock meant the scale
+      // factor calculated here — and therefore the time row's final
+      // rendered width — quietly depended on which digits happened to be
+      // on screen the moment this ran. "11:11" measures narrower than
+      // "17:38" would, so the resulting font-size differed load to load.
+      // Swapping in a constant reference string just for the measurement
+      // (then restoring the real clock text immediately after) makes the
+      // scale factor identical every time, regardless of the actual time
+      // or font-load timing.
+      const originalTimeText = timeEl.textContent;
+      timeEl.textContent = '88:88';
       const timeWidth = timeEl.getBoundingClientRect().width;
+      timeEl.textContent = originalTimeText;
+
       const timeFontSize = parseFloat(getComputedStyle(timeEl).fontSize);
       if (timeWidth > 0) {
         const newTimeSize = timeFontSize * (cityWidth / timeWidth);
