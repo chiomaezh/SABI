@@ -391,7 +391,7 @@
       height: 30px;
       margin-left: auto;
       margin-right: -2px;
-      margin-top: 4px;
+      margin-top: 2.6px;
       padding: 0;
       border: none;
       background: none;
@@ -445,6 +445,11 @@
         flex: 1 1 0;
         max-width: 320px;
         margin: 0;
+        /* Nudge the whole form block down so it lines up with the
+           visual bottom of the paragraph text (not just the box edge —
+           the paragraph's line-height leaves a bit of whitespace below
+           its last visible glyph). Adjust this single value to fine-tune. */
+        transform: translateY(14px);
       }
     }
 
