@@ -178,8 +178,8 @@
       position: absolute;
       top: 24px;
       right: 24px;
-      width: 56px;
-      height: 56px;
+      width: 45px;
+      height: 45px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -255,6 +255,7 @@
     .form-field {
       flex: 1 1 auto;
       min-width: 0;
+      margin-bottom: 12px;
     }
 
     .form-field--code {
@@ -319,7 +320,7 @@
     }
 
     .form-error-msg {
-      display: none;
+      visibility: hidden;
       font-family: var(--font-body);
       font-weight: 300;
       font-size: 12px;
@@ -329,7 +330,7 @@
     }
 
     .form-field.has-error .form-error-msg {
-      display: block;
+      visibility: visible;
     }
 
     /* ── Consent checkbox + small print ── */
@@ -384,11 +385,11 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      width: 32px;
-      height: 32px;
+      width: 58px;
+      height: 30px;
       margin-left: auto;
       margin-right: -2px;
-      margin-top: -8px;
+      margin-top: -14px;
       padding: 0;
       border: none;
       background: none;
@@ -744,6 +745,19 @@
       .station-time { font-size: 18px; }
       .station-meta { font-size: 14px; gap: 4px; }
       .station-icon { width: 14px; height: 14px; }
+
+      .lightbox-close {
+        top: 10px;
+        right: 20px;
+      }
+
+      .lightbox-heading {
+        font-size: 22px;
+      }
+
+      .lightbox-content {
+        font-size: 15px;
+      }
     }
   </style>
   <!-- Google tag (gtag.js) -->
@@ -811,9 +825,9 @@
             <div class="form-error-msg">Required.</div>
           </div>
           <button type="submit" class="lightbox-submit" aria-label="Submit">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <line x1="4" y1="12" x2="22" y2="12"/>
-              <polyline points="16 6 22 12 16 18"/>
+            <svg viewBox="0 0 46 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M2 16 H32 Q37 16 42 9"/>
+              <polyline points="37 4 42 9 37 14"/>
             </svg>
           </button>
         </form>
