@@ -372,6 +372,17 @@
       border-color: rgb(80, 41, 47);
     }
 
+    .consent-error-msg {
+      /* Indent to line up with the paragraph text, not the checkbox —
+         matches the checkbox width (15px) + the label's gap (10px). */
+      margin-left: 25px;
+    }
+
+    .consent-link {
+      color: inherit;
+      text-decoration: underline;
+    }
+
     .consent-text {
       flex: 1 1 auto;
       min-width: 0;
@@ -882,9 +893,9 @@
             <label class="consent-label">
               <input type="checkbox" name="consent" required>
               <span class="consent-box" aria-hidden="true"></span>
-              <span class="consent-text">I agree to receive SABI&rsquo;s weekly prompts by SMS. I understand that I can unsubscribe anytime by texting STOP. I've read the privacy policy.</span>
+              <span class="consent-text">I agree to receive SABI&rsquo;s weekly prompts by SMS. I understand that I can unsubscribe anytime by texting STOP. I've read the <a href="https://sabi.london/legal" class="consent-link">privacy policy</a>.</span>
             </label>
-            <div class="form-error-msg">Required.</div>
+            <div class="form-error-msg consent-error-msg">Required.</div>
           </div>
           <button type="submit" class="lightbox-submit" aria-label="Submit">
             <svg viewBox="0 0 60 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
