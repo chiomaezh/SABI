@@ -540,8 +540,6 @@
       flex-direction: column;
       align-items: stretch;
       gap: 8px;
-      opacity: 0;
-      transition: opacity 0.35s ease;
       /* Small uniform nudge down to match the contact block's top/bottom —
          purely visual (transform), doesn't touch layout, alignment, or
          font-size, and applies consistently across every breakpoint since
@@ -550,7 +548,25 @@
       transform: translateY(3px);
     }
 
-    .station.is-ready {
+    /* City + time rows reveal independently of the weather row — the time's
+       font-size is derived from the city label, not from the weather fetch,
+       so it shouldn't be held hostage by a slow/hung network request. */
+    .station-row:nth-child(1),
+    .station-row:nth-child(2) {
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .station.clock-ready .station-row:nth-child(1),
+    .station.clock-ready .station-row:nth-child(2) {
+      opacity: 1;
+    }
+
+    /* Weather row (icon + temperature) reveals once the fetch settles. */
+    .station-row:nth-child(3) {
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .station.is-ready .station-row:nth-child(3) {
       opacity: 1;
     }
 
@@ -1070,6 +1086,27 @@
         minute: '2-digit'
       });
       panel.querySelector('[data-time]').textContent = timeStr;
+      // Re-fit the time font-size to match the city label's width every tick —
+      // not just on load/resize — since different digits render at slightly
+      // different widths and the match would otherwise go stale between ticks.
+      // Guarded to only run after the initial reveal so it doesn't race the
+      // webfont-loading sequencing handled in initClockReveal() below.
+      if (panel.classList.contains('clock-ready')) {
+        matchStationRowWidths();
+      }
+    }
+
+    // City + time reveal: waits only on webfonts (needed so the width-match
+    // measures against real font metrics, not a fallback font), never on the
+    // weather fetch. This is what actually needs to happen "together" with
+    // the city row, since the time's font-size is derived from it.
+    async function initClockReveal() {
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+      matchStationRowWidths();
+      matchLeftColumnHeightToStation();
+      panel.classList.add('clock-ready');
     }
 
     async function updateWeather() {
@@ -1086,13 +1123,9 @@
       } catch (e) {
         panel.querySelector('[data-temp]').textContent = '—';
       } finally {
-        // Wait for the real webfont ('owners-text') to finish loading before
-        // measuring anything. The weather fetch usually resolves faster than
-        // Typekit delivers the font, so measuring here against the browser's
-        // fallback font produced a wrong (too-small) scale that only got
-        // corrected later, causing a visible size jump right after reveal.
-        // Waiting on document.fonts.ready first means we only ever measure
-        // and reveal once against the real font metrics.
+        // Same webfont-readiness guard as initClockReveal(), applied here so
+        // the weather row's icon/temperature width-match is also measured
+        // against real font metrics rather than a fallback font.
         if (document.fonts && document.fonts.ready) {
           await document.fonts.ready;
         }
@@ -1103,6 +1136,7 @@
     }
 
     updateClock();
+    initClockReveal();
     updateWeather();
     setInterval(updateClock, 1000);
     setInterval(updateWeather, 5 * 60 * 1000); // refresh weather every 5 min
