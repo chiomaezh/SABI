@@ -619,6 +619,33 @@
       object-fit: contain;
     }
 
+    /* Clickable retry — only appears in place of the icon when the weather
+       fetch has failed. Sized to fill .station-icon exactly (100%/100%), so
+       it automatically matches the normal icon's dimensions at every
+       breakpoint without needing its own separate size rules. Same hairline
+       stroke treatment as the lightbox close/submit icons for consistency. */
+    .station-refresh-btn {
+      display: block;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .station-refresh-btn svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      stroke: var(--bg);
+      stroke-width: 1.4;
+      stroke-linecap: butt;
+      stroke-linejoin: miter;
+      fill: none;
+      shape-rendering: geometricPrecision;
+    }
+
     /* ── Description block ── */
   .footer-desc {
   max-width: 420px;
@@ -1121,7 +1148,16 @@
         panel.querySelector('[data-icon]').innerHTML =
           `<img src="icons/${iconName}.png" alt="" width="256" height="256" onerror="this.style.display='none'">`;
       } catch (e) {
-        panel.querySelector('[data-temp]').textContent = '—';
+        panel.querySelector('[data-temp]').textContent = '';
+        panel.querySelector('[data-icon]').innerHTML =
+          `<button type="button" class="station-refresh-btn" aria-label="Retry weather">
+             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+               <polyline points="1 4 1 10 7 10"/>
+               <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+             </svg>
+           </button>`;
+        const retryBtn = panel.querySelector('.station-refresh-btn');
+        if (retryBtn) retryBtn.addEventListener('click', updateWeather);
       } finally {
         // Same webfont-readiness guard as initClockReveal(), applied here so
         // the weather row's icon/temperature width-match is also measured
@@ -1139,7 +1175,9 @@
     initClockReveal();
     updateWeather();
     setInterval(updateClock, 1000);
-    setInterval(updateWeather, 5 * 60 * 1000); // refresh weather every 5 min
+    // No periodic refresh — a failed fetch now shows a clickable retry icon
+    // instead (see the catch block above), which is a more direct fix for
+    // the one scenario this interval was actually covering.
 
     // ── Force all three station rows (city/time/meta) to share the exact same width ──
     function matchStationRowWidths() {
