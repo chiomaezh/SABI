@@ -244,9 +244,11 @@
 
     /* Needs to out-specificity ".lightbox-content p:last-child" above,
        otherwise its margin-top gets silently reset to 0 and the success
-       message loses the same 40px gap the form has above the Name field. */
+       message loses its gap above where the Name field used to sit. */
     .lightbox-content .form-success {
-      margin: 40px 0 0;
+      margin: 60px 0 0;
+      font-family: var(--font-mono);
+      font-size: 18px;
     }
 
     .form-success.is-visible {
@@ -919,7 +921,7 @@
             </svg>
           </button>
         </form>
-        <p class="form-success" id="formSuccess">Thanks &ndash; you&rsquo;re on the list :)</p>
+        <p class="form-success" id="formSuccess">Thanks &ndash; you&rsquo;re on the list :)<br>Text you l8r.</p>
       </div>
     </div>
   </div>
