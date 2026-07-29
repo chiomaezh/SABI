@@ -240,6 +240,12 @@
 
     .form-success {
       display: none;
+    }
+
+    /* Needs to out-specificity ".lightbox-content p:last-child" above,
+       otherwise its margin-top gets silently reset to 0 and the success
+       message loses the same 40px gap the form has above the Name field. */
+    .lightbox-content .form-success {
       margin: 40px 0 0;
     }
 
