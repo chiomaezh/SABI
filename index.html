@@ -1097,7 +1097,7 @@
       const payload = {
         'TIMESTAMP': new Date().toISOString(),
         'NAME': lightboxForm.querySelector('input[name="name"]').value.trim(),
-        'COUNTRY CODE': areaCodeInput.value.trim(),
+        'COUNTRY CODE': '+' + areaCodeInput.value.trim(),
         'MOBILE NUMBER': lightboxForm.querySelector('input[name="number"]').value.trim(),
         'CONSENT': true
       };
