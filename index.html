@@ -872,7 +872,7 @@
           <line x1="19" y1="5" x2="5" y2="19"/>
         </svg>
       </button>
-      <div class="lightbox-content">
+      <div class="lightbox-content" id="lightboxContent">
         <div class="lightbox-copy">
           <p class="lightbox-heading">Thoughtline</p>
           <p>A creative prompt subscription.<br>A bite of incentive via SMS.</p>
@@ -1041,6 +1041,7 @@
     const lightboxForm = document.getElementById('lightboxForm');
     const areaCodeInput = lightboxForm.querySelector('input[name="areaCode"]');
     const formSuccess = document.getElementById('formSuccess');
+    const lightboxContent = document.getElementById('lightboxContent');
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzDo7B7pz9AsWq5Wd5lRDh37Pyhe6dqL_-Uyx-vQkAPbAIpoexq47138wB_Rv7iMLb6w/exec';
 
     areaCodeInput.addEventListener('input', () => {
@@ -1111,6 +1112,16 @@
         body: JSON.stringify(payload)
       }).catch((err) => console.error('Sign-up submit failed', err))
         .finally(() => {
+          // On the mobile layout the lightbox is bottom-anchored, so if the
+          // form (tall) is simply swapped for the success message (short)
+          // the whole block collapses and re-anchors lower on screen,
+          // dragging the heading/copy down with it. Locking in the box's
+          // current height before hiding the form keeps the heading/copy
+          // exactly where they were, and lets the success message land in
+          // the space the form used to occupy (right where "Name" was).
+          if (window.matchMedia('(max-width: 760px)').matches) {
+            lightboxContent.style.minHeight = lightboxContent.offsetHeight + 'px';
+          }
           lightboxForm.style.display = 'none';
           formSuccess.classList.add('is-visible');
         });
