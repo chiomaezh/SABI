@@ -1030,6 +1030,7 @@
     //    only flags a field once a submit attempt has actually failed ──
     const lightboxForm = document.getElementById('lightboxForm');
     const areaCodeInput = lightboxForm.querySelector('input[name="areaCode"]');
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzDo7B7pz9AsWq5Wd5lRDh37Pyhe6dqL_-Uyx-vQkAPbAIpoexq47138wB_Rv7iMLb6w/exec';
 
     areaCodeInput.addEventListener('input', () => {
       areaCodeInput.value = areaCodeInput.value.replace(/\D/g, '').slice(0, 3);
@@ -1080,14 +1081,21 @@
         return;
       }
 
-      // All valid — assemble the phone number as +XX... for export.
-      // No backend wired up yet, so this just logs the payload for now.
+      // All valid — assemble the phone number as +XX... and send to Google Apps Script.
       const payload = {
         name: lightboxForm.querySelector('input[name="name"]').value.trim(),
         phone: '+' + areaCodeInput.value + lightboxForm.querySelector('input[name="number"]').value.trim(),
         consent: true
       };
-      console.log('Sign-up payload', payload);
+
+      // no-cors: Apps Script doesn't send CORS headers back, so the response
+      // is opaque — we can't read it, but the request still goes through.
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload)
+      }).catch((err) => console.error('Sign-up submit failed', err));
     });
 
     // ── Hairline weather icons, matched to Open-Meteo WMO weather codes ──
