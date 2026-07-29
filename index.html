@@ -238,6 +238,15 @@
       margin-bottom: 0;
     }
 
+    .form-success {
+      display: none;
+      margin: 40px 0 0;
+    }
+
+    .form-success.is-visible {
+      display: block;
+    }
+
     /* ── Sign-up form (Name + phone number, underline style) ── */
     .lightbox-form {
       display: flex;
@@ -904,6 +913,7 @@
             </svg>
           </button>
         </form>
+        <p class="form-success" id="formSuccess">Thanks &ndash; you&rsquo;re on the list :)</p>
       </div>
     </div>
   </div>
@@ -1030,6 +1040,7 @@
     //    only flags a field once a submit attempt has actually failed ──
     const lightboxForm = document.getElementById('lightboxForm');
     const areaCodeInput = lightboxForm.querySelector('input[name="areaCode"]');
+    const formSuccess = document.getElementById('formSuccess');
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzDo7B7pz9AsWq5Wd5lRDh37Pyhe6dqL_-Uyx-vQkAPbAIpoexq47138wB_Rv7iMLb6w/exec';
 
     areaCodeInput.addEventListener('input', () => {
@@ -1098,7 +1109,11 @@
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(payload)
-      }).catch((err) => console.error('Sign-up submit failed', err));
+      }).catch((err) => console.error('Sign-up submit failed', err))
+        .finally(() => {
+          lightboxForm.style.display = 'none';
+          formSuccess.classList.add('is-visible');
+        });
     });
 
     // ── Hairline weather icons, matched to Open-Meteo WMO weather codes ──
