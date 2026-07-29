@@ -1081,11 +1081,14 @@
         return;
       }
 
-      // All valid — assemble the phone number as +XX... and send to Google Apps Script.
+      // All valid — assemble the payload with keys matching the Google Sheet
+      // column headers exactly, then send to Google Apps Script.
       const payload = {
-        name: lightboxForm.querySelector('input[name="name"]').value.trim(),
-        phone: '+' + areaCodeInput.value + lightboxForm.querySelector('input[name="number"]').value.trim(),
-        consent: true
+        'TIMESTAMP': new Date().toISOString(),
+        'NAME': lightboxForm.querySelector('input[name="name"]').value.trim(),
+        'COUNTRY CODE': areaCodeInput.value.trim(),
+        'MOBILE NUMBER': lightboxForm.querySelector('input[name="number"]').value.trim(),
+        'CONSENT': true
       };
 
       // no-cors: Apps Script doesn't send CORS headers back, so the response
