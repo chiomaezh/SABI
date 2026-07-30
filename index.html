@@ -1113,28 +1113,35 @@
         'CONSENT': true
       };
 
+      // Show success immediately — don't wait on the network request.
+      // Disabling the button too is a second safeguard: even a very fast
+      // double-click can't fire this handler twice once it's disabled.
+      const submitBtn = lightboxForm.querySelector('.lightbox-submit');
+      if (submitBtn) submitBtn.disabled = true;
+
+      // On the mobile layout the lightbox is bottom-anchored, so if the
+      // form (tall) is simply swapped for the success message (short)
+      // the whole block collapses and re-anchors lower on screen,
+      // dragging the heading/copy down with it. Locking in the box's
+      // current height before hiding the form keeps the heading/copy
+      // exactly where they were, and lets the success message land in
+      // the space the form used to occupy (right where "Name" was).
+      if (window.matchMedia('(max-width: 760px)').matches) {
+        lightboxContent.style.minHeight = lightboxContent.offsetHeight + 'px';
+      }
+      lightboxForm.style.display = 'none';
+      formSuccess.classList.add('is-visible');
+
       // no-cors: Apps Script doesn't send CORS headers back, so the response
       // is opaque — we can't read it, but the request still goes through.
+      // Fired without awaiting it, so a slow/cold-start Apps Script response
+      // can't hold up the UI.
       fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(payload)
-      }).catch((err) => console.error('Sign-up submit failed', err))
-        .finally(() => {
-          // On the mobile layout the lightbox is bottom-anchored, so if the
-          // form (tall) is simply swapped for the success message (short)
-          // the whole block collapses and re-anchors lower on screen,
-          // dragging the heading/copy down with it. Locking in the box's
-          // current height before hiding the form keeps the heading/copy
-          // exactly where they were, and lets the success message land in
-          // the space the form used to occupy (right where "Name" was).
-          if (window.matchMedia('(max-width: 760px)').matches) {
-            lightboxContent.style.minHeight = lightboxContent.offsetHeight + 'px';
-          }
-          lightboxForm.style.display = 'none';
-          formSuccess.classList.add('is-visible');
-        });
+      }).catch((err) => console.error('Sign-up submit failed', err));
     });
 
     // ── Hairline weather icons, matched to Open-Meteo WMO weather codes ──
