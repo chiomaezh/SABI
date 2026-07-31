@@ -835,21 +835,25 @@
         padding: 0 0 0 24px;
       }
       .lightbox-content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 40px;
         font-size: 15px;
+      }
+      .lightbox-copy {
+        flex: 1 1 0;
+        max-width: 340px;
       }
       .lightbox-heading {
         font-size: 19px;
       }
 
-      .lightbox-form > [data-field="name"],
-      .lightbox-form > .form-row,
-      .lightbox-form > .form-consent {
-        transform: translateY(-30px);
+      .lightbox-form {
+        flex: 1 1 0;
+        max-width: 300px;
       }
 
-      .lightbox-submit {
-        transform: translateY(-14px);
-      }
     }
   </style>
   <!-- Google tag (gtag.js) -->
