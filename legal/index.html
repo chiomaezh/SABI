@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="https://use.typekit.net/bwp0bbg.css">
+
+  <title>Privacy Policy — SABI</title>
+  <meta name="description" content="SABI's privacy policy: what information we collect, including Thoughtline, our SMS creative prompt service, and how we use it." />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    :root {
+      --bg: #FAFBE3;
+      --surface: #FAFBE3;
+      --border: #423A3A;
+      --border-light: #423A3A;
+      --text: #211D1D;
+      --found-bg: #211D1D;
+      --found-text: #FAFBE3;
+      --select-bg: rgba(183, 184, 168, 0.4);
+      --select-text: var(--text);
+      --font-body: 'owners-text', sans-serif;
+      --font-mono: 'gemeli-mono', serif;
+    }
+
+    ::selection {
+      background: var(--select-bg);
+    }
+    ::-moz-selection {
+      background: var(--select-bg);
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 350;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 0 5rem;
+    }
+
+    .page { width: 100%; }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .container--footer {
+      max-width: 768px;
+    }
+
+    /* Full-bleed horizontal rule, used between every section */
+    .full-divider {
+      width: 100%;
+      border-top: 0.5px solid var(--border);
+    }
+
+    .header-divider-inset {
+      width: 100%;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      padding-top: 0;
+    }
+
+    .site-name {
+      font-family: "all-round-gothic", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    /* ── Hamburger menu (accordion) ── */
+    .menu-btn {
+      position: relative;
+      width: 22px;
+      height: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .menu-btn span {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--text);
+      transition: transform 0.25s ease, top 0.25s ease;
+    }
+    .menu-btn span:first-child { top: 1.75px; }
+    .menu-btn span:last-child { top: 12.25px; }
+    .menu-btn.open span { height: 1.8px; }
+    .menu-btn.open span:first-child { top: 7px; transform: rotate(45deg); }
+    .menu-btn.open span:last-child { top: 7px; transform: rotate(-45deg); }
+    .menu-accordion {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .menu-accordion.open { max-height: 220px; }
+    .menu-list {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 1rem;
+    }
+    .menu-list a {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.5rem 0;
+    }
+    .menu-list a.active {
+      color: rgba(139, 140, 120, 0.5);
+      pointer-events: none;
+      cursor: default;
+    }
+
+    @media (min-width: 721px) {
+      .site-header-wrap {
+        max-width: none;
+        width: 100%;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+      }
+    }
+
+    @media (min-width: 721px) and (orientation: landscape) and (max-height: 500px) {
+      .site-header-wrap {
+        max-width: 720px;
+        width: auto;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+    }
+
+    /* ── Section title (small eyebrow heading) ── */
+    .section-title {
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 1.1;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 2.2rem;
+    }
+
+    .page-title {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 22px;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .page-body {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 15.5px;
+      color: var(--text);
+      line-height: 1.9;
+      max-width: 100%;
+    }
+    .page-body p { margin-bottom: 1.5rem; }
+    .page-body p:last-child { margin-bottom: 0; }
+    .page-body a { color: var(--text); }
+    .page-body ul {
+      margin: 0 0 1.5rem 1.2rem;
+    }
+    .page-body li { margin-bottom: 0.6rem; }
+    .page-body li:last-child { margin-bottom: 0; }
+    .page-body strong { font-weight: 600; }
+
+    /* ── Sections ── */
+    .section {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+    .section:first-of-type { padding-top: 0; }
+
+    .section--about {
+      padding-top: 3rem;
+      padding-bottom: 2.25rem;
+    }
+
+    @media (min-width: 651px) {
+      .section--about {
+        padding-top: 4rem;
+      }
+    }
+
+    /* ── Legal sub-sections ── */
+    .legal-section {
+      padding-top: 2.25rem;
+      padding-bottom: 2.25rem;
+    }
+    .legal-section:first-of-type { padding-top: 0; }
+    .legal-updated {
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      color: var(--text);
+      opacity: 0.6;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── Site footer ── */
+    .site-footer {
+      padding-top: 1.5rem;
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: 1.4fr auto auto;
+      column-gap: 0.75rem;
+      align-items: start;
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      align-self: start;
+    }
+
+    .footer-desc {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 0.9rem;
+      margin-top: -0.2em;
+    }
+
+    .footer-copyright {
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+
+    .footer-heading {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.7rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .footer-links a {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+
+    .footer-col--services {
+      margin-left: 2rem;
+    }
+
+    .footer-col--services .footer-links a {
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 500px) {
+      .site-footer {
+        grid-template-columns: 1fr 1fr;
+        column-gap: 1rem;
+        row-gap: 1.75rem;
+      }
+      .footer-col:first-child {
+        grid-column: 1 / -1;
+      }
+      .footer-col--services {
+        margin-left: 0;
+      }
+      .footer-links a {
+        white-space: normal;
+      }
+      .footer-copyright {
+        font-size: 12px;
+      }
+    }
+  </style>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9ZHK592471"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9ZHK592471');
+</script>
+</head>
+<body>
+<div class="page">
+
+  <div class="container site-header-wrap">
+    <header class="site-header">
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+      </button>
+      <a href="https://sabi.london/" class="site-name">S A B I</a>
+    </header>
+
+    <nav class="menu-accordion" id="menuAccordion">
+      <div class="menu-list">
+        <a href="https://sabi.london/about/">About</a>
+        <a href="https://sabi.london/services/">Services</a>
+        <a href="https://play.sabi.london/word-search/">Play</a>
+      </div>
+    </nav>
+
+    <div class="full-divider header-divider-inset"></div>
+  </div>
+
+  <!-- ── Section: Intro ── -->
+  <div class="container section section--about">
+    <h1 class="page-title">Privacy Policy</h1>
+    <p class="legal-updated">Effective Date: July 6, 2026</p>
+    <div class="page-body">
+      <p>
+        This Privacy Policy explains what information SABI ("we," "our," or "us") collects and how we use it. This page is also where we'll keep any other terms that govern your use of SABI's site and services as they're introduced.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── Section: Policy body ── -->
+  <div class="container section">
+
+    <div class="legal-section">
+      <h2 class="section-title">Information We Collect</h2>
+      <div class="page-body">
+        <p>
+          If you sign up for Thoughtline, SABI's weekly creative prompt service, we collect your name and phone number. This is currently the only information we ask you to provide.
+        </p>
+        <p>
+          When you visit <a href="https://sabi.london/" style="text-decoration: underline;">sabi.london</a>, we use Google Analytics to understand and improve our site. This involves cookies and similar technologies that collect information such as your IP address, browser and device type, and browsing activity on our site.
+        </p>
+      </div>
+    </div>
+
+    <div class="legal-section">
+      <h2 class="section-title">How We Use &amp; Share Your Information</h2>
+      <div class="page-body">
+        <p>
+          We use your name and phone number solely to send you the weekly creative prompts you've signed up to receive, and we use Google Analytics data to understand and improve our site. We don't sell your information, and we don't share it with third parties.
+        </p>
+        <p>
+          To operate the SMS service, your details pass through a few service providers on our behalf: when you sign up, your name and phone number are stored via Google Apps Script, which passes that information to ClickSend, a third party platform we use to send the texts to our mailing list. These providers only process your information to deliver the service — they don't use it for their own purposes.
+        </p>
+        <p>
+          By signing up, you consent to receive a text message from SABI once a week at the number provided. You can unsubscribe at any time by replying STOP. You can request that we delete your information by contacting us at office@sabi.london.
+        </p>
+      </div>
+    </div>
+
+    <div class="legal-section">
+      <h2 class="section-title">Cookies &amp; Analytics</h2>
+      <div class="page-body">
+        <p>
+          Our site uses Google Analytics, which sets cookies on your browser to help us understand the site traffic and content engagement. You can control or block cookies through your browser settings, and you can opt out of Google Analytics tracking generally using Google's <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Analytics Opt-out Browser Add-on</a>.
+        </p>
+      </div>
+    </div>
+
+    <div class="legal-section">
+      <h2 class="section-title">Your Rights &amp; Choices</h2>
+      <div class="page-body">
+        <p>
+          You can ask us what information we hold about you, or ask us to correct or delete it, at any time by contacting us at the email below. Our services are not directed at children, and we do not knowingly collect information from anyone under 13.
+        </p>
+      </div>
+    </div>
+
+    <div class="legal-section">
+      <h2 class="section-title">Changes &amp; Contact</h2>
+      <div class="page-body">
+        <p>
+          We may update this policy from time to time as our services evolve; we'll update the effective date above when we do. Questions about this policy or your information? Email us at <a href="mailto:office@sabi.london">office@sabi.london</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="full-divider"></div>
+
+  <div class="container container--footer">
+    <footer class="site-footer">
+      <div class="footer-col">
+        <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
+        <p class="footer-copyright">© 2026 SABI London</p>
+      </div>
+
+      <div class="footer-col">
+        <p class="footer-heading">Contact</p>
+        <div class="footer-links">
+          <a href="mailto:office@sabi.london" target="_blank" rel="noopener">office@sabi.london</a>
+          <a href="tel:+447400192837">+44 7400 192837</a>
+          <a href="https://calendar.app.google/itHV85cwLfoDmH7x5">OOO Hours</a>
+        </div>
+      </div>
+
+      <div class="footer-col footer-col--services">
+        <p class="footer-heading">Services</p>
+        <div class="footer-links">
+          <a href="https://sabi.london/services/brand-strategy/">Brand Strategy</a>
+          <a href="https://sabi.london/services/world-building/">World Building</a>
+          <a href="https://sabi.london/services/copy/">Copy</a>
+          <a href="https://sabi.london/services/community-and-partnerships/">Community &amp; Partnerships</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+</div>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const menuAccordion = document.getElementById('menuAccordion');
+
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = menuAccordion.classList.toggle('open');
+    menuBtn.classList.toggle('open', isOpen);
+    menuBtn.setAttribute('aria-expanded', isOpen);
+  });
+</script>
+
+</body>
+</html>
