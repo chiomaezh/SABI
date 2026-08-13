@@ -164,21 +164,18 @@
     /* ── CD + player, right panel ── */
     .music-stack {
       position: relative;
-      width: min(480px, 78vw);
-      height: min(480px, 78vw);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 1.75rem;
     }
 
     .cd-image {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 100%;
-      height: 100%;
-      transform: translate(-50%, -50%) rotate(0deg);
-      opacity: 0.05;
+      width: min(384px, 62vw);
+      height: min(384px, 62vw);
+      transform: rotate(0deg);
+      opacity: 0.95;
       animation: spin-cd 9s linear infinite;
       animation-play-state: paused;
       pointer-events: none;
@@ -189,8 +186,8 @@
     }
 
     @keyframes spin-cd {
-      from { transform: translate(-50%, -50%) rotate(0deg); }
-      to   { transform: translate(-50%, -50%) rotate(360deg); }
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
     }
 
     .player-wrap {
@@ -264,7 +261,7 @@
       const options = {
         uri: 'spotify:playlist:0XXOJH57JlfsukZGkiRdKz',
         width: '100%',
-        height: '352'
+        height: '152'
       };
 
       const callback = (EmbedController) => {
