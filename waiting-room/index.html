@@ -44,32 +44,38 @@
       height: 100dvh;
     }
 
-    /* ── Fixed viewfinder: two panels, no scroll ── */
+    /* ── Fixed viewfinder: grid of wine-top / wine-bottom / cream ── */
     .viewfinder {
       position: fixed;
       inset: 0;
-      display: flex;
+      display: grid;
       width: 100vw;
       height: 100vh;
       height: 100dvh;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      grid-template-areas:
+        "top    right"
+        "bottom right";
     }
 
-    .panel {
-      flex: 1 1 50%;
+    .wine-block {
+      background: var(--wine);
       height: 100%;
       position: relative;
     }
-
-    .panel--left {
-      background: var(--wine);
-    }
+    .wine-block--top { grid-area: top; }
+    .wine-block--bottom { grid-area: bottom; }
 
     .panel--right {
+      grid-area: right;
+      height: 100%;
       background: var(--bg);
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      position: relative;
     }
 
     /* ── Header (overlaid, no divider, positions unchanged) ── */
@@ -229,18 +235,26 @@
 
       .viewfinder {
         position: static;
-        flex-direction: column;
+        display: grid;
         width: 100%;
         height: auto;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        grid-template-areas:
+          "top"
+          "right"
+          "bottom";
       }
 
-      .panel--left {
-        flex: none;
+      .wine-block--top {
         height: 30vh;
         min-height: 220px;
       }
+      .wine-block--bottom {
+        height: 18vh;
+        min-height: 160px;
+      }
       .panel--right {
-        flex: none;
         height: auto;
         min-height: 70vh;
         padding-bottom: 4rem;
@@ -255,8 +269,8 @@
 <body>
 
   <div class="viewfinder">
-    <div class="panel panel--left"></div>
-    <div class="panel panel--right">
+    <div class="wine-block wine-block--top"></div>
+    <div class="panel--right">
       <div class="music-stack">
         <div class="cd-stack">
           <img src="blank_CD.png" alt="" class="cd-image cd-image--spin" id="cdImage" />
@@ -266,6 +280,7 @@
         </div>
       </div>
     </div>
+    <div class="wine-block wine-block--bottom"></div>
   </div>
 
   <div class="header-wrap">
