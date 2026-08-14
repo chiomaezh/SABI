@@ -72,7 +72,10 @@
       grid-area: bottom;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
+      flex-direction: column;
+      padding-bottom: 1.5rem;
+      min-width: 0;
     }
 
     /* ── Hero copy, top wine block ── */
@@ -98,74 +101,112 @@
       }
     }
 
-    /* ── World clocks, bottom wine block ── */
+    /* ── World clocks, bottom wine block: sideways-scrolling reel ── */
     .clocks-wrap {
       width: 100%;
+      min-width: 0;
       padding: 2rem 1.5rem;
     }
-    .clocks-row {
+
+    .weather-reel {
       display: flex;
-      justify-content: space-between;
-      gap: 0.75rem;
+      min-width: 0;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
-    .clocks-row + .clocks-row {
-      margin-top: 2.25rem;
-    }
-    .clock-cell {
-      flex: 1 1 0;
+    .weather-reel::-webkit-scrollbar { display: none; }
+
+    /* Each block: city / time / weather, stacked — same font-family,
+       weights, letter-spacing and colour as the .ba-* weather blocks
+       on the About page. (The About version spreads each city's
+       letters edge-to-edge across a JS-measured column width; here
+       block widths are responsive %-based, so the city name is
+       centred with the same letter-spacing instead of letter-justified.) */
+    .wr-block {
+      flex: 0 0 33.3333%;
+      max-width: 33.3333%;
+      box-sizing: border-box;
+      padding: 0 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
     }
-    .clock-city {
+    .wr-city-name {
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: 10px;
-      letter-spacing: 1.5px;
+      font-size: 11px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--bg);
-      margin-bottom: 0.5rem;
       white-space: nowrap;
     }
-    .clock-time {
+    .wr-city-time {
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: 16px;
-      letter-spacing: 0.5px;
+      font-size: 20px;
+      letter-spacing: 1px;
       font-variant-numeric: tabular-nums;
       color: var(--bg);
+      margin-top: 8px;
     }
-    .clock-weather {
+    .wr-city-weather {
       display: flex;
       align-items: center;
-      gap: 5px;
-      margin-top: 0.5rem;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 8px;
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: 12px;
-      letter-spacing: 0.5px;
+      font-size: 14px;
+      letter-spacing: 1px;
       font-variant-numeric: tabular-nums;
       color: var(--bg);
     }
-    .clock-icon {
+    .wr-icon {
       display: inline-block;
-      width: 15px;
-      height: 15px;
+      width: 18px;
+      height: 18px;
     }
-    .clock-icon img {
+    .wr-icon img {
       width: 100%;
       height: 100%;
       display: block;
       object-fit: contain;
     }
 
+    /* Typeform-style progress bar: thin track + filled thumb showing
+       scroll position, draggable to scroll the reel. */
+    .weather-scrollbar-track {
+      position: relative;
+      width: 100%;
+      height: 3px;
+      margin-top: 1.75rem;
+      background: rgba(250, 251, 227, 0.25);
+      border-radius: 2px;
+      cursor: pointer;
+      touch-action: none;
+    }
+    .weather-scrollbar-thumb {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: var(--bg);
+      border-radius: 2px;
+    }
+
     @media (min-width: 651px) {
       .clocks-wrap { padding: 2.5rem; }
-      .clock-city { font-size: 11px; letter-spacing: 2px; }
-      .clock-time { font-size: 20px; }
-      .clock-weather { font-size: 14px; margin-top: 0.65rem; }
-      .clock-icon { width: 18px; height: 18px; }
+      .wr-block { flex: 0 0 20%; max-width: 20%; padding: 0 14px; }
+      .wr-city-name { font-size: 12px; }
+      .wr-city-time { font-size: 25px; }
+      .wr-city-weather { font-size: 17px; }
+      .wr-icon { width: 21px; height: 21px; }
+      .weather-scrollbar-track { margin-top: 2.25rem; }
     }
 
     .panel--right {
@@ -339,7 +380,7 @@
         display: grid;
         width: 100%;
         height: auto;
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         grid-template-rows: auto auto auto;
         grid-template-areas:
           "top"
@@ -399,18 +440,19 @@
     </div>
     <div class="wine-block wine-block--bottom">
       <div class="clocks-wrap">
-        <div class="clocks-row">
-          <div class="clock-cell"><span class="clock-city">London</span><span class="clock-time" id="clock-London">--:--</span><span class="clock-weather" id="weather-London"><span class="clock-icon" data-icon></span><span data-temp>--°C</span></span></div>
-          <div class="clock-cell"><span class="clock-city">New York</span><span class="clock-time" id="clock-New York">--:--</span><span class="clock-weather" id="weather-New York"><span class="clock-icon" data-icon></span><span data-temp>--°C</span></span></div>
-          <div class="clock-cell"><span class="clock-city">Paris</span><span class="clock-time" id="clock-Paris">--:--</span><span class="clock-weather" id="weather-Paris"><span class="clock-icon" data-icon></span><span data-temp>--°C</span></span></div>
-          <div class="clock-cell"><span class="clock-city">Tokyo</span><span class="clock-time" id="clock-Tokyo">--:--</span><span class="clock-weather" id="weather-Tokyo"><span class="clock-icon" data-icon></span><span data-temp>--°C</span></span></div>
-          <div class="clock-cell"><span class="clock-city">Milan</span><span class="clock-time" id="clock-Milan">--:--</span><span class="clock-weather" id="weather-Milan"><span class="clock-icon" data-icon></span><span data-temp>--°C</span></span></div>
+        <div class="weather-reel" id="weatherReel">
+          <div class="wr-block"><span class="wr-city-name">London</span><span class="wr-city-time" id="clock-London">--:--</span><span class="wr-city-weather" id="weather-London"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span></div>
+          <div class="wr-block"><span class="wr-city-name">New York</span><span class="wr-city-time" id="clock-New York">--:--</span><span class="wr-city-weather" id="weather-New York"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span></div>
+          <div class="wr-block"><span class="wr-city-name">Paris</span><span class="wr-city-time" id="clock-Paris">--:--</span><span class="wr-city-weather" id="weather-Paris"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span></div>
+          <div class="wr-block"><span class="wr-city-name">Tokyo</span><span class="wr-city-time" id="clock-Tokyo">--:--</span><span class="wr-city-weather" id="weather-Tokyo"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span></div>
+          <div class="wr-block"><span class="wr-city-name">Milan</span><span class="wr-city-time" id="clock-Milan">--:--</span><span class="wr-city-weather" id="weather-Milan"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span></div>
+          <div class="wr-block"><span class="wr-city-name">Los Angeles</span><span class="wr-city-time" id="clock-Los Angeles">--:--</span><span class="wr-city-weather" id="weather-Los Angeles"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span></div>
+          <div class="wr-block"><span class="wr-city-name">Seoul</span><span class="wr-city-time" id="clock-Seoul">--:--</span><span class="wr-city-weather" id="weather-Seoul"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span></div>
+          <div class="wr-block"><span class="wr-city-name">Copenhagen</span><span class="wr-city-time" id="clock-Copenhagen">--:--</span><span class="wr-city-weather" id="weather-Copenhagen"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span></div>
+          <div class="wr-block"><span class="wr-city-name">Berlin</span><span class="wr-city-time" id="clock-Berlin">--:--</span><span class="wr-city-weather" id="weather-Berlin"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span></div>
         </div>
-        <div class="clocks-row">
-          <div class="clock-cell"><span class="clock-city">Los Angeles</span><span class="clock-time" id="clock-Los Angeles">--:--</span><span class="clock-weather" id="weather-Los Angeles"><span class="clock-icon" data-icon></span><span data-temp>--°C</span></span></div>
-          <div class="clock-cell"><span class="clock-city">Seoul</span><span class="clock-time" id="clock-Seoul">--:--</span><span class="clock-weather" id="weather-Seoul"><span class="clock-icon" data-icon></span><span data-temp>--°C</span></span></div>
-          <div class="clock-cell"><span class="clock-city">Copenhagen</span><span class="clock-time" id="clock-Copenhagen">--:--</span><span class="clock-weather" id="weather-Copenhagen"><span class="clock-icon" data-icon></span><span data-temp>--°C</span></span></div>
-          <div class="clock-cell"><span class="clock-city">Berlin</span><span class="clock-time" id="clock-Berlin">--:--</span><span class="clock-weather" id="weather-Berlin"><span class="clock-icon" data-icon></span><span data-temp>--°C</span></span></div>
+        <div class="weather-scrollbar-track" id="weatherScrollbarTrack">
+          <div class="weather-scrollbar-thumb" id="weatherScrollbarThumb"></div>
         </div>
       </div>
     </div>
@@ -519,6 +561,71 @@
       wrUpdateWeather(city);
       setInterval(() => wrUpdateWeather(city), 5 * 60 * 1000);
     });
+  </script>
+
+  <!-- ── Weather reel: custom scrollbar (Typeform-style progress bar) ── -->
+  <script>
+    const wrReel = document.getElementById('weatherReel');
+    const wrTrack = document.getElementById('weatherScrollbarTrack');
+    const wrThumb = document.getElementById('weatherScrollbarThumb');
+
+    function wrMaxScroll() {
+      return Math.max(0, wrReel.scrollWidth - wrReel.clientWidth);
+    }
+
+    function wrUpdateThumb() {
+      const max = wrMaxScroll();
+      // Thumb width mirrors how much of the reel is visible at once
+      // (e.g. 5 of 9 blocks visible → thumb covers 5/9 of the track).
+      const widthRatio = Math.min(1, wrReel.clientWidth / wrReel.scrollWidth);
+      const widthPct = widthRatio * 100;
+      wrThumb.style.width = widthPct + '%';
+
+      const scrollRatio = max > 0 ? wrReel.scrollLeft / max : 0;
+      const trackWidth = wrTrack.clientWidth;
+      const thumbWidthPx = (widthPct / 100) * trackWidth;
+      const maxThumbLeft = trackWidth - thumbWidthPx;
+      wrThumb.style.left = (scrollRatio * maxThumbLeft) + 'px';
+    }
+
+    function wrScrollToRatio(ratio) {
+      const max = wrMaxScroll();
+      wrReel.scrollLeft = Math.min(max, Math.max(0, ratio * max));
+    }
+
+    function wrRatioFromClientX(clientX) {
+      const rect = wrTrack.getBoundingClientRect();
+      const thumbWidthPx = wrThumb.getBoundingClientRect().width;
+      const usable = Math.max(1, rect.width - thumbWidthPx);
+      const x = clientX - rect.left - thumbWidthPx / 2;
+      return Math.min(1, Math.max(0, x / usable));
+    }
+
+    let wrDragging = false;
+
+    wrTrack.addEventListener('pointerdown', (e) => {
+      wrDragging = true;
+      wrTrack.setPointerCapture(e.pointerId);
+      wrReel.style.scrollBehavior = 'auto';
+      wrScrollToRatio(wrRatioFromClientX(e.clientX));
+    });
+    wrTrack.addEventListener('pointermove', (e) => {
+      if (!wrDragging) return;
+      wrScrollToRatio(wrRatioFromClientX(e.clientX));
+    });
+    wrTrack.addEventListener('pointerup', (e) => {
+      wrDragging = false;
+      wrTrack.releasePointerCapture(e.pointerId);
+      wrReel.style.scrollBehavior = 'smooth';
+    });
+    wrTrack.addEventListener('pointercancel', () => {
+      wrDragging = false;
+      wrReel.style.scrollBehavior = 'smooth';
+    });
+
+    wrReel.addEventListener('scroll', wrUpdateThumb);
+    window.addEventListener('resize', wrUpdateThumb);
+    wrUpdateThumb();
   </script>
 
   <!-- ── Spotify IFrame API: syncs CD spin to actual playback state ── -->
