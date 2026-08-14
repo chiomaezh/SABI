@@ -640,14 +640,16 @@
       return width;
     }
 
-    // Size every card to the SAME fixed width — the widest natural
-    // content across all cities' name/time/weather rows, so no card
-    // ever overflows and every city reads as a uniform "card".
+    // Size every card to the SAME fixed width. The floor is whatever the
+    // widest city's name/time/weather actually needs (so nothing ever
+    // overflows); on top of that we stretch cards so exactly 3 fit in
+    // view on mobile, or 5 on desktop, per screenful of the reel.
     function matchWrBlockWidths() {
       const blocks = document.querySelectorAll('.wr-block');
-      if (!blocks.length) return;
+      const reel = document.getElementById('weatherReel');
+      if (!blocks.length || !reel) return;
 
-      let maxWidth = 0;
+      let naturalMax = 0;
       blocks.forEach((block) => {
         const nameInner = block.querySelector('.wr-city-inner');
         const timeInner = block.querySelector('.wr-time-inner');
@@ -657,10 +659,15 @@
           wrNaturalWidth(timeInner),
           weatherEl ? weatherEl.getBoundingClientRect().width : 0
         );
-        if (w > maxWidth) maxWidth = w;
+        if (w > naturalMax) naturalMax = w;
       });
+      const contentFloor = Math.ceil(naturalMax) + 4;
 
-      const cardWidth = Math.ceil(maxWidth) + 4;
+      const isDesktop = window.matchMedia('(min-width: 651px)').matches;
+      const visibleCount = isDesktop ? 5 : 3;
+      const viewportShare = reel.clientWidth / visibleCount;
+
+      const cardWidth = Math.max(contentFloor, viewportShare);
       blocks.forEach((block) => {
         block.style.width = cardWidth + 'px';
       });
