@@ -121,10 +121,7 @@
 
     /* Each block: city / time / weather, stacked — same font-family,
        weights, letter-spacing and colour as the .ba-* weather blocks
-       on the About page. City name letters are spread edge-to-edge
-       via flex justify-content:space-between (like .ba-city-inner),
-       and each block's font-size is fit by JS so every card reads as
-       a consistent, evenly-filled width regardless of name length. */
+       on the About page. */
     .wr-block {
       flex: 0 0 33.3333%;
       max-width: 33.3333%;
@@ -136,16 +133,13 @@
       text-align: center;
     }
     .wr-city-name {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
       font-family: var(--font-body);
       font-weight: 300;
       font-size: 11px;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--bg);
-      line-height: 1;
+      white-space: nowrap;
     }
     .wr-city-time {
       font-family: var(--font-body);
@@ -640,87 +634,6 @@
     wrReel.addEventListener('scroll', wrUpdateThumb);
     window.addEventListener('resize', wrUpdateThumb);
     wrUpdateThumb();
-  </script>
-
-  <!-- ── Weather reel: per-city font-size fit, so every city-name row
-       spreads evenly across its card (same trick as .ba-city-inner
-       on the About page, generalised to any number of cities and any
-       card width) ── -->
-  <script>
-    // Break each city name into one <span> per letter so the row can
-    // be justified edge-to-edge with justify-content: space-between,
-    // exactly like .ba-city-inner on the About page.
-    function wrSplitCityLetters() {
-      document.querySelectorAll('.wr-city-name').forEach((el) => {
-        if (el.dataset.split === '1') return;
-        const text = el.textContent;
-        el.innerHTML = '';
-        for (const ch of text) {
-          const span = document.createElement('span');
-          span.textContent = ch === ' ' ? '\u00A0' : ch;
-          el.appendChild(span);
-        }
-        el.dataset.split = '1';
-      });
-    }
-
-    // Pick a font-size per city so each name's glyphs fill roughly the
-    // same proportion of its card's width — short names ("Paris") get
-    // a bigger font, long names ("Copenhagen") a smaller one — the
-    // same effect as the hand-tuned per-city sizes on the About page,
-    // computed automatically so it holds at any card width.
-    const WR_FIT_REF_PX = 10;
-    const WR_FIT_TARGET_RATIO = 0.52;
-
-    function wrFitCityFontSizes() {
-      const nameEls = document.querySelectorAll('.wr-city-name');
-      if (!nameEls.length) return;
-      const canvas = wrFitCityFontSizes._canvas || (wrFitCityFontSizes._canvas = document.createElement('canvas'));
-      const ctx = canvas.getContext('2d');
-      const isDesktop = window.innerWidth >= 651;
-      const minPx = isDesktop ? 10 : 9;
-      const maxPx = isDesktop ? 15 : 12;
-
-      nameEls.forEach((nameEl) => {
-        const block = nameEl.closest('.wr-block');
-        if (!block) return;
-
-        const styles = getComputedStyle(nameEl);
-        ctx.font = `${styles.fontWeight || '300'} ${WR_FIT_REF_PX}px ${styles.fontFamily}`;
-        const text = nameEl.textContent.replace(/\u00A0/g, ' ');
-        let naturalWidth = 0;
-        for (const ch of text) naturalWidth += ctx.measureText(ch).width;
-        if (naturalWidth <= 0) return;
-
-        const blockStyles = getComputedStyle(block);
-        const usableWidth = block.clientWidth
-          - (parseFloat(blockStyles.paddingLeft) || 0)
-          - (parseFloat(blockStyles.paddingRight) || 0);
-        if (usableWidth <= 0) return;
-
-        let fontSize = WR_FIT_REF_PX * (WR_FIT_TARGET_RATIO * usableWidth) / naturalWidth;
-        fontSize = Math.max(minPx, Math.min(maxPx, fontSize));
-        nameEl.style.fontSize = fontSize.toFixed(2) + 'px';
-      });
-    }
-
-    function wrInitCityFit() {
-      wrSplitCityLetters();
-      wrFitCityFontSizes();
-      // Re-fit once the custom webfont has actually loaded, since the
-      // very first measurement may happen against a fallback font.
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(wrFitCityFontSizes);
-      }
-    }
-
-    wrInitCityFit();
-
-    let wrFitResizeTimer = null;
-    window.addEventListener('resize', () => {
-      clearTimeout(wrFitResizeTimer);
-      wrFitResizeTimer = setTimeout(wrFitCityFontSizes, 100);
-    });
   </script>
 
   <!-- ── Spotify IFrame API: syncs CD spin to actual playback state ── -->
