@@ -640,10 +640,11 @@
       return width;
     }
 
-    // Size every card to the SAME fixed width. The floor is whatever the
-    // widest city's name/time/weather actually needs (so nothing ever
-    // overflows); on top of that we stretch cards so exactly 3 fit in
-    // view on mobile, or 5 on desktop, per screenful of the reel.
+    // Card width is fixed and content-driven only — the widest natural
+    // city name/time/weather content across all cities, so nothing ever
+    // overflows and every card is the same size. To control how many
+    // cities are visible per screen (3 on mobile, 5 on desktop), we
+    // adjust the GAP between cards, not the card width itself.
     function matchWrBlockWidths() {
       const blocks = document.querySelectorAll('.wr-block');
       const reel = document.getElementById('weatherReel');
@@ -661,16 +662,21 @@
         );
         if (w > naturalMax) naturalMax = w;
       });
-      const contentFloor = Math.ceil(naturalMax) + 4;
-
-      const isDesktop = window.matchMedia('(min-width: 651px)').matches;
-      const visibleCount = isDesktop ? 5 : 3;
-      const viewportShare = reel.clientWidth / visibleCount;
-
-      const cardWidth = Math.max(contentFloor, viewportShare);
+      const cardWidth = Math.ceil(naturalMax) + 24; // +20px for the block's own left/right padding, +4 buffer
       blocks.forEach((block) => {
         block.style.width = cardWidth + 'px';
       });
+
+      // Reset gap to measure the reel's true available width first,
+      // then solve for the gap that spaces exactly N cards across it.
+      reel.style.gap = '0px';
+      const isDesktop = window.matchMedia('(min-width: 651px)').matches;
+      const visibleCount = isDesktop ? 5 : 3;
+      const availableWidth = reel.clientWidth;
+      const minGap = 16;
+      const rawGap = (availableWidth - visibleCount * cardWidth) / (visibleCount - 1);
+      const gap = Math.max(minGap, rawGap);
+      reel.style.gap = gap + 'px';
 
       wrUpdateThumb();
     }
