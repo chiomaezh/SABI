@@ -68,7 +68,79 @@
       position: relative;
     }
     .wine-block--top { grid-area: top; }
-    .wine-block--bottom { grid-area: bottom; }
+    .wine-block--bottom {
+      grid-area: bottom;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Hero copy, top wine block ── */
+    .hero-text {
+      padding: 6.5rem 1.5rem 2rem;
+      max-width: 480px;
+      text-align: left;
+    }
+    .hero-lead,
+    .hero-body {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--bg);
+    }
+    .hero-lead { margin-bottom: 0.75rem; }
+
+    @media (min-width: 651px) {
+      .hero-text {
+        padding: 9rem 2.5rem 2rem;
+      }
+    }
+
+    /* ── World clocks, bottom wine block ── */
+    .clocks-wrap {
+      width: 100%;
+      padding: 2rem 1.5rem;
+    }
+    .clocks-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .clocks-row + .clocks-row {
+      margin-top: 2.25rem;
+    }
+    .clock-cell {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .clock-city {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--bg);
+      margin-bottom: 0.5rem;
+      white-space: nowrap;
+    }
+    .clock-time {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      font-variant-numeric: tabular-nums;
+      color: var(--bg);
+    }
+
+    @media (min-width: 651px) {
+      .clocks-wrap { padding: 2.5rem; }
+      .clock-city { font-size: 11px; letter-spacing: 2px; }
+      .clock-time { font-size: 20px; }
+    }
 
     .panel--right {
       grid-area: right;
@@ -177,7 +249,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1.75rem;
+      gap: 3.0625rem;
       margin-top: 4rem;
     }
 
@@ -250,12 +322,12 @@
       }
 
       .wine-block--top {
-        height: 30vh;
-        min-height: 220px;
+        height: auto;
+        min-height: 30vh;
       }
       .wine-block--bottom {
-        height: 18vh;
-        min-height: 160px;
+        height: auto;
+        min-height: 18vh;
       }
       .panel--right {
         height: auto;
@@ -270,13 +342,25 @@
       /* header overlays the wine band at the top on mobile, so both
          the hamburger and the logo need to read against wine */
       .site-name { color: var(--bg); }
+
+      /* fixed to the top section itself (scrolls away with it), rather
+         than pinned to the viewport for the whole page — matches the
+         original reference page's header behaviour */
+      .header-wrap {
+        position: absolute;
+      }
     }
   </style>
 </head>
 <body>
 
   <div class="viewfinder">
-    <div class="wine-block wine-block--top"></div>
+    <div class="wine-block wine-block--top">
+      <div class="hero-text">
+        <p class="hero-lead">Take a seat while you wait.</p>
+        <p class="hero-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.</p>
+      </div>
+    </div>
     <div class="panel--right">
       <div class="music-stack">
         <div class="cd-stack">
@@ -287,7 +371,23 @@
         </div>
       </div>
     </div>
-    <div class="wine-block wine-block--bottom"></div>
+    <div class="wine-block wine-block--bottom">
+      <div class="clocks-wrap">
+        <div class="clocks-row">
+          <div class="clock-cell"><span class="clock-city">London</span><span class="clock-time" id="clock-London">--:--</span></div>
+          <div class="clock-cell"><span class="clock-city">New York</span><span class="clock-time" id="clock-New York">--:--</span></div>
+          <div class="clock-cell"><span class="clock-city">Paris</span><span class="clock-time" id="clock-Paris">--:--</span></div>
+          <div class="clock-cell"><span class="clock-city">Tokyo</span><span class="clock-time" id="clock-Tokyo">--:--</span></div>
+          <div class="clock-cell"><span class="clock-city">Milan</span><span class="clock-time" id="clock-Milan">--:--</span></div>
+        </div>
+        <div class="clocks-row">
+          <div class="clock-cell"><span class="clock-city">Los Angeles</span><span class="clock-time" id="clock-Los Angeles">--:--</span></div>
+          <div class="clock-cell"><span class="clock-city">Seoul</span><span class="clock-time" id="clock-Seoul">--:--</span></div>
+          <div class="clock-cell"><span class="clock-city">Copenhagen</span><span class="clock-time" id="clock-Copenhagen">--:--</span></div>
+          <div class="clock-cell"><span class="clock-city">Berlin</span><span class="clock-time" id="clock-Berlin">--:--</span></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="header-wrap">
@@ -318,6 +418,37 @@
       const isOpen = menuAccordion.classList.toggle('open');
       menuBtn.classList.toggle('open', isOpen);
       menuBtn.setAttribute('aria-expanded', isOpen);
+    });
+  </script>
+
+  <!-- ── World clocks ── -->
+  <script>
+    const WR_CITIES = [
+      { id: 'London', tz: 'Europe/London' },
+      { id: 'New York', tz: 'America/New_York' },
+      { id: 'Paris', tz: 'Europe/Paris' },
+      { id: 'Tokyo', tz: 'Asia/Tokyo' },
+      { id: 'Milan', tz: 'Europe/Rome' },
+      { id: 'Los Angeles', tz: 'America/Los_Angeles' },
+      { id: 'Seoul', tz: 'Asia/Seoul' },
+      { id: 'Copenhagen', tz: 'Europe/Copenhagen' },
+      { id: 'Berlin', tz: 'Europe/Berlin' }
+    ];
+
+    function wrUpdateClock(city) {
+      const el = document.getElementById('clock-' + city.id);
+      if (!el) return;
+      const timeStr = new Date().toLocaleTimeString('en-GB', {
+        timeZone: city.tz,
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      el.textContent = timeStr;
+    }
+
+    WR_CITIES.forEach((city) => {
+      wrUpdateClock(city);
+      setInterval(() => wrUpdateClock(city), 1000);
     });
   </script>
 
