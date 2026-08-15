@@ -130,7 +130,7 @@
     .wr-block {
       flex: 0 0 auto;
       box-sizing: border-box;
-      padding: 0 10px;
+      padding: 0 6px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -151,22 +151,25 @@
       justify-content: space-between;
       width: 100%;
     }
+    .wr-city-name--small {
+      font-size: 11px !important;
+    }
     .wr-city-time {
       display: block;
       width: 100%;
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: 20px;
-      letter-spacing: 1px;
+      font-size: 18px;
+      letter-spacing: 0.5px;
       font-variant-numeric: tabular-nums;
       color: var(--bg);
       margin-top: 8px;
     }
     .wr-time-inner {
-      display: flex;
-      justify-content: space-between;
+      display: inline-flex;
       align-items: baseline;
-      width: 100%;
+      justify-content: center;
+      gap: 2px;
     }
     .wr-city-weather {
       display: flex;
@@ -226,11 +229,11 @@
 
     @media (min-width: 651px) {
       .clocks-wrap { padding: 2.5rem; }
-      .wr-block { padding: 0 14px; }
+      .wr-block { padding: 0 8px; }
       .wr-city-name { font-size: 12px; }
-      .wr-city-time { font-size: 25px; }
-      .wr-city-weather { font-size: 17px; }
-      .wr-icon { width: 21px; height: 21px; }
+      .wr-city-time { font-size: 20px; letter-spacing: 0.5px; }
+      .wr-city-weather { font-size: 15px; }
+      .wr-icon { width: 18px; height: 18px; }
       .weather-scrollbar-hit { margin-top: 1.25rem; }
     }
 
@@ -472,7 +475,7 @@
             <span class="wr-city-weather" id="weather-London"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span>
           </div>
           <div class="wr-block">
-            <span class="wr-city-name"><span class="wr-city-inner"><span>N</span><span>e</span><span>w</span><span>&nbsp;</span><span>Y</span><span>o</span><span>r</span><span>k</span></span></span>
+            <span class="wr-city-name wr-city-name--small"><span class="wr-city-inner"><span>N</span><span>e</span><span>w</span><span>&nbsp;</span><span>Y</span><span>o</span><span>r</span><span>k</span></span></span>
             <span class="wr-city-time" id="clock-New York"><span class="wr-time-inner"><span data-h1>0</span><span data-h2>0</span><span class="wr-time-colon">:</span><span data-m1>0</span><span data-m2>0</span></span></span>
             <span class="wr-city-weather" id="weather-New York"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span>
           </div>
@@ -492,7 +495,7 @@
             <span class="wr-city-weather" id="weather-Milan"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span>
           </div>
           <div class="wr-block">
-            <span class="wr-city-name"><span class="wr-city-inner"><span>L</span><span>o</span><span>s</span><span>&nbsp;</span><span>A</span><span>n</span><span>g</span><span>e</span><span>l</span><span>e</span><span>s</span></span></span>
+            <span class="wr-city-name wr-city-name--small"><span class="wr-city-inner"><span>L</span><span>o</span><span>s</span><span>&nbsp;</span><span>A</span><span>n</span><span>g</span><span>e</span><span>l</span><span>e</span><span>s</span></span></span>
             <span class="wr-city-time" id="clock-Los Angeles"><span class="wr-time-inner"><span data-h1>0</span><span data-h2>0</span><span class="wr-time-colon">:</span><span data-m1>0</span><span data-m2>0</span></span></span>
             <span class="wr-city-weather" id="weather-Los Angeles"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span>
           </div>
@@ -502,7 +505,7 @@
             <span class="wr-city-weather" id="weather-Seoul"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span>
           </div>
           <div class="wr-block">
-            <span class="wr-city-name"><span class="wr-city-inner"><span>C</span><span>o</span><span>p</span><span>e</span><span>n</span><span>h</span><span>a</span><span>g</span><span>e</span><span>n</span></span></span>
+            <span class="wr-city-name wr-city-name--small"><span class="wr-city-inner"><span>C</span><span>o</span><span>p</span><span>e</span><span>n</span><span>h</span><span>a</span><span>g</span><span>e</span><span>n</span></span></span>
             <span class="wr-city-time" id="clock-Copenhagen"><span class="wr-time-inner"><span data-h1>0</span><span data-h2>0</span><span class="wr-time-colon">:</span><span data-m1>0</span><span data-m2>0</span></span></span>
             <span class="wr-city-weather" id="weather-Copenhagen"><span class="wr-icon" data-icon></span><span data-temp>--°C</span></span>
           </div>
@@ -662,7 +665,7 @@
         );
         if (w > naturalMax) naturalMax = w;
       });
-      const cardWidth = Math.ceil(naturalMax) + 24; // +20px for the block's own left/right padding, +4 buffer
+      const cardWidth = Math.ceil(naturalMax) + 20; // covers the block's own left/right padding + small buffer
       blocks.forEach((block) => {
         block.style.width = cardWidth + 'px';
       });
@@ -673,7 +676,7 @@
       const isDesktop = window.matchMedia('(min-width: 651px)').matches;
       const visibleCount = isDesktop ? 5 : 3;
       const availableWidth = reel.clientWidth;
-      const minGap = 16;
+      const minGap = 10;
       const rawGap = (availableWidth - visibleCount * cardWidth) / (visibleCount - 1);
       const gap = Math.max(minGap, rawGap);
       reel.style.gap = gap + 'px';
