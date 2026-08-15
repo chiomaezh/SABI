@@ -130,7 +130,7 @@
     .wr-block {
       flex: 0 0 auto;
       box-sizing: border-box;
-      padding: 0 6px;
+      padding: 0 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -159,17 +159,17 @@
       width: 100%;
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: 18px;
-      letter-spacing: 0.5px;
+      font-size: 20px;
+      letter-spacing: 1px;
       font-variant-numeric: tabular-nums;
       color: var(--bg);
       margin-top: 8px;
     }
     .wr-time-inner {
-      display: inline-flex;
+      display: flex;
+      justify-content: space-between;
       align-items: baseline;
-      justify-content: center;
-      gap: 2px;
+      width: 100%;
     }
     .wr-city-weather {
       display: flex;
@@ -229,11 +229,11 @@
 
     @media (min-width: 651px) {
       .clocks-wrap { padding: 2.5rem; }
-      .wr-block { padding: 0 8px; }
+      .wr-block { padding: 0 14px; }
       .wr-city-name { font-size: 12px; }
-      .wr-city-time { font-size: 20px; letter-spacing: 0.5px; }
-      .wr-city-weather { font-size: 15px; }
-      .wr-icon { width: 18px; height: 18px; }
+      .wr-city-time { font-size: 25px; }
+      .wr-city-weather { font-size: 17px; }
+      .wr-icon { width: 21px; height: 21px; }
       .weather-scrollbar-hit { margin-top: 1.25rem; }
     }
 
@@ -643,11 +643,12 @@
       return width;
     }
 
-    // Card width is fixed and content-driven only — the widest natural
-    // city name/time/weather content across all cities, so nothing ever
-    // overflows and every card is the same size. To control how many
-    // cities are visible per screen (3 on mobile, 5 on desktop), we
-    // adjust the GAP between cards, not the card width itself.
+    // Card width is driven by the TIME row's natural content width (plus
+    // weather as a safety floor) — NOT the city name. Because both
+    // .wr-city-inner and .wr-time-inner use width:100% + space-between,
+    // the city name automatically stretches to match this exact same
+    // width; they're locked together by construction, so they always
+    // align, and narrowing the time row narrows the whole card.
     function matchWrBlockWidths() {
       const blocks = document.querySelectorAll('.wr-block');
       const reel = document.getElementById('weatherReel');
@@ -655,11 +656,9 @@
 
       let naturalMax = 0;
       blocks.forEach((block) => {
-        const nameInner = block.querySelector('.wr-city-inner');
         const timeInner = block.querySelector('.wr-time-inner');
         const weatherEl = block.querySelector('.wr-city-weather');
         const w = Math.max(
-          wrNaturalWidth(nameInner),
           wrNaturalWidth(timeInner),
           weatherEl ? weatherEl.getBoundingClientRect().width : 0
         );
@@ -676,7 +675,7 @@
       const isDesktop = window.matchMedia('(min-width: 651px)').matches;
       const visibleCount = isDesktop ? 5 : 3;
       const availableWidth = reel.clientWidth;
-      const minGap = 10;
+      const minGap = 16;
       const rawGap = (availableWidth - visibleCount * cardWidth) / (visibleCount - 1);
       const gap = Math.max(minGap, rawGap);
       reel.style.gap = gap + 'px';
