@@ -67,10 +67,7 @@
       height: 100%;
       position: relative;
     }
-    .wine-block--top {
-      grid-area: top;
-      background: linear-gradient(to bottom, #2E000D, var(--wine));
-    }
+    .wine-block--top { grid-area: top; }
     .wine-block--bottom {
       grid-area: bottom;
       display: flex;
@@ -86,7 +83,9 @@
       padding: 6.5rem 1.5rem 2rem;
       max-width: 480px;
       margin-left: auto;
+      margin-top: 0;
       text-align: right;
+      transition: margin-top 0.25s ease;
     }
     .hero-lead,
     .hero-body {
@@ -549,12 +548,17 @@
   <script>
     const menuBtn = document.getElementById('menuBtn');
     const menuAccordion = document.getElementById('menuAccordion');
+    const heroText = document.querySelector('.hero-text');
 
     menuBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const isOpen = menuAccordion.classList.toggle('open');
       menuBtn.classList.toggle('open', isOpen);
       menuBtn.setAttribute('aria-expanded', isOpen);
+
+      if (heroText) {
+        heroText.style.marginTop = isOpen ? menuAccordion.scrollHeight + 'px' : '0px';
+      }
     });
   </script>
 
