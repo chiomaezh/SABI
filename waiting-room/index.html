@@ -666,7 +666,7 @@
         );
         if (w > naturalMax) naturalMax = w;
       });
-      const cardWidth = Math.ceil(naturalMax) + 32; // covers the block's own left/right padding + a bit of extra breathing room
+      const cardWidth = Math.ceil(naturalMax) + 26; // covers the block's own left/right padding + a bit of extra breathing room
       blocks.forEach((block) => {
         block.style.width = cardWidth + 'px';
       });
