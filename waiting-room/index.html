@@ -141,7 +141,7 @@
       width: 100%;
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: 10px;
+      font-size: 11px;
       letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--bg);
@@ -152,7 +152,7 @@
       width: 100%;
     }
     .wr-city-name--small {
-      font-size: 10px !important;
+      font-size: 11px !important;
     }
     .wr-city-time {
       display: block;
@@ -656,15 +656,17 @@
 
       let naturalMax = 0;
       blocks.forEach((block) => {
+        const nameInner = block.querySelector('.wr-city-inner');
         const timeInner = block.querySelector('.wr-time-inner');
         const weatherEl = block.querySelector('.wr-city-weather');
         const w = Math.max(
+          wrNaturalWidth(nameInner),
           wrNaturalWidth(timeInner),
           wrNaturalWidth(weatherEl)
         );
         if (w > naturalMax) naturalMax = w;
       });
-      const cardWidth = Math.ceil(naturalMax) + 20; // covers the block's own left/right padding + small buffer
+      const cardWidth = Math.ceil(naturalMax) + 32; // covers the block's own left/right padding + a bit of extra breathing room
       blocks.forEach((block) => {
         block.style.width = cardWidth + 'px';
       });
