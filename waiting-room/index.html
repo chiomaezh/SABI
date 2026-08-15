@@ -174,8 +174,8 @@
     .wr-city-weather {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
+      justify-content: space-between;
+      width: 100%;
       margin-top: 8px;
       font-family: var(--font-body);
       font-weight: 300;
@@ -660,7 +660,7 @@
         const weatherEl = block.querySelector('.wr-city-weather');
         const w = Math.max(
           wrNaturalWidth(timeInner),
-          weatherEl ? weatherEl.getBoundingClientRect().width : 0
+          wrNaturalWidth(weatherEl)
         );
         if (w > naturalMax) naturalMax = w;
       });
