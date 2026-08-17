@@ -89,11 +89,17 @@
     }
 
     /* Desktop: the accordion push is done with a transform instead of
-       margin-top, so it only visually shifts the hero copy inside the
-       wine block and never changes the fixed grid's track sizing (which
-       is what was dragging the cream side / whole page down with it). */
+       margin-top, so it only visually shifts the wine-side content and
+       never changes the fixed grid's track sizing (which is what was
+       dragging the cream side / whole page down with it). Both the hero
+       copy and the weather reel below get the same transform so they
+       move down together, keeping their relative spacing intact. */
     @media (min-width: 651px) {
       .hero-text {
+        transition: transform 0.25s ease;
+        transform: translateY(0);
+      }
+      .clocks-wrap {
         transition: transform 0.25s ease;
         transform: translateY(0);
       }
@@ -284,10 +290,7 @@
       overflow-x: hidden;
       scroll-behavior: smooth;
       scroll-snap-type: y mandatory;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
     }
-    .cream-col::-webkit-scrollbar { display: none; }
 
     .cream-card {
       width: 100%;
@@ -315,8 +318,10 @@
     @media (min-width: 651px) {
       .cream-card--games {
         /* Matches .hero-text's desktop padding-top exactly, so the top
-           of "Brain Games" lines up with the top of the hero paragraph. */
-        padding: 9rem 2.5rem 2rem;
+           of "Brain Games" lines up with the top of the hero paragraph.
+           Bottom padding is 2.5x the original 2rem, to give the list
+           more breathing room underneath it. */
+        padding: 9rem 2.5rem 5rem;
       }
     }
 
@@ -365,6 +370,13 @@
       letter-spacing: 1.3px;
       text-transform: uppercase;
       color: var(--text);
+    }
+
+    /* "Game 01" / "Game 02" labels switch to owners-text; the values
+       (Word Search, Buzzword) stay in gemeli mono like the rest of the
+       list. Size/spacing/case stay identical between the two. */
+    .games-list-label {
+      font-family: var(--font-body);
     }
 
     /* ── Header (overlaid, no divider, positions unchanged) ── */
@@ -562,7 +574,9 @@
       }
       .cream-card--games {
         grid-area: games;
-        padding: 3.5rem 1.5rem 3rem;
+        /* Same length as the music card above it. */
+        min-height: 70vh;
+        padding: 3.5rem 1.5rem 7.5rem;
       }
 
       .music-stack {
@@ -705,6 +719,7 @@
     const menuBtn = document.getElementById('menuBtn');
     const menuAccordion = document.getElementById('menuAccordion');
     const heroText = document.querySelector('.hero-text');
+    const clocksWrap = document.querySelector('.clocks-wrap');
 
     menuBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -712,17 +727,29 @@
       menuBtn.classList.toggle('open', isOpen);
       menuBtn.setAttribute('aria-expanded', isOpen);
 
-      if (heroText) {
-        const isDesktop = window.matchMedia('(min-width: 651px)').matches;
-        const offset = menuAccordion.scrollHeight;
-        if (isDesktop) {
-          // Transform-only: shifts the hero copy without affecting the
-          // fixed grid's row sizing, so the cream side stays put.
-          heroText.style.transform = isOpen ? `translateY(${offset}px)` : 'translateY(0)';
+      const isDesktop = window.matchMedia('(min-width: 651px)').matches;
+      const offset = menuAccordion.scrollHeight;
+
+      if (isDesktop) {
+        // Transform-only, applied to both the hero copy and the weather
+        // reel below it: the whole wine-side column shifts down together
+        // (keeping their relative spacing so nothing gets covered),
+        // while the cream side and the grid's own sizing stay untouched.
+        const shift = isOpen ? `translateY(${offset}px)` : 'translateY(0)';
+        if (heroText) {
+          heroText.style.transform = shift;
           heroText.style.marginTop = '0px';
-        } else {
+        }
+        if (clocksWrap) {
+          clocksWrap.style.transform = shift;
+        }
+      } else {
+        if (heroText) {
           heroText.style.marginTop = isOpen ? offset + 'px' : '0px';
           heroText.style.transform = '';
+        }
+        if (clocksWrap) {
+          clocksWrap.style.transform = '';
         }
       }
     });
