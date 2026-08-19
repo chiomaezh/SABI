@@ -143,7 +143,7 @@
       width: 100%;
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: 10px;
+      font-size: 9.8px;
       letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--bg);
@@ -154,7 +154,7 @@
       width: 100%;
     }
     .wr-city-name--small {
-      font-size: 9.5px !important;
+      font-size: 9.3px !important;
     }
     .wr-city-time {
       display: block;
@@ -232,7 +232,7 @@
     @media (min-width: 651px) {
       .clocks-wrap { padding: 2.5rem; }
       .wr-block { padding: 0 14px; }
-      .wr-city-name { font-size: 10px; }
+      .wr-city-name { font-size: 9.8px; }
       .wr-city-time { font-size: 28px; }
       .wr-city-weather { font-size: 18px; }
       .wr-icon { width: 22px; height: 22px; }
@@ -893,7 +893,7 @@
         );
         if (w > naturalMax) naturalMax = w;
       });
-      const cardWidth = Math.ceil(naturalMax) + 25; // covers the block's own left/right padding + a bit of extra breathing room
+      const cardWidth = Math.ceil(naturalMax) + 24; // covers the block's own left/right padding + a bit of extra breathing room
       blocks.forEach((block) => {
         block.style.width = cardWidth + 'px';
       });
