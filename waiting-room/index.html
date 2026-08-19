@@ -66,7 +66,6 @@
       background: var(--wine);
       height: 100%;
       min-height: 0;
-      overflow: hidden;
       position: relative;
     }
     .wine-block--top { grid-area: top; }
@@ -99,9 +98,23 @@
     }
     .hero-lead { margin-bottom: 0.75rem; }
 
+    /* Desktop: the accordion push uses a transform instead of
+       margin-top. Margin forces the grid row to grow to fit the
+       content, and since the cream column spans both rows, growing the
+       top row drags the cream side down with it (and clipping the
+       overflow instead just cuts the hero text off). A transform never
+       affects layout/track sizing, so it only visually shifts the wine
+       side. The weather reel below gets the same transform so it moves
+       down in sync and never gets covered by the hero text. */
     @media (min-width: 651px) {
       .hero-text {
         padding: 9rem 2.5rem 2rem;
+        transition: transform 0.25s ease;
+        transform: translateY(0);
+      }
+      .clocks-wrap {
+        transition: transform 0.25s ease;
+        transform: translateY(0);
       }
     }
 
@@ -565,7 +578,7 @@
       width: 100%;
       height: 100%;
       transform: rotate(0deg);
-      opacity: 0.55;
+      opacity: 0.45;
       pointer-events: none;
       user-select: none;
     }
@@ -821,6 +834,7 @@
     const menuBtn = document.getElementById('menuBtn');
     const menuAccordion = document.getElementById('menuAccordion');
     const heroText = document.querySelector('.hero-text');
+    const clocksWrap = document.querySelector('.clocks-wrap');
 
     menuBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -828,8 +842,31 @@
       menuBtn.classList.toggle('open', isOpen);
       menuBtn.setAttribute('aria-expanded', isOpen);
 
-      if (heroText) {
-        heroText.style.marginTop = isOpen ? menuAccordion.scrollHeight + 'px' : '0px';
+      const isDesktop = window.matchMedia('(min-width: 651px)').matches;
+      const offset = menuAccordion.scrollHeight;
+
+      if (isDesktop) {
+        // Transform-only, applied to both the hero copy and the weather
+        // reel below it: the whole wine-side column shifts down
+        // together (keeping their relative spacing so nothing gets
+        // covered or clipped), while the cream side and the grid's own
+        // row sizing stay completely untouched.
+        const shift = isOpen ? `translateY(${offset}px)` : 'translateY(0)';
+        if (heroText) {
+          heroText.style.transform = shift;
+          heroText.style.marginTop = '0px';
+        }
+        if (clocksWrap) {
+          clocksWrap.style.transform = shift;
+        }
+      } else {
+        if (heroText) {
+          heroText.style.marginTop = isOpen ? offset + 'px' : '0px';
+          heroText.style.transform = '';
+        }
+        if (clocksWrap) {
+          clocksWrap.style.transform = '';
+        }
       }
     });
   </script>
