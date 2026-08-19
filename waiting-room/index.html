@@ -455,9 +455,85 @@
       font-family: var(--font-body);
     }
 
-    /* ── Third card, left blank for now ── */
+    /* ── Third card: page footer, in the About page's phone-mode format ── */
     .cream-card--blank {
       background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 3.5rem 1.5rem 3.5rem;
+    }
+    @media (min-width: 651px) {
+      .cream-card--blank {
+        /* Matches the other two cards' desktop padding. */
+        padding: 9rem 2.5rem 6.75rem;
+      }
+    }
+
+    /* Footer grid: same 2-column, stacked format used on the About
+       page's phone layout — description + copyright span the full
+       width, Contact and Services sit side by side underneath. */
+    .site-footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 1rem;
+      row-gap: 1.75rem;
+      align-items: start;
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      align-self: start;
+    }
+    .footer-col:first-child {
+      grid-column: 1 / -1;
+    }
+
+    .footer-desc {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 0.9rem;
+    }
+
+    .footer-copyright {
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 12px;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+
+    .footer-heading {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.7rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .footer-links a {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: underline;
+      white-space: normal;
+    }
+
+    .footer-col--services .footer-links a {
+      text-transform: uppercase;
     }
 
     /* ── Header (overlaid, no divider, positions unchanged) ── */
@@ -744,7 +820,33 @@
               </ul>
             </div>
           </div>
-          <div class="cream-card cream-card--blank"></div>
+          <div class="cream-card cream-card--blank">
+            <footer class="site-footer">
+              <div class="footer-col">
+                <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
+                <p class="footer-copyright">© 2026 SABI London</p>
+              </div>
+
+              <div class="footer-col">
+                <p class="footer-heading">Contact</p>
+                <div class="footer-links">
+                  <a href="mailto:office@sabi.london" target="_blank" rel="noopener">office@sabi.london</a>
+                  <a href="tel:+447400192837">+44 7400 192837</a>
+                  <a href="https://calendar.app.google/itHV85cwLfoDmH7x5">OOO Hours</a>
+                </div>
+              </div>
+
+              <div class="footer-col footer-col--services">
+                <p class="footer-heading">Services</p>
+                <div class="footer-links">
+                  <a href="https://sabi.london/services/brand-strategy/">Brand Strategy</a>
+                  <a href="https://sabi.london/services/world-building/">World Building</a>
+                  <a href="https://sabi.london/services/copy/">Copy</a>
+                  <a href="https://sabi.london/services/community-and-partnerships/">Community &amp; Partnerships</a>
+                </div>
+              </div>
+            </footer>
+          </div>
         </div>
       </div>
       <div class="cream-snap-spacer" aria-hidden="true"></div>
