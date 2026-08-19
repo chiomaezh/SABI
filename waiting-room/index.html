@@ -282,19 +282,35 @@
     /* Pinned window onto the horizontal track: stays put at the top of
        the scrollport for the whole scrollable range, so scrolling
        vertically doesn't move it up/down — only the track inside it
-       slides horizontally. */
+       slides. NOTE: this element intentionally does NOT carry
+       scroll-snap-align — sticky elements make unreliable snap targets
+       (their box appears "already in place" once stuck, which is what
+       was preventing scrolling back up to the music card). The actual
+       snap points are the plain, non-sticky markers below. */
     .cream-viewport {
       position: sticky;
       top: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
     }
 
-    /* Invisible spacer: gives the column a second "page" of scrollable
-       height so there's something to scroll/snap to. */
+    /* Zero-footprint marker for the very first snap point (top of the
+       column). Plain and non-sticky, so it's an unambiguous snap
+       target. */
+    .cream-snap-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 1px;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      pointer-events: none;
+    }
+
+    /* Invisible spacers: each gives the column one more "page" of
+       scrollable height with its own plain (non-sticky) snap target. */
     .cream-snap-spacer {
       width: 100%;
       height: 100%;
@@ -303,20 +319,24 @@
     }
 
     .cream-track {
-      display: flex;
-      flex-direction: row;
+      display: grid;
+      grid-template-columns: 50% 50%;
+      grid-template-rows: 50% 50%;
       width: 200%;
-      height: 100%;
+      height: 200%;
     }
 
     .cream-card {
-      width: 50%;
+      width: 100%;
       height: 100%;
       min-height: 100%;
-      flex-shrink: 0;
       background: var(--bg);
       position: relative;
     }
+
+    .cream-card--music { grid-column: 1; grid-row: 1; }
+    .cream-card--games { grid-column: 2; grid-row: 1; }
+    .cream-card--blank { grid-column: 2; grid-row: 2; }
 
     .cream-card--music {
       display: flex;
@@ -373,7 +393,9 @@
 
     .games-header .tm {
       font-size: 1.5em;
-      vertical-align: text-top;
+      display: inline-block;
+      vertical-align: top;
+      line-height: 1;
       margin-left: 3px;
       text-transform: none;
     }
@@ -416,6 +438,11 @@
        list. Size/spacing/case stay identical between the two. */
     .games-list-label {
       font-family: var(--font-body);
+    }
+
+    /* ── Third card, left blank for now ── */
+    .cream-card--blank {
+      background: var(--bg);
     }
 
     /* ── Header (overlaid, no divider, positions unchanged) ── */
@@ -531,7 +558,7 @@
       width: 100%;
       height: 100%;
       transform: rotate(0deg);
-      opacity: 0.45;
+      opacity: 0.55;
       pointer-events: none;
       user-select: none;
     }
@@ -579,12 +606,13 @@
         width: 100%;
         height: auto;
         grid-template-columns: minmax(0, 1fr);
-        grid-template-rows: auto auto auto auto;
+        grid-template-rows: auto auto auto auto auto;
         grid-template-areas:
           "top"
           "right"
           "bottom"
-          "games";
+          "games"
+          "blank";
       }
 
       .wine-block--top {
@@ -595,9 +623,8 @@
         height: auto;
         min-height: 18vh;
       }
-      /* Unwrap the card-snap scroller on mobile: its two cards become
-         independent grid items, so "Brain Games" can sit below the
-         weather reel instead of stacking with the music card. */
+      /* Unwrap the card-snap scroller on mobile: its cards become
+         independent grid items, stacked vertically in normal order. */
       .cream-col {
         display: contents;
       }
@@ -607,6 +634,7 @@
       .cream-track {
         display: contents;
       }
+      .cream-snap-top,
       .cream-snap-spacer {
         display: none;
       }
@@ -628,6 +656,10 @@
            Bottom padding matches top padding, per the desktop card. */
         min-height: 70vh;
         padding: 3.5rem 1.5rem 3.5rem;
+      }
+      .cream-card--blank {
+        grid-area: blank;
+        min-height: 70vh;
       }
 
       .music-stack {
@@ -657,6 +689,7 @@
       </div>
     </div>
     <div class="cream-col" id="creamCol">
+      <span class="cream-snap-top" aria-hidden="true"></span>
       <div class="cream-viewport">
         <div class="cream-track" id="creamTrack">
           <div class="cream-card cream-card--music">
@@ -691,8 +724,10 @@
               </ul>
             </div>
           </div>
+          <div class="cream-card cream-card--blank"></div>
         </div>
       </div>
+      <div class="cream-snap-spacer" aria-hidden="true"></div>
       <div class="cream-snap-spacer" aria-hidden="true"></div>
     </div>
     <div class="wine-block wine-block--bottom">
@@ -903,7 +938,7 @@
         );
         if (w > naturalMax) naturalMax = w;
       });
-      const cardWidth = Math.ceil(naturalMax) + 25; // covers the block's own left/right padding + a bit of extra breathing room
+      const cardWidth = Math.ceil(naturalMax) + 24.5; // covers the block's own left/right padding + a bit of extra breathing room
       blocks.forEach((block) => {
         block.style.width = cardWidth + 'px';
       });
@@ -1030,17 +1065,19 @@
       IFrameAPI.createController(element, options, callback);
     };
   </script>
-  <!-- ── Cream cards: force music & Brain Games sections to match height on phone ── -->
+  <!-- ── Cream cards: force music, Brain Games & blank sections to match height on phone ── -->
   <script>
     function matchCreamCardHeights() {
       const musicCard = document.querySelector('.cream-card--music');
       const gamesCard = document.querySelector('.cream-card--games');
-      if (!musicCard || !gamesCard) return;
+      const blankCard = document.querySelector('.cream-card--blank');
+      if (!musicCard || !gamesCard || !blankCard) return;
 
       const isMobile = window.matchMedia('(max-width: 650px)').matches;
       if (!isMobile) {
         musicCard.style.height = '';
         gamesCard.style.height = '';
+        blankCard.style.height = '';
         return;
       }
 
@@ -1049,21 +1086,26 @@
       // stale height left over from a previous measurement.
       musicCard.style.height = 'auto';
       gamesCard.style.height = 'auto';
+      blankCard.style.height = 'auto';
 
       const tallest = Math.max(
         musicCard.getBoundingClientRect().height,
-        gamesCard.getBoundingClientRect().height
+        gamesCard.getBoundingClientRect().height,
+        blankCard.getBoundingClientRect().height
       );
 
       musicCard.style.height = tallest + 'px';
       gamesCard.style.height = tallest + 'px';
+      blankCard.style.height = tallest + 'px';
     }
 
     window.addEventListener('load', matchCreamCardHeights);
     window.addEventListener('resize', matchCreamCardHeights);
   </script>
 
-  <!-- ── Cream column: vertical scroll drives a horizontal card slide (PC only) ── -->
+  <!-- ── Cream column: vertical scroll drives an L-shaped card slide (PC only) ──
+       Music → Brain Games slides horizontally; Brain Games → blank card
+       slides vertically. Scroll interaction itself is always vertical. ── -->
   <script>
     (function () {
       const creamCol = document.getElementById('creamCol');
@@ -1076,11 +1118,14 @@
           creamTrack.style.transform = '';
           return;
         }
-        const max = creamCol.scrollHeight - creamCol.clientHeight;
-        const progress = max > 0 ? Math.min(1, Math.max(0, creamCol.scrollTop / max)) : 0;
-        // Track is 200% wide (two cards side by side); -50% of the
-        // track's own width slides exactly one card's width across.
-        creamTrack.style.transform = `translateX(-${progress * 50}%)`;
+        const pageHeight = creamCol.clientHeight;
+        // 0 = music card, 1 = games card, 2 = blank card.
+        const pageFloat = pageHeight > 0
+          ? Math.min(2, Math.max(0, creamCol.scrollTop / pageHeight))
+          : 0;
+        const xProgress = Math.min(1, pageFloat);           // music → games
+        const yProgress = Math.max(0, Math.min(1, pageFloat - 1)); // games → blank
+        creamTrack.style.transform = `translate(-${xProgress * 50}%, -${yProgress * 50}%)`;
       }
 
       creamCol.addEventListener('scroll', updateCreamTrack, { passive: true });
