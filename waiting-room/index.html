@@ -259,32 +259,61 @@
       .weather-tagline { margin-top: 1rem; }
     }
 
-    /* ── Cream column: card-snap scroller, right grid area ──
-       On PC this is the scrollable "cream side" — instead of scrolling
-       continuously, it snaps horizontally between full-width cards
-       (music, then Brain Games). On phone it's unwrapped (see max-width
-       query below) so each card can be placed independently, stacked
-       vertically, in the mobile stack. */
+    /* ── Cream column: vertical scroller, horizontal card animation ──
+       The scroll interaction (wheel, trackbar, scrollbar) is vertical,
+       same as a normal scrollable panel. Visually though, the two
+       "pages" of scrollable height are just invisible snap targets —
+       the actual cards live in a sticky, pinned viewport and slide
+       left/right as you scroll down, so the transition itself reads as
+       horizontal. On phone it's unwrapped (see max-width query below)
+       so each card can be placed independently, stacked vertically, in
+       the mobile stack. */
     .cream-col {
       grid-area: right;
       height: 100%;
       background: var(--bg);
       position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+    }
+
+    /* Pinned window onto the horizontal track: stays put at the top of
+       the scrollport for the whole scrollable range, so scrolling
+       vertically doesn't move it up/down — only the track inside it
+       slides horizontally. */
+    .cream-viewport {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+
+    /* Invisible spacer: gives the column a second "page" of scrollable
+       height so there's something to scroll/snap to. */
+    .cream-snap-spacer {
+      width: 100%;
+      height: 100%;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+
+    .cream-track {
       display: flex;
       flex-direction: row;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-behavior: smooth;
-      scroll-snap-type: x mandatory;
+      width: 200%;
+      height: 100%;
     }
 
     .cream-card {
-      width: 100%;
+      width: 50%;
       height: 100%;
       min-height: 100%;
-      flex: 1 0 100%;
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
+      flex-shrink: 0;
       background: var(--bg);
       position: relative;
     }
@@ -562,6 +591,15 @@
       .cream-col {
         display: contents;
       }
+      .cream-viewport {
+        display: contents;
+      }
+      .cream-track {
+        display: contents;
+      }
+      .cream-snap-spacer {
+        display: none;
+      }
       .cream-card {
         width: 100%;
         height: auto;
@@ -609,38 +647,43 @@
       </div>
     </div>
     <div class="cream-col" id="creamCol">
-      <div class="cream-card cream-card--music">
-        <div class="music-stack">
-          <div class="cd-stack">
-            <img src="blank_CD.png" alt="" class="cd-image cd-image--spin" id="cdImage" />
+      <div class="cream-viewport">
+        <div class="cream-track" id="creamTrack">
+          <div class="cream-card cream-card--music">
+            <div class="music-stack">
+              <div class="cd-stack">
+                <img src="blank_CD.png" alt="" class="cd-image cd-image--spin" id="cdImage" />
+              </div>
+              <div class="player-wrap">
+                <div id="spotify-embed"></div>
+              </div>
+            </div>
           </div>
-          <div class="player-wrap">
-            <div id="spotify-embed"></div>
+          <div class="cream-card cream-card--games">
+            <div class="games-inner">
+              <div class="games-header">
+                <span>Brain Games</span>
+                <span>Off Paper<sup class="tm">&trade;</sup></span>
+              </div>
+              <ul class="games-list">
+                <li>
+                  <a class="games-list-item" href="https://play.sabi.london/word-search" target="_blank" rel="noopener noreferrer">
+                    <span class="games-list-label">Game 01</span>
+                    <span class="games-list-value">Word Search</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="games-list-item" href="https://play.sabi.london/buzzword" target="_blank" rel="noopener noreferrer">
+                    <span class="games-list-label">Game 02</span>
+                    <span class="games-list-value">Buzzword</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-      <div class="cream-card cream-card--games">
-        <div class="games-inner">
-          <div class="games-header">
-            <span>Brain Games</span>
-            <span>Off Paper<sup class="tm">&trade;</sup></span>
-          </div>
-          <ul class="games-list">
-            <li>
-              <a class="games-list-item" href="https://play.sabi.london/word-search" target="_blank" rel="noopener noreferrer">
-                <span class="games-list-label">Game 01</span>
-                <span class="games-list-value">Word Search</span>
-              </a>
-            </li>
-            <li>
-              <a class="games-list-item" href="https://play.sabi.london/buzzword" target="_blank" rel="noopener noreferrer">
-                <span class="games-list-label">Game 02</span>
-                <span class="games-list-value">Buzzword</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <div class="cream-snap-spacer" aria-hidden="true"></div>
     </div>
     <div class="wine-block wine-block--bottom">
       <div class="clocks-wrap">
@@ -1008,6 +1051,32 @@
 
     window.addEventListener('load', matchCreamCardHeights);
     window.addEventListener('resize', matchCreamCardHeights);
+  </script>
+
+  <!-- ── Cream column: vertical scroll drives a horizontal card slide (PC only) ── -->
+  <script>
+    (function () {
+      const creamCol = document.getElementById('creamCol');
+      const creamTrack = document.getElementById('creamTrack');
+      if (!creamCol || !creamTrack) return;
+
+      function updateCreamTrack() {
+        const isDesktop = window.matchMedia('(min-width: 651px)').matches;
+        if (!isDesktop) {
+          creamTrack.style.transform = '';
+          return;
+        }
+        const max = creamCol.scrollHeight - creamCol.clientHeight;
+        const progress = max > 0 ? Math.min(1, Math.max(0, creamCol.scrollTop / max)) : 0;
+        // Track is 200% wide (two cards side by side); -50% of the
+        // track's own width slides exactly one card's width across.
+        creamTrack.style.transform = `translateX(-${progress * 50}%)`;
+      }
+
+      creamCol.addEventListener('scroll', updateCreamTrack, { passive: true });
+      window.addEventListener('resize', updateCreamTrack);
+      updateCreamTrack();
+    })();
   </script>
 
 </body>
