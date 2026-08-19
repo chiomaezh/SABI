@@ -467,6 +467,7 @@
       .cream-card--blank {
         /* Matches the other two cards' desktop padding. */
         padding: 9rem 2.5rem 6.75rem;
+        position: relative;
       }
     }
 
@@ -490,6 +491,20 @@
       grid-column: 1 / -1;
     }
 
+    /* Desktop only: the description + copyright move up and out of the
+       bottom-anchored footer grid, pinned instead to the top of the
+       card so their top edge lines up with the top of the hero
+       paragraph — same reference point (9rem) used for "Brain Games"
+       earlier. Contact/Services stay put at the bottom. */
+    @media (min-width: 651px) {
+      .footer-col:first-child {
+        position: absolute;
+        top: 9rem;
+        left: 2.5rem;
+        right: 2.5rem;
+      }
+    }
+
     .footer-desc {
       font-family: var(--font-body);
       font-weight: 400;
@@ -497,6 +512,13 @@
       line-height: 1.5;
       color: var(--text);
       margin-bottom: 0.9rem;
+    }
+    @media (min-width: 651px) {
+      .footer-desc {
+        /* Compensates for .hero-lead's taller line-height (1.7 vs 1.5
+           here), same trick used for the games-header nudge. */
+        margin-top: 2px;
+      }
     }
 
     .footer-copyright {
@@ -948,18 +970,20 @@
       const offset = menuAccordion.scrollHeight;
 
       if (isDesktop) {
-        // Transform-only, applied to both the hero copy and the weather
-        // reel below it: the whole wine-side column shifts down
-        // together (keeping their relative spacing so nothing gets
-        // covered or clipped), while the cream side and the grid's own
-        // row sizing stay completely untouched.
+        // Transform-only, and only on the hero copy: transform never
+        // grows the grid row or clips content, and there's already a
+        // natural gap between the hero paragraph and the weather reel
+        // (which sits flush against the bottom of its own row), so the
+        // reel doesn't need to move too — doing so was pushing it off
+        // the bottom of the viewport entirely, since it had nowhere
+        // left to go.
         const shift = isOpen ? `translateY(${offset}px)` : 'translateY(0)';
         if (heroText) {
           heroText.style.transform = shift;
           heroText.style.marginTop = '0px';
         }
         if (clocksWrap) {
-          clocksWrap.style.transform = shift;
+          clocksWrap.style.transform = '';
         }
       } else {
         if (heroText) {
