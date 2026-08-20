@@ -558,6 +558,14 @@
       text-transform: uppercase;
     }
 
+    /* Desktop only: nudge "Contact" right, roughly halfway toward
+       "Services" — Services itself stays exactly where it was. */
+    @media (min-width: 651px) {
+      .footer-col--contact {
+        margin-left: 9.5rem;
+      }
+    }
+
     /* ── Header (overlaid, no divider, positions unchanged) ── */
     .header-wrap {
       position: fixed;
@@ -849,7 +857,7 @@
                 <p class="footer-copyright">© 2026 SABI London</p>
               </div>
 
-              <div class="footer-col">
+              <div class="footer-col footer-col--contact">
                 <p class="footer-heading">Contact</p>
                 <div class="footer-links">
                   <a href="mailto:office@sabi.london" target="_blank" rel="noopener">office@sabi.london</a>
