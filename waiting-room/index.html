@@ -415,26 +415,17 @@
       text-transform: none;
     }
 
-    /* Desktop only: sits in the empty band between the fixed top nav
-       (y=0) and the top of "Brain Games" (y=9rem), vertically centered
-       between the two — i.e. at the halfway point, 4.5rem. */
+    /* Sits centered in the gap between the section header and the game
+       list — a third flex child alongside them, so justify-content:
+       space-between on .games-inner naturally centers it in whatever
+       space remains between the two. Works the same on phone and PC. */
     .games-hero {
-      display: none;
-    }
-    @media (min-width: 651px) {
-      .games-hero {
-        display: block;
-        position: absolute;
-        top: 4.5rem;
-        left: 2.5rem;
-        right: 2.5rem;
-        margin: 0;
-        text-align: center;
-        font-family: var(--font-body);
-        font-weight: 300;
-        font-size: 17px;
-        color: var(--text);
-      }
+      margin: 0;
+      text-align: center;
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 17px;
+      color: var(--text);
     }
 
     .games-list {
@@ -475,6 +466,7 @@
        list. Size/spacing/case stay identical between the two. */
     .games-list-label {
       font-family: var(--font-body);
+      font-size: 14.5px;
     }
 
     /* ── Third card: page footer, in the About page's phone-mode format ── */
@@ -693,21 +685,17 @@
       margin-top: 2rem;
     }
 
-    /* Row holding the rotated "Curated Sounds" heading and the CD.
-       Matches .player-wrap's width exactly, so the heading (pinned
-       left) lines up with the player's left edge, and the CD (pinned
-       right) lines up with the player's right edge — shifted off
-       center rather than centered above the player. */
-    .music-top-row {
-      width: min(380px, 84vw);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
+    /* Row holding the rotated "Curated Sounds" heading and the CD. The
+       CD stays centered exactly as before — the heading is absolutely
+       positioned off its left edge, vertically centered on it, so it
+       doesn't affect the CD's own centered position at all. */
     .music-heading {
+      position: absolute;
+      top: 50%;
+      right: 100%;
+      margin-right: 1rem;
       writing-mode: vertical-rl;
-      transform: rotate(180deg);
+      transform: translateY(-50%) rotate(180deg);
       font-family: var(--font-mono);
       font-weight: 300;
       font-size: 14px;
@@ -865,11 +853,9 @@
         <div class="cream-track" id="creamTrack">
           <div class="cream-card cream-card--music">
             <div class="music-stack">
-              <div class="music-top-row">
+              <div class="cd-stack">
                 <span class="music-heading">Curated Sounds</span>
-                <div class="cd-stack">
-                  <img src="blank_CD.png" alt="" class="cd-image cd-image--spin" id="cdImage" />
-                </div>
+                <img src="blank_CD.png" alt="" class="cd-image cd-image--spin" id="cdImage" />
               </div>
               <div class="player-wrap">
                 <div id="spotify-embed"></div>
@@ -877,12 +863,12 @@
             </div>
           </div>
           <div class="cream-card cream-card--games">
-            <p class="games-hero">Newspaper style games reimagined for brand people.</p>
             <div class="games-inner">
               <div class="games-header">
                 <span>Brain Games</span>
                 <span>Off Paper<sup class="tm">&trade;</sup></span>
               </div>
+              <p class="games-hero">Newspaper style games reimagined for brand people.</p>
               <ul class="games-list">
                 <li>
                   <a class="games-list-item" href="https://play.sabi.london/word-search" target="_blank" rel="noopener noreferrer">
