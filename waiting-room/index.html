@@ -428,6 +428,17 @@
       color: var(--text);
     }
 
+    /* Forces a break after "games" / before "reimagined" on phone
+       portrait only; on PC the sentence runs as a single line. */
+    .hero-linebreak {
+      display: none;
+    }
+    @media (max-width: 650px) {
+      .hero-linebreak {
+        display: block;
+      }
+    }
+
     .games-list {
       list-style: none;
       display: flex;
@@ -685,10 +696,12 @@
       margin-top: 2rem;
     }
 
-    /* Row holding the rotated "Curated Sounds" heading and the CD. The
-       CD stays centered exactly as before — the heading is absolutely
-       positioned off its left edge, vertically centered on it, so it
-       doesn't affect the CD's own centered position at all. */
+    /* CD aligns to the left edge of the player below it — since
+       .music-stack shrink-wraps to its widest child (the player, which
+       is wider than the CD), aligning the CD to the flex column's own
+       start edge lines it up with the player's left edge. The rotated
+       "Curated Sounds" heading is absolutely positioned off the CD's
+       own left edge, vertically centered on it. */
     .music-heading {
       position: absolute;
       top: 50%;
@@ -706,6 +719,7 @@
     }
 
     .cd-stack {
+      align-self: flex-start;
       position: relative;
       width: min(384px, 62vw);
       height: min(384px, 62vw);
@@ -736,8 +750,9 @@
         padding-bottom: 6.125rem;
       }
       .cd-stack {
-        width: min(307px, 49.6vw);
-        height: min(307px, 49.6vw);
+        /* 0.9x the original 307px / 49.6vw */
+        width: min(276px, 44.6vw);
+        height: min(276px, 44.6vw);
       }
     }
 
@@ -868,7 +883,7 @@
                 <span>Brain Games</span>
                 <span>Off Paper<sup class="tm">&trade;</sup></span>
               </div>
-              <p class="games-hero">Newspaper style games reimagined for brand people.</p>
+              <p class="games-hero">Newspaper style games<br class="hero-linebreak">reimagined for brand people.</p>
               <ul class="games-list">
                 <li>
                   <a class="games-list-item" href="https://play.sabi.london/word-search" target="_blank" rel="noopener noreferrer">
