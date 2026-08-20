@@ -699,16 +699,19 @@
     /* CD aligns to the right edge of the player below it — since
        .music-stack shrink-wraps to its widest child (the player, which
        is wider than the CD), aligning the CD to the flex column's own
-       end edge lines it up with the player's right edge. The rotated
-       "Curated Sounds" heading is absolutely positioned off the CD's
-       own left edge, vertically centered on it. */
+       end edge lines it up with the player's right edge.
+
+       "Curated Sounds" is anchored to .music-stack itself (not the CD),
+       at left:0 — which is the player's left edge, since .music-stack
+       shrink-wraps to the player's width. Its vertical position is
+       tied to the CD's own height at each breakpoint, so it stays
+       centered on the CD regardless of where the CD sits horizontally. */
     .music-heading {
       position: absolute;
-      top: 50%;
-      right: 100%;
-      margin-right: 1rem;
-      writing-mode: vertical-rl;
+      left: 0;
+      top: calc(min(384px, 62vw) / 2);
       transform: translateY(-50%) rotate(180deg);
+      writing-mode: vertical-rl;
       font-family: var(--font-mono);
       font-weight: 300;
       font-size: 14px;
@@ -748,6 +751,9 @@
       .music-stack {
         margin-top: 8rem;
         padding-bottom: 6.125rem;
+      }
+      .music-heading {
+        top: calc(min(276px, 44.6vw) / 2);
       }
       .cd-stack {
         /* 0.9x the original 307px / 49.6vw */
@@ -868,8 +874,8 @@
         <div class="cream-track" id="creamTrack">
           <div class="cream-card cream-card--music">
             <div class="music-stack">
+              <span class="music-heading">Curated Sounds</span>
               <div class="cd-stack">
-                <span class="music-heading">Curated Sounds</span>
                 <img src="blank_CD.png" alt="" class="cd-image cd-image--spin" id="cdImage" />
               </div>
               <div class="player-wrap">
