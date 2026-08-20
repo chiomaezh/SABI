@@ -696,10 +696,10 @@
       margin-top: 2rem;
     }
 
-    /* CD aligns to the left edge of the player below it — since
+    /* CD aligns to the right edge of the player below it — since
        .music-stack shrink-wraps to its widest child (the player, which
        is wider than the CD), aligning the CD to the flex column's own
-       start edge lines it up with the player's left edge. The rotated
+       end edge lines it up with the player's right edge. The rotated
        "Curated Sounds" heading is absolutely positioned off the CD's
        own left edge, vertically centered on it. */
     .music-heading {
@@ -719,7 +719,7 @@
     }
 
     .cd-stack {
-      align-self: flex-start;
+      align-self: flex-end;
       position: relative;
       width: min(384px, 62vw);
       height: min(384px, 62vw);
@@ -883,7 +883,7 @@
                 <span>Brain Games</span>
                 <span>Off Paper<sup class="tm">&trade;</sup></span>
               </div>
-              <p class="games-hero">Newspaper style games<br class="hero-linebreak">reimagined for brand people.</p>
+              <p class="games-hero">Newspaper style games <br class="hero-linebreak">reimagined for brand people.</p>
               <ul class="games-list">
                 <li>
                   <a class="games-list-item" href="https://play.sabi.london/word-search" target="_blank" rel="noopener noreferrer">
