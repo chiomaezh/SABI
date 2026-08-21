@@ -510,10 +510,19 @@
       .cream-card--blank {
         justify-content: flex-start;
         padding-top: 0;
+        /* Matches About.html's body padding-bottom (5rem) — the space
+           below the footer content, no longer forced to a taller
+           height by the card-matching script (see JS below). */
+        padding-bottom: 5rem;
       }
       .footer-divider-mobile {
         display: block;
         margin-top: 2cm;
+        /* Cancels the card's own 1.5rem left/right padding so the line
+           reaches the true edges of the page, not just the card's
+           content box. */
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
         border-top: 0.5px solid var(--border);
       }
     }
@@ -869,7 +878,8 @@
       }
       .cream-card--blank {
         grid-area: blank;
-        min-height: 70vh;
+        /* No forced min-height: sizes to its own content, per the
+           About.html-matched spacing above. */
       }
 
       .music-stack {
@@ -1350,17 +1360,19 @@
       // stale height left over from a previous measurement.
       musicCard.style.height = 'auto';
       gamesCard.style.height = 'auto';
-      blankCard.style.height = 'auto';
+      // The footer card is intentionally left out of this — it sizes
+      // to its own content (divider gap + footer + the 5rem bottom
+      // padding matching About.html), not stretched to match the
+      // other two sections.
+      blankCard.style.height = '';
 
       const tallest = Math.max(
         musicCard.getBoundingClientRect().height,
-        gamesCard.getBoundingClientRect().height,
-        blankCard.getBoundingClientRect().height
+        gamesCard.getBoundingClientRect().height
       );
 
       musicCard.style.height = tallest + 'px';
       gamesCard.style.height = tallest + 'px';
-      blankCard.style.height = tallest + 'px';
     }
 
     window.addEventListener('load', matchCreamCardHeights);
