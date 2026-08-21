@@ -758,6 +758,17 @@
       color: var(--text);
       white-space: nowrap;
     }
+    /* A single unbroken rule standing in for "———" (3 em dashes), since
+       repeated dash characters were creating a break opportunity and
+       wrapping inside the vertical heading. Same overall length as 4
+       em dashes, same stroke weight as one normal em dash glyph. */
+    .em-rule {
+      display: inline-block;
+      width: 4em;
+      height: 1px;
+      background: currentColor;
+      vertical-align: 0.32em;
+    }
 
     .cd-stack {
       align-self: flex-end;
@@ -965,7 +976,7 @@
         <div class="cream-track" id="creamTrack">
           <div class="cream-card cream-card--music">
             <div class="music-stack">
-              <span class="music-heading">Curated Sounds &mdash;&mdash;&mdash; Autumn 2026</span>
+              <span class="music-heading">Curated Sounds <span class="em-rule"></span> Autumn 2026</span>
               <div class="cd-stack">
                 <img src="blank_CD.png" alt="" class="cd-image cd-image--spin" id="cdImage" />
               </div>
