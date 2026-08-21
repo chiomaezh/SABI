@@ -897,9 +897,61 @@
         position: absolute;
       }
     }
+
+    /* ── Landscape block: phones only ──
+       Mirrors the Thoughtline lightbox's visual formatting exactly —
+       same dark wine overlay at 95% opacity, same gemeli-mono uppercase
+       heading treatment, same owners-text body copy. Targets phones in
+       landscape specifically (max-height:500px catches phone landscape
+       heights while leaving tablets/laptops in landscape untouched). No
+       close button — it's not a dismissible dialog, it just disappears
+       on its own once the device is rotated back to portrait. */
+    .landscape-block {
+      display: none;
+    }
+    @media (orientation: landscape) and (max-height: 500px) {
+      .landscape-block {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(23, 0, 6, 0.95);
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px 40px;
+      }
+      .landscape-block-inner {
+        max-width: 420px;
+      }
+      .landscape-block-heading {
+        font-family: var(--font-mono);
+        font-weight: 300;
+        font-size: 19px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--bg);
+        margin: 0 0 16px 0;
+      }
+      .landscape-block-copy {
+        font-family: var(--font-body);
+        font-weight: 300;
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--bg);
+        margin: 0;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <div class="landscape-block" role="dialog" aria-label="Rotate device">
+    <div class="landscape-block-inner">
+      <p class="landscape-block-heading">Portrait Only</p>
+      <p class="landscape-block-copy">This waiting room's made for portrait. Turn your phone back around to take a seat.</p>
+    </div>
+  </div>
 
   <div class="viewfinder">
     <div class="wine-block wine-block--top">
