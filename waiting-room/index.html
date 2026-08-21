@@ -31,6 +31,7 @@
       --bg: #FAFBE3;
       --text: #211D1D;
       --wine: #170006;
+      --border: #423A3A;
       --font-body: 'owners-text', sans-serif;
       --font-mono: 'gemeli-mono', serif;
     }
@@ -81,7 +82,7 @@
 
     /* ── Hero copy, top wine block ── */
     .hero-text {
-      padding: 6.5rem 1.5rem 4rem;
+      padding: 6.5rem 1.5rem 2.6rem;
       max-width: 480px;
       margin-left: auto;
       margin-top: 0;
@@ -483,6 +484,7 @@
     /* ── Third card: page footer, in the About page's phone-mode format ── */
     .cream-card--blank {
       background: var(--bg);
+      position: relative;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -492,7 +494,25 @@
       .cream-card--blank {
         /* Matches the other two cards' desktop padding. */
         padding: 9rem 2.5rem 6.75rem;
-        position: relative;
+      }
+    }
+
+    /* Phone only — matches the About page's .full-divider treatment
+       above its footer. Positioned independently of the (bottom-
+       anchored) footer content, a fixed distance down from the top of
+       the card rather than inheriting the section's leftover height,
+       so there's no large empty gap above it. Not shown on PC at all. */
+    .footer-divider-mobile {
+      display: none;
+    }
+    @media (max-width: 650px) {
+      .footer-divider-mobile {
+        display: block;
+        position: absolute;
+        top: 2cm;
+        left: 0;
+        right: 0;
+        border-top: 0.5px solid var(--border);
       }
     }
 
@@ -874,7 +894,7 @@
         <div class="cream-track" id="creamTrack">
           <div class="cream-card cream-card--music">
             <div class="music-stack">
-              <span class="music-heading">Curated Sounds</span>
+              <span class="music-heading">Curated Sounds &mdash; Autumn 2026</span>
               <div class="cd-stack">
                 <img src="blank_CD.png" alt="" class="cd-image cd-image--spin" id="cdImage" />
               </div>
@@ -907,6 +927,7 @@
             </div>
           </div>
           <div class="cream-card cream-card--blank">
+            <div class="footer-divider-mobile" aria-hidden="true"></div>
             <footer class="site-footer">
               <div class="footer-col">
                 <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
