@@ -292,6 +292,20 @@
       white-space: nowrap;
       flex-shrink: 0;
     }
+    .phase-list-wrap {
+      position: relative;
+    }
+    .phase-list-price {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 13.5px;
+      letter-spacing: 0.5px;
+      color: var(--text);
+      white-space: nowrap;
+    }
     .phase-list {
       list-style: none;
       margin-top: 1.45rem;
@@ -587,21 +601,20 @@
 
     <div class="phase-block">
       <p class="phase-title">Phase II</p>
-      <ul class="phase-list">
-        <li>Up to 2 hours of meeting time</li>
-        <li>Building a bespoke project brief</li>
-        <li>2 weeks delivery</li>
-      </ul>
-      <div class="phase-row">
-        <p class="phase-row-text">Fee</p>
-        <p class="phase-row-price">£240</p>
+      <div class="phase-list-wrap">
+        <ul class="phase-list">
+          <li>Up to 2 hours of meeting time</li>
+          <li>Building a bespoke campaign brief</li>
+          <li>2 weeks delivery</li>
+        </ul>
+        <p class="phase-list-price">£240</p>
       </div>
     </div>
 
     <div class="phase-block">
       <p class="phase-title">Phase III</p>
       <ul class="phase-list">
-        <li>Creative development and campaign deck</li>
+        <li>Concept development and campaign deck</li>
         <li>2–4 weeks delivery*</li>
       </ul>
       <p class="phase-footnote">* Fee and timeline adjusted to the scope of the campaign.</p>
@@ -610,8 +623,9 @@
     <div class="phase-block">
       <p class="phase-title">Phase IV</p>
       <ul class="phase-list">
-        <li>Production planning and on-set direction</li>
-        <li>Timeline adjusted to campaign scope**</li>
+        <li>Production planning</li>
+        <li>On-set direction</li>
+        <li>3–6 weeks delivery**</li>
       </ul>
       <p class="phase-footnote">** Final fee and timeline determined by production requirements.</p>
     </div>
