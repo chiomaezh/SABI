@@ -304,6 +304,13 @@
     .manifesto {
       padding-bottom: 6rem;
     }
+    /* Desktop only: increase the hero→manifesto gap by 0.25x
+       (was 3rem top padding, inherited from .section; mobile is untouched) */
+    @media (min-width: 651px) {
+      .manifesto {
+        padding-top: 3.75rem;
+      }
+    }
     .manifesto-inner {
       display: grid;
       grid-template-columns: auto 1fr;
