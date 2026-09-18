@@ -1331,21 +1331,38 @@
     }
     window.addEventListener('resize', scheduleMatchStationRowWidths);
 
-    // ── On mobile, centre the logo within the empty space between nav and footer ──
+    // ── On mobile, centre the logo within the empty space between nav and footer.
+    //    On desktop, leave it to the default flex centering (dead-centre of the page). ──
     function centreLogoInMainBlock() {
       const logo = document.querySelector('img');
       const nav = document.querySelector('.site-nav');
       const footer = document.querySelector('.site-footer');
       if (!logo || !nav || !footer) return;
 
+      const isPhone = window.innerWidth <= 760 ||
+        (window.matchMedia('(orientation: landscape)').matches && window.innerHeight <= 500);
+
       const navBottom = nav.getBoundingClientRect().bottom;
       const footerHeight = footer.getBoundingClientRect().height;
       const viewportHeight = window.innerHeight;
-      const availableMid = navBottom + (viewportHeight - navBottom - footerHeight) / 2;
+      const gapMid = navBottom + (viewportHeight - navBottom - footerHeight) / 2;
+
+      if (!isPhone) {
+        // Desktop: split the difference between dead-centre of the full
+        // viewport and the centre of the nav/footer gap.
+        const trueMid = viewportHeight / 2;
+        const blendedMid = (trueMid + gapMid) / 2;
+
+        logo.style.position = 'fixed';
+        logo.style.left = '50%';
+        logo.style.top = blendedMid + 'px';
+        logo.style.transform = 'translate(-50%, -50%)';
+        return;
+      }
 
       logo.style.position = 'fixed';
       logo.style.left = '50%';
-      logo.style.top = availableMid + 'px';
+      logo.style.top = gapMid + 'px';
       logo.style.transform = 'translate(-50%, -50%)';
     }
 
