@@ -950,7 +950,7 @@
     table.style.tableLayout = 'fixed';
 
     if (naturalWidth > 0) {
-      const narrowedWidth = Math.max(0, naturalWidth - BA_COL_NARROW_BY);
+      const narrowedWidth = naturalWidth + 8;
       cols.forEach((col) => { col.style.width = narrowedWidth + 'px'; });
     }
   }
