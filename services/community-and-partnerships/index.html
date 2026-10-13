@@ -54,7 +54,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 40px 0 16px;
+      padding: 48px 0 16px;
     }
     .header-divider { border-top: 0.5px solid var(--border); }
     .site-name {
@@ -382,12 +382,10 @@
 
     /* ── Phones: normal scrolling page ── */
     @media (max-width: 900px) {
-      :root { --gutter: 20px; }
       html { scroll-snap-type: none; }
       .card { min-height: 0; display: block; }
       .card--centre .card-inner { padding-top: 56px; padding-bottom: 8px; }
       .card--approach .card-inner { padding-bottom: 40px; }
-      .site-header { padding-top: 28px; }
       .hero-content { padding-top: 32px; padding-bottom: 40px; }
       .hero-bottom { margin-top: 2rem; padding-top: 0; }
       .service-overview { width: 100%; }
@@ -409,7 +407,6 @@
     /* Short desktop windows: same widths and layout, just tighter vertical spacing */
     @media (min-width: 901px) and (max-height: 700px) {
       .card--centre .card-inner { padding-top: 28px; padding-bottom: 28px; }
-      .site-header { padding-top: 28px; }
       .approach-head { height: 240px; padding-bottom: 24px; }
       .approach-head .tag { margin-bottom: 24px; }
       .deliverables-tag { margin-bottom: 24px; }
@@ -417,6 +414,9 @@
       .phase-title { margin-bottom: 0.5rem; }
       .phase-row { padding: 0.3rem 0; }
       .phase-footnote { margin-top: 1.65rem; }
+    }
+    @media (max-width: 720px) {
+      :root { --gutter: 24px; }
     }
     @media (max-width: 500px) {
       .site-footer { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1rem; row-gap: 1.75rem; }
