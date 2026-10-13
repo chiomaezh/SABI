@@ -141,6 +141,20 @@
       align-items: flex-start;
     }
 
+    /* ── Scroll chevron (hero, bottom right; desktop) ── */
+    .hero-content { position: relative; }
+    .scroll-cue {
+      position: absolute;
+      right: 0;
+      bottom: 40px;
+      width: 32px;
+      height: 20px;
+      display: block;
+      color: var(--text);
+    }
+    .scroll-cue svg { display: block; width: 100%; height: 100%; }
+    .scroll-cue:hover { opacity: 0.6; }
+
     /* ── Tinted section label ── */
     .tag {
       display: inline-block;
@@ -333,7 +347,24 @@
 
     .footer-wrap {
       padding: 96px var(--gutter) 40px;
-      scroll-snap-align: end;
+      scroll-snap-align: start;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      gap: 64px;
+    }
+    .footer-logo {
+      align-self: flex-start;
+      margin-top: auto;
+      padding-top: 2rem;
+      font-family: "all-round-gothic", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      color: var(--text);
+      text-decoration: none;
     }
     .footer-line { border-top: 0.5px solid var(--border); }
     .site-footer {
@@ -350,7 +381,9 @@
       gap: 3rem;
       align-items: flex-start;
     }
+    .footer-logo--phone { display: none; }
     .footer-col { display: flex; flex-direction: column; }
+    @media (min-width: 501px) { .site-footer { align-items: stretch; } .footer-groups { align-items: flex-start; } .footer-logo { align-self: flex-start; } }
     .footer-desc {
       font-weight: 400;
       font-size: 15px;
@@ -395,7 +428,8 @@
       .approach-head .tag { margin-bottom: 24px; }
       .cta-col { flex: 1 1 100%; min-width: 0; }
       .deliverables-row { row-gap: 64px; }
-      .footer-wrap { padding-top: 64px; }
+      .footer-wrap { padding-top: 64px; min-height: 0; display: block; }
+      .scroll-cue { display: none; }
     }
     /* Pages with four phases: a little tighter so the screen still fits */
     @media (min-width: 901px) {
@@ -420,7 +454,10 @@
     }
     @media (max-width: 500px) {
       .site-footer { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1rem; row-gap: 1.75rem; }
+      .site-footer { align-items: stretch; }
       .site-footer > .footer-col:first-child { grid-column: 1 / -1; }
+      .site-footer > .footer-col:first-child .footer-logo { display: none; }
+      .footer-logo--phone { display: block; }
       .footer-groups { display: contents; }
       .footer-links a { white-space: normal; }
       .footer-copyright { font-size: 12px; }
@@ -481,12 +518,15 @@
             Strategy for discoverability and cultural currency. Analysing your brand identity, market segment, and short term goals to curate a bespoke dossier of 50 industry contacts to platform and endorse your brand. Looking beyond the biggest names, and redirecting you to more niche, specialised leads.
           </p>
         </div>
+        <a href="#approach" class="scroll-cue" aria-label="Scroll to Approach">
+          <svg viewBox="0 0 32 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true"><polyline points="1.5,2 16,16.5 30.5,2"/></svg>
+        </a>
       </div>
     </div>
   </section>
 
   <!-- Screen 2: approach -->
-  <section class="card card--centre card--approach" aria-labelledby="approach-label">
+  <section class="card card--centre card--approach" id="approach" aria-labelledby="approach-label">
     <div class="card-inner">
       <div class="approach-stage">
         <div class="approach">
@@ -550,6 +590,7 @@
     <div class="footer-col">
       <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
       <p class="footer-copyright">© 2026 SABI LDN</p>
+      <a href="https://sabi.london/" class="footer-logo" aria-label="SABI">S A B I</a>
     </div>
 
     <div class="footer-groups">
@@ -560,6 +601,7 @@
           <a href="tel:+447400192837">+44 7400 192837</a>
           <a href="https://calendar.app.google/itHV85cwLfoDmH7x5">OOO Hours</a>
         </div>
+        <a href="https://sabi.london/" class="footer-logo footer-logo--phone" aria-label="SABI">S A B I</a>
       </div>
 
       <div class="footer-col footer-col--services">
@@ -622,6 +664,32 @@
     fit();
     window.addEventListener('resize', fit);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  })();
+
+  /* Footer logo: sit its baseline exactly on the baseline of the last Services link */
+  (function () {
+    var logos = document.querySelectorAll('.footer-logo');
+    var logo = logos[0];
+    var last = document.querySelector('.footer-col--services .footer-links a:last-child');
+    if (!logos.length || !last) return;
+    function baseline(el) {
+      var probe = document.createElement('span');
+      probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+      el.appendChild(probe);
+      var y = probe.getBoundingClientRect().bottom;
+      el.removeChild(probe);
+      return y;
+    }
+    function align() {
+      logos.forEach(function (l) { l.style.position = 'relative'; l.style.top = '0px'; });
+      logos.forEach(function (l) {
+        if (l.offsetParent === null) return;
+        l.style.top = (baseline(last) - baseline(l)) + 'px';
+      });
+    }
+    align();
+    window.addEventListener('resize', align);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(align);
   })();
 </script>
 </body>
