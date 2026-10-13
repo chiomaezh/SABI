@@ -8,18 +8,13 @@
   <link rel="stylesheet" href="https://use.typekit.net/bwp0bbg.css">
 
   <title>World Building — SABI</title>
-  <meta name="description" content="Deep research to define your culture, mythology, and market positioning. Profiling your audience, and understanding how your customer discovers and
-      moves through your brand universe. This exercise establishes brand codes and pillars to guide your visual direction, messaging, and future campaigns." />
-  
+  <meta name="description" content="Deep research to define your culture, mythology, and market positioning. Profiling your audience, and understanding how your customer discovers and moves through your brand universe. This exercise establishes brand codes and pillars to guide your visual direction, messaging, and future campaigns." />
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    ::selection {
-      background: var(--select-bg);
-    }
-    ::-moz-selection {
-      background: var(--select-bg);
-    }
+    ::selection { background: var(--select-bg); }
+    ::-moz-selection { background: var(--select-bg); }
 
     html {
       -webkit-text-size-adjust: 100%;
@@ -28,90 +23,51 @@
 
     :root {
       --bg: #FAFBE3;
-      --surface: #FAFBE3;
       --border: #423A3A;
-      --border-light: #423A3A;
       --text: #211D1D;
-      --found-bg: #211D1D;
+      --tint: rgba(33, 29, 29, 0.07);
       --found-text: #FAFBE3;
       --select-bg: rgba(183, 184, 168, 0.4);
-      --select-text: var(--text);
       --font-body: 'owners-text', sans-serif;
-      --font-mono: 'gemeli-mono', serif;
+      --font-mono: 'gemeli-mono', monospace;
+      --gutter: 40px;
+      --col-gap: 40px;
     }
 
+    /* The page itself snaps from screen to screen (native scrollbar stays visible). */
+    html {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
     body {
       font-family: var(--font-body);
       font-weight: 350;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 3rem 1.5rem 5rem;
     }
 
-    .page { width: 100%; max-width: 720px; }
+    a { color: var(--text); }
+    a:hover { opacity: 0.7; }
 
-    /* ── Full-bleed utility ──
-       Used for the header row and the footer's top divider so both are
-       guaranteed to be exactly the same width. Base state matches the
-       normal centered .page column (i.e. mobile is unaffected, since on
-       mobile .page is already just 100% of the available width). On
-       desktop/tablet it breaks out of body's 1.5rem padding and re-adds
-       its own small 2.5rem padding, reaching much closer to the true
-       page edges. Phone landscape is reset back to the normal capped
-       width so it stays identical to portrait. */
-    .full-bleed-row {
-      width: 100%;
-      max-width: 720px;
-    }
-    @media (min-width: 721px) {
-      .full-bleed-row {
-        max-width: none;
-        width: calc(100% + 3rem);
-        margin-left: -1.5rem;
-        margin-right: -1.5rem;
-        padding-left: 2.5rem;
-        padding-right: 2.5rem;
-      }
-    }
-    @media (min-width: 721px) and (orientation: landscape) and (max-height: 500px) {
-      .full-bleed-row {
-        max-width: 720px;
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-        padding-left: 0;
-        padding-right: 0;
-      }
-    }
-
-    /* .service-title's font-size uses a vw-based clamp() for its desktop/
-       tablet scaling. That's fine in portrait, where 3.8vw stays small and
-       hits the 21px floor — but on phone landscape the viewport is much
-       wider, so the same formula computes a noticeably larger size (up to
-       the 27px ceiling), even though it's still "a phone". Pin it back to
-       the portrait value here so phone stays visually consistent in both
-       orientations. */
-    @media (orientation: landscape) and (max-height: 500px) {
-      .service-title {
-        font-size: 21px;
-      }
-    }
-
-    /* ── Header ── */
+    /* ── Header (part of the hero screen) ── */
     .site-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 1rem;
+      padding: 40px 0 16px;
     }
-    .header-divider {
-      border-top: 0.5px solid var(--border);
-      margin-bottom: 1.75rem;
+    .header-divider { border-top: 0.5px solid var(--border); }
+    .site-name {
+      font-family: "all-round-gothic", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      color: var(--text);
+      text-decoration: none;
     }
+
+    /* ── Hamburger menu ── */
     .menu-btn {
       position: relative;
       width: 22px;
@@ -155,44 +111,65 @@
       text-decoration: none;
       padding: 0.5rem 0;
     }
-    .site-name {
-      font-family: "all-round-gothic", sans-serif;
-      font-weight: 400;
-      font-size: 24px;
-      text-transform: uppercase;
-      letter-spacing: 0px;
-      color: var(--text);
-      text-decoration: none;
+
+    /* ── Three full-screen sections ── */
+    .card {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
     }
-    .site-tag {
-      font-family: var(--font-body);
-      font-weight: 350;
-      font-size: 18px;
-      color: var(--text);
-      text-transform: uppercase;
-      letter-spacing: 2px;
+    .card-inner {
+      flex: 1;
+      min-width: 0;
+      padding: 0 var(--gutter);
+      display: flex;
+      flex-direction: column;
+    }
+    /* Approach and Deliverables sit vertically centred in their screen */
+    .card--centre .card-inner {
+      justify-content: center;
+      padding-top: 40px;
+      padding-bottom: 40px;
+    }
+    .hero-content {
+      flex: 1;
+      padding: 40px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
 
-    /* ── Back to services nav + title row ──
-       Below 1200px there usually isn't a real margin to work with, so the
-       back link stacks above the title exactly as before — this keeps the
-       title itself untouched at every width. From 1200px up, there's
-       enough empty margin beside the 720px content column for the back
-       link to live in it: .title-full-row breaks out of the page column
-       the same way the header's full-bleed-row does (same 2.5rem inset),
-       then a 3-column grid puts the back link in the left margin column
-       and the title in a center column that lines up exactly with .page
-       below it (both resolve to the same (100vw - 720px)/2 inset, so the
-       title never moves). */
-    .title-full-row {
-      width: 100%;
-      max-width: 720px;
-      margin-bottom: 1.4rem;
+    /* ── Tinted section label ── */
+    .tag {
+      display: inline-block;
+      background: var(--tint);
+      font-family: var(--font-mono);
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: 1.3px;
+      line-height: 1.2;
+      text-transform: uppercase;
+      padding: 8px 14px;
     }
-    .title-grid {
+
+    /* ── Card 1: hero ── */
+    .hero-content { container-type: inline-size; }
+    .hero-top {
       display: flex;
       flex-direction: column;
       gap: 2rem;
+      align-items: flex-start;
+    }
+    .hero-bottom {
+      margin-top: auto;
+      padding-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      align-items: flex-start;
+      width: 100%;
     }
     .back-link {
       font-family: var(--font-body);
@@ -200,176 +177,141 @@
       font-size: 12px;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--text);
       text-decoration: none;
       border-bottom: 0.5px solid var(--border);
       padding-bottom: 2px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
       white-space: nowrap;
-      align-self: flex-start;
     }
-    .back-link:hover { opacity: 0.7; }
-    @media (min-width: 1200px) {
-      .title-full-row {
-        max-width: none;
-        width: calc(100% + 3rem);
-        margin-left: -1.5rem;
-        margin-right: -1.5rem;
-        padding-left: 2.5rem;
-        padding-right: 2.5rem;
-      }
-      .title-grid {
-        display: grid;
-        grid-template-columns: 1fr minmax(0, 720px) 1fr;
-        align-items: start;
-        column-gap: 1.5rem;
-      }
-      .back-link {
-        grid-column: 1;
-        justify-self: start;
-        margin-top: 6px;
-      }
-      .service-title {
-        grid-column: 2;
-        margin-top: 3rem;
-      }
-    }
-
-    /* ── Service header ── */
     .service-title {
       font-family: var(--font-body);
       font-weight: 400;
-      font-size: clamp(21px, 3.8vw, 27px);
+      font-size: clamp(22px, 3.8vw, 27px);
       line-height: 1.1;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--text);
-      margin-bottom: 0;
     }
     .service-overview {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 15px;
-      color: var(--text);
-      line-height: 1.9;
-      margin-bottom: 2.5rem;
-    }
-
-    /* ── Section divider ── */
-    .divider {
-      border-top: 0.5px solid var(--border);
-      margin: 2.5rem 0;
-    }
-
-    .section-label {
-      font-family: var(--font-mono);
-      font-weight: 300;
-      font-size: 15px;
-      line-height: 1.1;
-      text-transform: uppercase;
-      letter-spacing: 1.3px;
-      color: var(--text);
-      margin-top: 3.8rem;
-      margin-bottom: 1.8rem;
-    }
-
-    /* ── Approach items ── */
-    .approach-item {
-      margin-bottom: 1.8rem;
-    }
-    .approach-item:last-child { margin-bottom: 0; }
-    .approach-number {
-      font-family: var(--font-body);
-      font-weight: 400;
-      font-size: 13px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--text);
-      margin-bottom: 0.5rem;
-    }
-    .approach-desc {
-      font-family: var(--font-body);
       font-weight: 300;
       font-size: 14px;
       line-height: 1.8;
-      color: var(--text);
-      max-width: 75%;
-      text-align: justify;
-      text-justify: inter-word;
+      width: 50%;
+      max-width: 100%;
+    }
+    @supports (width: 1cqw) {
+      .service-overview { width: 50cqw; }
     }
 
-    /* ── Service / pricing table ── */
-    .phase-block {
-      margin-bottom: 2rem;
+    /* ── Card 2: approach (right-hand third, anchored to the bottom) ── */
+    .approach-stage {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
     }
-    .phase-title {
-      font-family: var(--font-body);
-      font-weight: 400;
+    .approach {
+      flex: 0 0 calc((100% - (var(--col-gap) * 2)) / 3);
+      min-width: 280px;
+    }
+    .approach-head {
+      height: 314px;
+      padding-bottom: 57px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .approach-head .tag {
+      align-self: flex-end;
+      margin-bottom: 36px;
+    }
+    .approach-counter {
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 12px;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .approach-desc {
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .approach-desc[hidden] { display: none; }
+    .approach-list { list-style: none; margin-top: 0.7rem; }
+    .approach-list li { font-weight: 300; font-size: 14px; line-height: 1.6; }
+
+    .menu { list-style: none; border-bottom: 0.5px solid var(--border); }
+    .menu button {
+      display: flex;
+      gap: 16px;
+      align-items: baseline;
+      width: 100%;
+      text-align: left;
+      border: 0;
+      border-top: 0.5px solid var(--border);
+      border-radius: 0;
+      padding: 14px 12px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-weight: 300;
       font-size: 13px;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--text);
+    }
+    .menu button:hover { background: var(--tint); }
+    .menu button[aria-pressed="true"] {
+      background: var(--text);
+      color: var(--bg);
+    }
+    .menu button:focus-visible {
+      outline: 2px solid var(--text);
+      outline-offset: -2px;
+    }
+    .menu button[aria-pressed="true"]:focus-visible { outline-color: var(--bg); }
+    .menu .num {
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 13px;
+    }
+
+    /* ── Card 3: deliverables + footer ── */
+    .deliverables-tag { align-self: flex-start; margin-bottom: 36px; }
+    .deliverables-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 32px;
+    }
+    .deliverables-copy { max-width: 720px; }
+    .phase { margin-bottom: 3.275rem; }
+    .phase:last-child { margin-bottom: 0; }
+    .phase-title {
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 12px;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
       margin-bottom: 0.9rem;
     }
     .phase-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 1rem;
-      padding: 0.55rem 0;
-    }
-    .phase-row-text {
-      font-family: var(--font-body);
       font-weight: 300;
       font-size: 13.5px;
       line-height: 1.7;
-      color: var(--text);
-    }
-    .phase-row-price {
-      font-family: var(--font-body);
-      font-weight: 400;
-      font-size: 13.5px;
-      letter-spacing: 0.5px;
-      color: var(--text);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .phase-list {
-      list-style: none;
-      margin-top: 1.45rem;
-    }
-    .phase-list li {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 13.5px;
-      line-height: 1.9;
-      color: var(--text);
-      padding-left: 1rem;
-      position: relative;
-    }
-    .phase-list li::before {
-      content: "–";
-      position: absolute;
-      left: 0;
+      padding: 0.55rem 0;
     }
     .phase-footnote {
-      font-family: var(--font-body);
       font-weight: 300;
       font-style: italic;
       font-size: 13.5px;
-      color: var(--text);
-      margin-top: 2rem;
       line-height: 1.7;
+      margin-top: 3.275rem;
     }
-
-    /* ── CTA ── */
-    .cta-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 4.2rem;
+    .cta-col {
+      flex: 0 0 calc((100% - (var(--col-gap) * 2)) / 3);
+      min-width: 280px;
     }
     .btn {
       font-family: var(--font-body);
@@ -382,275 +324,261 @@
       cursor: pointer;
       text-decoration: none;
       display: inline-block;
-      transition: background 0.15s, color 0.15s;
-    }
-    .btn-primary {
       color: var(--found-text);
       background: #2E000D;
       border: 0.5px solid #2E000D;
+      transition: background 0.15s, color 0.15s;
     }
-    .btn-primary:hover { background: #1f0009; }
+    .btn:hover { opacity: 1; background: #1f0009; }
 
-    /* ── Site footer ── */
-.site-footer {
-  padding-top: 1.5rem;
-  display: grid;
-  grid-template-columns: 1.4fr auto auto;
-  column-gap: 0.75rem;
-  align-items: start;
-}
+    .footer-wrap {
+      padding: 96px var(--gutter) 40px;
+      scroll-snap-align: end;
+    }
+    .footer-line { border-top: 0.5px solid var(--border); }
+    .site-footer {
+      padding-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+    .footer-groups {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3rem;
+      align-items: flex-start;
+    }
+    .footer-col { display: flex; flex-direction: column; }
+    .footer-desc {
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 0.9rem;
+      margin-top: -0.2em;
+    }
+    .footer-copyright {
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+    .footer-heading {
+      font-weight: 400;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 0.7rem;
+    }
+    .footer-links { display: flex; flex-direction: column; gap: 0.55rem; }
+    .footer-links a {
+      font-weight: 300;
+      font-size: 13px;
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+    .footer-col--services .footer-links a { text-transform: uppercase; }
 
-.footer-divider {
-  border-top: 0.5px solid var(--border);
-  margin-top: 4rem;
-}
-
-.footer-col {
-  display: flex;
-  flex-direction: column;
-  align-self: start;
-}
-
-.footer-desc {
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 1.5;
-  color: var(--text);
-  margin-bottom: 0.9rem;
-  margin-top: -0.2em;
-}
-
-.footer-copyright {
-  font-family: var(--font-mono);
-  font-weight: 300;
-  font-size: 14px;
-  color: var(--text);
-  letter-spacing: 0.5px;
-}
-
-.footer-heading {
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 12px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text);
-  margin-bottom: 0.7rem;
-}
-
-.footer-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.footer-links a {
-  font-family: var(--font-body);
-  font-weight: 300;
-  font-size: 13px;
-  color: var(--text);
-  text-decoration: underline;
-  white-space: nowrap;
-}
-
-.footer-col--services {
-  margin-left: 2rem;
-}
-
-.footer-col--services .footer-links a {
-  text-transform: uppercase;
-}
-
-@media (max-width: 500px) {
-  .site-footer {
-    grid-template-columns: 1fr 1fr;
-    column-gap: 1rem;
-    row-gap: 1.75rem;
-  }
-  .footer-col:first-child {
-    grid-column: 1 / -1;
-  }
-  .footer-col--services {
-    margin-left: 0;
-  }
-  .footer-links a {
-    white-space: normal;
-  }
-  .footer-copyright {
-    font-size: 12px;
-  }
-}
+    /* ── Phones: normal scrolling page ── */
+    @media (max-width: 900px) {
+      :root { --gutter: 20px; }
+      html { scroll-snap-type: none; }
+      .card { min-height: 0; display: block; }
+      .card--centre .card-inner { padding-top: 56px; padding-bottom: 8px; }
+      .card--approach .card-inner { padding-bottom: 40px; }
+      .site-header { padding-top: 28px; }
+      .hero-content { padding-top: 32px; padding-bottom: 40px; }
+      .hero-bottom { margin-top: 2rem; padding-top: 0; }
+      .service-overview { width: 100%; }
+      .approach-stage { display: block; }
+      .approach { min-width: 0; }
+      .approach-head { height: auto; padding-bottom: 24px; }
+      .approach-head .tag { margin-bottom: 24px; }
+      .cta-col { flex: 1 1 100%; min-width: 0; }
+      .deliverables-row { row-gap: 64px; }
+      .footer-wrap { padding-top: 64px; }
+    }
+    /* Pages with four phases: a little tighter so the screen still fits */
+    @media (min-width: 901px) {
+      .card--dense .phase { margin-bottom: 1.7rem; }
+      .card--dense .phase-row { padding: 0.4rem 0; }
+      .card--dense .phase-footnote { margin-top: 1.7rem; }
+      .card--dense .deliverables-tag { margin-bottom: 28px; }
+    }
+    /* Short desktop windows: same widths and layout, just tighter vertical spacing */
+    @media (min-width: 901px) and (max-height: 700px) {
+      .card--centre .card-inner { padding-top: 28px; padding-bottom: 28px; }
+      .site-header { padding-top: 28px; }
+      .approach-head { height: 240px; padding-bottom: 24px; }
+      .approach-head .tag { margin-bottom: 24px; }
+      .deliverables-tag { margin-bottom: 24px; }
+      .phase { margin-bottom: 1.65rem; }
+      .phase-title { margin-bottom: 0.5rem; }
+      .phase-row { padding: 0.3rem 0; }
+      .phase-footnote { margin-top: 1.65rem; }
+    }
+    @media (max-width: 500px) {
+      .site-footer { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1rem; row-gap: 1.75rem; }
+      .site-footer > .footer-col:first-child { grid-column: 1 / -1; }
+      .footer-groups { display: contents; }
+      .footer-links a { white-space: normal; }
+      .footer-copyright { font-size: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
   </style>
-   </style>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-9ZHK592471"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-9ZHK592471');
-</script>
-<script type="text/javascript">
+    <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ZHK592471"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9ZHK592471');
+  </script>
+  <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "xxr0mg59uq");
-</script>
+  </script>
+  <noscript><style>.approach-desc[hidden] { display: block; margin-top: 1rem; }</style></noscript>
 </head>
 <body>
-<div class="full-bleed-row">
-  <header class="site-header">
-    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
-      <span></span>
-      <span></span>
-    </button>
-    <a href="https://sabi.london/" class="site-name">S A B I</a>
-  </header>
 
-  <nav class="menu-accordion" id="menuAccordion">
-    <div class="menu-list">
-      <a href="https://sabi.london/about">About</a>
-      <a href="https://sabi.london/services/">Services</a>
-      <a href="https://play.sabi.london">Play</a>
-    </div>
-  </nav>
+<main>
 
-  <div class="header-divider"></div>
-</div>
+  <!-- Screen 1: header + hero -->
+  <section class="card" aria-label="Overview">
+    <div class="card-inner">
+      <header class="site-header">
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="menuAccordion">
+          <span></span>
+          <span></span>
+        </button>
+        <a href="https://sabi.london/" class="site-name" aria-label="SABI">S A B I</a>
+      </header>
 
-<div class="title-full-row">
-  <div class="title-grid">
-    <a href="https://sabi.london/services/" class="back-link">← All Services</a>
-    <h1 class="service-title">World Building</h1>
-  </div>
-</div>
+      <nav class="menu-accordion" id="menuAccordion" aria-label="Primary">
+        <div class="menu-list">
+          <a href="https://sabi.london/about">About</a>
+          <a href="https://sabi.london/services/">Services</a>
+          <a href="https://play.sabi.london/">Play</a>
+        </div>
+      </nav>
 
-<div class="page">
+      <div class="header-divider"></div>
 
-  <main>
-    <p class="service-overview">
-     Deep research to define your culture, mythology, and market positioning. Profiling your audience, and understanding how your customer discovers and
-      moves through your brand universe. This exercise establishes brand codes and pillars to guide your visual direction, messaging, and future campaigns.
-    </p>
-
-    <p class="section-label">Our Approach</p>
-
-    <div class="approach-item">
-      <p class="approach-number">01 — Positioning</p>
-      <p class="approach-desc">
-        Defining the references and associations that shape your brand world. Narrowing down on the profile of your target customer, then mapping your brand alongside 15 direct competitor brands.  
-      </p>
-    </div>
-
-    <div class="approach-item">
-      <p class="approach-number">02 — Visual Language</p>
-      <p class="approach-desc">
-        Refining the visual, material, and sensory codes that define your brand. Identifying opportunities to create a more cohesive and recognisable aesthetic world.
-      </p>
-    </div>
-
-    <div class="approach-item">
-      <p class="approach-number">03 — Emotional Resonance</p>
-      <p class="approach-desc">
-        Distilling your brand presence into a feeling. Examining the role your brand plays
-        in your customer's life, and identifying the emotional levers that drive loyalty. Generating a brand voice that speaks to your ideal customer. Recommending strategies for deeper feedback and social listening.
-      </p>
-    </div>
-
-    <div class="approach-item">
-      <p class="approach-number">04 — Ethos</p>
-      <p class="approach-desc">
-        Exploring opportunities to communicate your stance on social, environmental, or
-        cultural issues relevant to your industry and audience. An examination of how your values are conveyed in your advertising, business operations, partnerships, and
-        public commitments.
-      </p>
-    </div>
-
-    <div class="approach-item">
-      <p class="approach-number">05 — Strategic Alignment</p>
-      <p class="approach-desc">
-        Identifying 15 complementary brands — indirect competitors or peers who share your
-        target audience — as opportunities for collaborative projects, and shared initiatives
-        that boost cultural relevance.
-      </p>
-    </div>
-
-    <div class="approach-item">
-      <p class="approach-number">06 — Business Model</p>
-      <p class="approach-desc">
-        Mapping your customer's full journey through your brand universe. Identifying
-        opportunities to refine or reframe how your offer is structured and conveyed. Assessing
-        discoverability and conversion across all acquisition channels.
-      </p>
-    </div>
-
-    <p class="section-label">Service</p>
-
-    <div class="phase-block">
-      <p class="phase-title">Phase I</p>
-      <div class="phase-row">
-        <p class="phase-row-text">Pre-consultation questionnaire</p>
-        <p class="phase-row-price">FREE</p>
-      </div>
-      <div class="phase-row">
-        <p class="phase-row-text">First consultation up to 90 minutes to outline your priorities and objectives</p>
-        <p class="phase-row-price">£110</p>
+      <div class="hero-content">
+        <a href="https://sabi.london/services/" class="back-link">← All Services</a>
+        <div class="hero-bottom">
+          <h1 class="service-title">World Building</h1>
+          <p class="service-overview">
+            Deep research to define your culture, mythology, and market positioning. Profiling your audience, and understanding how your customer discovers and moves through your brand universe. This exercise establishes brand codes and pillars to guide your visual direction, messaging, and future campaigns.
+          </p>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="phase-block">
-      <p class="phase-title">Phase II</p>
-      <ul class="phase-list">
-        <li>Up to 4 hours of meeting time</li>
-        <li>A comprehensive report summarising insights and recommendations</li>
-        <li>6–8 weeks delivery*</li>
-      </ul>
-      <p class="phase-footnote">* Scope and fee scaled to the size of the business and the complexity of the priorities.</p>
+  <!-- Screen 2: approach -->
+  <section class="card card--centre card--approach" aria-labelledby="approach-label">
+    <div class="card-inner">
+      <div class="approach-stage">
+        <div class="approach">
+          <div class="approach-head">
+            <h2 class="tag" id="approach-label">Approach</h2>
+            <p class="approach-counter"><span id="approach-current">01</span> / 06</p>
+            <div aria-live="polite">
+              <div class="approach-desc" id="desc-1">Defining the references and associations that shape your brand world. Narrowing down on the profile of your target customer, then mapping your brand alongside 15 direct competitor brands.</div>
+              <div class="approach-desc" id="desc-2" hidden>Refining the visual, material, and sensory codes that define your brand. Identifying opportunities to create a more cohesive and recognisable aesthetic world.</div>
+              <div class="approach-desc" id="desc-3" hidden>Distilling your brand presence into a feeling. Examining the role your brand plays in your customer's life, and identifying the emotional levers that drive loyalty. Generating a brand voice that speaks to your ideal customer. Recommending strategies for deeper feedback and social listening.</div>
+              <div class="approach-desc" id="desc-4" hidden>Exploring opportunities to communicate your stance on social, environmental, or cultural issues relevant to your industry and audience. An examination of how your values are conveyed in your advertising, business operations, partnerships, and public commitments.</div>
+              <div class="approach-desc" id="desc-5" hidden>Identifying 15 complementary brands — indirect competitors or peers who share your target audience — as opportunities for collaborative projects, and shared initiatives that boost cultural relevance.</div>
+              <div class="approach-desc" id="desc-6" hidden>Mapping your customer's full journey through your brand universe. Identifying opportunities to refine or reframe how your offer is structured and conveyed. Assessing discoverability and conversion across all acquisition channels.</div>
+            </div>
+          </div>
+          <ul class="menu">
+            <li><button type="button" aria-pressed="true" aria-controls="desc-1"><span class="num">01</span><span>Positioning</span></button></li>
+            <li><button type="button" aria-pressed="false" aria-controls="desc-2"><span class="num">02</span><span>Visual Language</span></button></li>
+            <li><button type="button" aria-pressed="false" aria-controls="desc-3"><span class="num">03</span><span>Emotional Resonance</span></button></li>
+            <li><button type="button" aria-pressed="false" aria-controls="desc-4"><span class="num">04</span><span>Ethos</span></button></li>
+            <li><button type="button" aria-pressed="false" aria-controls="desc-5"><span class="num">05</span><span>Strategic Alignment</span></button></li>
+            <li><button type="button" aria-pressed="false" aria-controls="desc-6"><span class="num">06</span><span>Business Model</span></button></li>
+          </ul>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div class="cta-row">
-      <a href="https://form.typeform.com/to/ctPwVdo0" target="_blank" rel="noopener" class="btn btn-primary">Start the questionnaire</a>
+  <!-- Screen 3: deliverables -->
+  <section class="card card--centre" aria-labelledby="deliverables-label">
+    <div class="card-inner">
+      <h2 class="tag deliverables-tag" id="deliverables-label">Deliverables</h2>
+
+      <div class="deliverables-row">
+        <div class="deliverables-copy">
+          <div class="phase">
+            <h3 class="phase-title">Phase I</h3>
+            <p class="phase-row">Pre-consultation questionnaire</p>
+            <p class="phase-row">First consultation up to 90 minutes to outline your priorities and objectives</p>
+          </div>
+          <div class="phase">
+            <h3 class="phase-title">Phase II</h3>
+            <p class="phase-row">Up to 4 hours of meeting time</p>
+            <p class="phase-row">A comprehensive report summarising insights and recommendations</p>
+            <p class="phase-row">6–8 weeks delivery*</p>
+            <p class="phase-footnote">* Scope scaled to the size of the business and the complexity of the priorities.</p>
+          </div>
+        </div>
+        <div class="cta-col">
+          <a href="https://form.typeform.com/to/ctPwVdo0" target="_blank" rel="noopener" class="btn">Start the questionnaire</a>
+        </div>
+      </div>
     </div>
-  </main>
-</div>
+  </section>
 
-<div class="full-bleed-row">
-  <div class="footer-divider"></div>
-</div>
+</main>
 
-<div class="page">
+<!-- Footer: its own block after the three screens -->
+<div class="footer-wrap">
+  <div class="footer-line"></div>
   <footer class="site-footer">
-  <div class="footer-col">
-    <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
-    <p class="footer-copyright">© 2026 SABI London</p>
-  </div>
-
-  <div class="footer-col">
-    <p class="footer-heading">Contact</p>
-    <div class="footer-links">
-      <a href="mailto:office@sabi.london">office@sabi.london</a>
-      <a href="tel:+447400192837">+44 7400 192837</a>
-      <a href="https://calendar.app.google/itHV85cwLfoDmH7x5">OOO Hours</a>
+    <div class="footer-col">
+      <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
+      <p class="footer-copyright">© 2026 SABI LDN</p>
     </div>
-  </div>
 
-  <div class="footer-col footer-col--services">
-    <p class="footer-heading">Services</p>
-    <div class="footer-links">
-      <a href="https://sabi.london/services/brand-strategy">Brand Strategy</a>
-      <a href="https://sabi.london/services/world-building">World Building</a>
-      <a href="https://sabi.london/services/copy">Copy</a>
-      <a href="https://sabi.london/services/community-and-partnerships">Community &amp; Partnerships</a>
-      <a href="https://sabi.london/services/campaign">Campaign</a>
+    <div class="footer-groups">
+      <div class="footer-col">
+        <p class="footer-heading">Contact</p>
+        <div class="footer-links">
+          <a href="mailto:office@sabi.london">office@sabi.london</a>
+          <a href="tel:+447400192837">+44 7400 192837</a>
+          <a href="https://calendar.app.google/itHV85cwLfoDmH7x5">OOO Hours</a>
+        </div>
+      </div>
+
+      <div class="footer-col footer-col--services">
+        <p class="footer-heading">Services</p>
+        <div class="footer-links">
+          <a href="https://sabi.london/services/brand-strategy">Brand Strategy</a>
+          <a href="https://sabi.london/services/world-building">World Building</a>
+          <a href="https://sabi.london/services/copy">Copy</a>
+          <a href="https://sabi.london/services/community-and-partnerships">Community &amp; Partnerships</a>
+          <a href="https://sabi.london/services/campaign">Campaign</a>
+        </div>
+      </div>
     </div>
-  </div>
-</footer>
-  
+  </footer>
 </div>
+
 <script>
+  /* Hamburger menu */
   const menuBtn = document.getElementById('menuBtn');
   const menuAccordion = document.getElementById('menuAccordion');
   menuBtn.addEventListener('click', (e) => {
@@ -659,5 +587,43 @@
     menuBtn.classList.toggle('open', isOpen);
     menuBtn.setAttribute('aria-expanded', isOpen);
   });
+
+  /* Approach selector */
+  (function () {
+    var buttons = document.querySelectorAll('.menu button');
+    var descs = document.querySelectorAll('.approach-desc');
+    var counter = document.getElementById('approach-current');
+
+    function select(index) {
+      buttons.forEach(function (b, i) { b.setAttribute('aria-pressed', i === index ? 'true' : 'false'); });
+      descs.forEach(function (d, i) { d.hidden = i !== index; });
+      counter.textContent = (index + 1 < 10 ? '0' : '') + (index + 1);
+    }
+
+    buttons.forEach(function (b, i) {
+      b.addEventListener('click', function () { select(i); });
+    });
+
+    /* Make the description block tall enough for the longest item, so nothing
+       overflows and the menu never moves when you switch item. */
+    var head = document.querySelector('.approach-head');
+    function fit() {
+      head.style.height = '';
+      if (window.innerWidth <= 900) return;
+      var base = head.offsetHeight, need = base, cur = 0;
+      buttons.forEach(function (b, i) { if (b.getAttribute('aria-pressed') === 'true') cur = i; });
+      head.style.height = 'auto';
+      descs.forEach(function (_, i) {
+        descs.forEach(function (d, j) { d.hidden = j !== i; });
+        need = Math.max(need, head.offsetHeight);
+      });
+      descs.forEach(function (d, j) { d.hidden = j !== cur; });
+      head.style.height = need + 'px';
+    }
+    fit();
+    window.addEventListener('resize', fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  })();
 </script>
+</body>
 </html>
