@@ -659,6 +659,7 @@
     var target = document.getElementById('deliverables');
     if (!cue || !from || !target) return;
     var busy = false, cooldownUntil = 0;
+    var origin = Math.round(window.scrollY);
     var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     function block(e) { e.preventDefault(); }
     function desktop() { return window.innerWidth > 900; }
@@ -700,6 +701,7 @@
         inn.cancel();
         ['wheel', 'touchmove'].forEach(function (t) { window.removeEventListener(t, block); });
         cooldownUntil = Date.now() + 400;
+        origin = target.offsetTop;
         busy = false;
       });
     }
@@ -724,6 +726,25 @@
         swipe();
       }
     });
+
+    /* Dragging the scrollbar (or any other scroll we can't intercept): if the page starts moving down
+       from the Approach screen, put it back and play the swipe instead. */
+    var settle = null;
+    window.addEventListener('scroll', function () {
+      var y = Math.round(window.scrollY);
+      if (busy) { if (y !== from.offsetTop) { var r = document.documentElement; r.style.scrollBehavior = 'auto'; window.scrollTo(0, from.offsetTop); r.style.scrollBehavior = ''; } return; }
+      if (desktop() && !mq.matches && Date.now() >= cooldownUntil &&
+          Math.abs(origin - from.offsetTop) <= 4 && y > origin + 10 && y <= target.offsetTop + 10) {
+        var root = document.documentElement;
+        root.style.scrollBehavior = 'auto';
+        window.scrollTo(0, from.offsetTop);
+        root.style.scrollBehavior = '';
+        swipe();
+        return;
+      }
+      clearTimeout(settle);
+      settle = setTimeout(function () { if (!busy) origin = Math.round(window.scrollY); }, 120);
+    }, { passive: true });
 
     var touchY = null;
     window.addEventListener('touchstart', function (e) { touchY = e.touches.length === 1 ? e.touches[0].clientY : null; }, { passive: true });
