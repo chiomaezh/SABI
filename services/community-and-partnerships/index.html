@@ -142,10 +142,9 @@
     }
 
     /* ── Scroll chevron (hero, bottom right; desktop) ── */
-    .hero-content { position: relative; }
     .scroll-cue {
       position: absolute;
-      right: 0;
+      right: var(--gutter);
       bottom: 40px;
       width: 32px;
       height: 20px;
@@ -166,10 +165,11 @@
       line-height: 1.2;
       text-transform: uppercase;
       padding: 8px 14px;
+      border-radius: 6px;
     }
 
     /* ── Card 1: hero ── */
-    .hero-content { container-type: inline-size; }
+    .card--hero .card-inner { container-type: inline-size; position: relative; }
     .hero-top {
       display: flex;
       flex-direction: column;
@@ -334,7 +334,7 @@
       letter-spacing: 1.5px;
       text-transform: uppercase;
       padding: 12px 22px;
-      border-radius: 0;
+      border-radius: 6px;
       cursor: pointer;
       text-decoration: none;
       display: inline-block;
@@ -381,7 +381,6 @@
       gap: 3rem;
       align-items: flex-start;
     }
-    .footer-logo--phone { display: none; }
     .footer-col { display: flex; flex-direction: column; }
     @media (min-width: 501px) { .site-footer { align-items: stretch; } .footer-groups { align-items: flex-start; } .footer-logo { align-self: flex-start; } }
     .footer-desc {
@@ -412,6 +411,36 @@
       white-space: nowrap;
     }
     .footer-col--services .footer-links a { text-transform: uppercase; }
+
+    /* Desktop: Approach block is centred on the page; a right chevron on the
+       right edge swipes on to Deliverables */
+    .scroll-cue--next { display: none; }
+    @media (min-width: 901px) {
+      .card--approach .card-inner { position: relative; }
+      .card--approach .approach-stage { justify-content: center; }
+      .scroll-cue--next {
+        display: block;
+        top: 50%;
+        bottom: auto;
+        width: 20px;
+        height: 32px;
+        transform: translateY(-50%);
+      }
+    }
+
+    /* Desktop: title + paragraph sit three-fifths of the way down the hero screen */
+    @media (min-width: 901px) {
+      .hero-bottom {
+        position: absolute;
+        left: var(--gutter);
+        right: var(--gutter);
+        top: 60%;
+        transform: translateY(-50%);
+        margin: 0;
+        padding: 0;
+        width: auto;
+      }
+    }
 
     /* ── Phones: normal scrolling page ── */
     @media (max-width: 900px) {
@@ -457,7 +486,6 @@
       .site-footer { align-items: stretch; }
       .site-footer > .footer-col:first-child { grid-column: 1 / -1; }
       .site-footer > .footer-col:first-child .footer-logo { display: none; }
-      .footer-logo--phone { display: block; }
       .footer-groups { display: contents; }
       .footer-links a { white-space: normal; }
       .footer-copyright { font-size: 12px; }
@@ -490,7 +518,7 @@
 <main>
 
   <!-- Screen 1: header + hero -->
-  <section class="card" aria-label="Overview">
+  <section class="card card--hero" aria-label="Overview">
     <div class="card-inner">
       <header class="site-header">
         <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="menuAccordion">
@@ -552,11 +580,14 @@
           </ul>
         </div>
       </div>
+      <a href="#deliverables" class="scroll-cue scroll-cue--next" id="nextCue" aria-label="Go to Deliverables">
+        <svg viewBox="0 0 20 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true"><polyline points="2,1.5 16.5,16 2,30.5"/></svg>
+      </a>
     </div>
   </section>
 
   <!-- Screen 3: deliverables -->
-  <section class="card card--centre" aria-labelledby="deliverables-label">
+  <section class="card card--centre" id="deliverables" aria-labelledby="deliverables-label">
     <div class="card-inner">
       <h2 class="tag deliverables-tag" id="deliverables-label">Deliverables</h2>
 
@@ -601,7 +632,6 @@
           <a href="tel:+447400192837">+44 7400 192837</a>
           <a href="https://calendar.app.google/itHV85cwLfoDmH7x5">OOO Hours</a>
         </div>
-        <a href="https://sabi.london/" class="footer-logo footer-logo--phone" aria-label="SABI">S A B I</a>
       </div>
 
       <div class="footer-col footer-col--services">
@@ -628,6 +658,143 @@
     menuBtn.classList.toggle('open', isOpen);
     menuBtn.setAttribute('aria-expanded', isOpen);
   });
+
+  /* Approach <-> Deliverables: a horizontal swipe instead of a vertical scroll.
+     Forward: Approach slides off to the left, Deliverables comes in from the right.
+     Back: Deliverables slides off to the right, Approach comes in from the left.
+     Triggered by the right chevron, wheel/trackpad, keys, touch and scrollbar drags. */
+  (function () {
+    var cue = document.getElementById('nextCue');
+    var approach = document.getElementById('approach');
+    var deliver = document.getElementById('deliverables');
+    var footerWrap = document.querySelector('.footer-wrap');
+    if (!cue || !approach || !deliver) return;
+    var busy = false, cooldownUntil = 0;
+    var origin = Math.round(window.scrollY);
+    var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function block(e) { e.preventDefault(); }
+    function desktop() { return window.innerWidth > 900; }
+    function at(el) { return Math.abs(window.scrollY - el.offsetTop) <= 4; }
+    function instant(y) {
+      var root = document.documentElement;
+      root.style.scrollBehavior = 'auto';
+      window.scrollTo(0, y);
+      root.style.scrollBehavior = '';
+    }
+
+    /* dir = 1: Approach -> Deliverables, dir = -1: Deliverables -> Approach */
+    function swipe(dir) {
+      if (busy) return;
+      var from = dir > 0 ? approach : deliver;
+      var to = dir > 0 ? deliver : approach;
+      if (mq.matches || !from.animate) { instant(to.offsetTop); return; }
+      busy = true;
+      var w = from.getBoundingClientRect().width;
+      var overlay = document.createElement('div');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.setAttribute('inert', '');
+      overlay.style.cssText = 'position:fixed;top:0;left:0;height:100vh;height:100dvh;overflow:hidden;z-index:50;background:var(--bg);width:' + w + 'px';
+      var clone = to.cloneNode(true);
+      clone.removeAttribute('id');
+      clone.removeAttribute('aria-labelledby');
+      clone.querySelectorAll('[id]').forEach(function (n) { n.removeAttribute('id'); });
+      clone.style.scrollSnapAlign = 'none';
+      overlay.appendChild(clone);
+      document.body.appendChild(overlay);
+
+      ['wheel', 'touchmove'].forEach(function (t) { window.addEventListener(t, block, { passive: false }); });
+      var opts = { duration: 700, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' };
+      var out = from.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(' + (-100 * dir) + '%)' }], opts);
+      var inn = overlay.animate([{ transform: 'translateX(' + (100 * dir) + '%)' }, { transform: 'translateX(0)' }], opts);
+      var fromTop = from.offsetTop;
+
+      inn.finished.then(function () {
+        instant(to.offsetTop);
+        overlay.remove();
+        out.cancel();
+        inn.cancel();
+        ['wheel', 'touchmove'].forEach(function (t) { window.removeEventListener(t, block); });
+        cooldownUntil = Date.now() + 400;
+        origin = to.offsetTop;
+        busy = false;
+      });
+      swipe.fromTop = fromTop;
+    }
+
+    cue.addEventListener('click', function (e) { e.preventDefault(); swipe(1); });
+
+    /* Which swipe (if any) does a scroll in direction d (1 = down, -1 = up) mean right now? */
+    function swipeFor(d) {
+      if (!desktop() || mq.matches || busy) return 0;
+      if (d > 0 && at(approach)) return 1;
+      if (d < 0 && at(deliver)) return -1;
+      return 0;
+    }
+
+    /* Mouse wheel / trackpad */
+    window.addEventListener('wheel', function (e) {
+      if (!desktop() || mq.matches) return;
+      if (Date.now() < cooldownUntil) { e.preventDefault(); return; }
+      if (busy || e.ctrlKey || Math.abs(e.deltaY) < 5 || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+      var dir = swipeFor(e.deltaY > 0 ? 1 : -1);
+      if (dir) { e.preventDefault(); swipe(dir); }
+    }, { passive: false });
+
+    /* Keys: Left/Right stand in for Up/Down */
+    var stops = function () { return [0, approach.offsetTop, deliver.offsetTop, footerWrap ? footerWrap.offsetTop : deliver.offsetTop]; };
+    function goStep(d) {
+      var dir = swipeFor(d);
+      if (dir) { swipe(dir); return; }
+      var pos = stops(), y = window.scrollY, idx = 0;
+      pos.forEach(function (p, i) { if (Math.abs(p - y) < Math.abs(pos[idx] - y)) idx = i; });
+      var next = Math.max(0, Math.min(pos.length - 1, idx + d));
+      if (next !== idx) window.scrollTo({ top: pos[next], behavior: 'smooth' });
+    }
+    window.addEventListener('keydown', function (e) {
+      if (!desktop() || e.altKey || e.ctrlKey || e.metaKey) return;
+      if (busy) { if (/^(Arrow|Page| |Spacebar)/.test(e.key)) e.preventDefault(); return; }
+      var k = e.key;
+      var tag = e.target && e.target.closest && e.target.closest('input, textarea, select');
+      if (tag) return;
+      var interactive = e.target && e.target.closest && e.target.closest('button, a');
+      var d = 0, native = true;
+      if (k === 'ArrowDown' || k === 'PageDown') d = 1;
+      else if (k === 'ArrowUp' || k === 'PageUp') d = -1;
+      else if ((k === ' ' || k === 'Spacebar') && !interactive) d = e.shiftKey ? -1 : 1;
+      else if (k === 'ArrowRight') { d = 1; native = false; }
+      else if (k === 'ArrowLeft') { d = -1; native = false; }
+      if (!d) return;
+      var dir = swipeFor(d);
+      if (dir) { e.preventDefault(); swipe(dir); }
+      else if (!native) { e.preventDefault(); goStep(d); }
+    });
+
+    /* Scrollbar drags (or any other scroll we can't intercept): put the page back and swipe instead */
+    var settle = null;
+    window.addEventListener('scroll', function () {
+      var y = Math.round(window.scrollY);
+      if (busy) { if (swipe.fromTop !== undefined && y !== swipe.fromTop) instant(swipe.fromTop); return; }
+      if (desktop() && !mq.matches && Date.now() >= cooldownUntil) {
+        var dir = 0;
+        if (Math.abs(origin - approach.offsetTop) <= 4 && y > origin + 10 && y <= deliver.offsetTop + 10) dir = 1;
+        else if (Math.abs(origin - deliver.offsetTop) <= 4 && y < origin - 10 && y >= approach.offsetTop - 10) dir = -1;
+        if (dir) { instant(origin); swipe(dir); return; }
+      }
+      clearTimeout(settle);
+      settle = setTimeout(function () { if (!busy) origin = Math.round(window.scrollY); }, 120);
+    }, { passive: true });
+
+    /* Touch */
+    var touchY = null;
+    window.addEventListener('touchstart', function (e) { touchY = e.touches.length === 1 ? e.touches[0].clientY : null; }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+      if (touchY === null || busy || !desktop() || mq.matches) return;
+      var dy = touchY - e.touches[0].clientY;
+      if (Math.abs(dy) < 30) return;
+      var dir = swipeFor(dy > 0 ? 1 : -1);
+      if (dir) { touchY = null; e.preventDefault(); swipe(dir); }
+    }, { passive: false });
+  })();
 
   /* Approach selector */
   (function () {
