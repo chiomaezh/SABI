@@ -142,10 +142,9 @@
     }
 
     /* ── Scroll chevron (hero, bottom right; desktop) ── */
-    .hero-content { position: relative; }
     .scroll-cue {
       position: absolute;
-      right: 0;
+      right: var(--gutter);
       bottom: 40px;
       width: 32px;
       height: 20px;
@@ -166,10 +165,11 @@
       line-height: 1.2;
       text-transform: uppercase;
       padding: 8px 14px;
+      border-radius: 6px;
     }
 
     /* ── Card 1: hero ── */
-    .hero-content { container-type: inline-size; }
+    .card--hero .card-inner { container-type: inline-size; position: relative; }
     .hero-top {
       display: flex;
       flex-direction: column;
@@ -332,7 +332,7 @@
       letter-spacing: 1.5px;
       text-transform: uppercase;
       padding: 12px 22px;
-      border-radius: 0;
+      border-radius: 6px;
       cursor: pointer;
       text-decoration: none;
       display: inline-block;
@@ -411,6 +411,20 @@
     }
     .footer-col--services .footer-links a { text-transform: uppercase; }
 
+    /* Desktop: title + paragraph sit in the vertical centre of the hero screen */
+    @media (min-width: 901px) {
+      .hero-bottom {
+        position: absolute;
+        left: var(--gutter);
+        right: var(--gutter);
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0;
+        padding: 0;
+        width: auto;
+      }
+    }
+
     /* ── Phones: normal scrolling page ── */
     @media (max-width: 900px) {
       html { scroll-snap-type: none; }
@@ -481,7 +495,7 @@
 <main>
 
   <!-- Screen 1: header + hero -->
-  <section class="card" aria-label="Overview">
+  <section class="card card--hero" aria-label="Overview">
     <div class="card-inner">
       <header class="site-header">
         <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="menuAccordion">
