@@ -379,7 +379,6 @@
       gap: 3rem;
       align-items: flex-start;
     }
-    .footer-logo--phone { display: none; }
     .footer-col { display: flex; flex-direction: column; }
     @media (min-width: 501px) { .site-footer { align-items: stretch; } .footer-groups { align-items: flex-start; } .footer-logo { align-self: flex-start; } }
     .footer-desc {
@@ -410,6 +409,22 @@
       white-space: nowrap;
     }
     .footer-col--services .footer-links a { text-transform: uppercase; }
+
+    /* Desktop: Approach block is centred on the page; a right chevron on the
+       right edge swipes on to Deliverables */
+    .scroll-cue--next { display: none; }
+    @media (min-width: 901px) {
+      .card--approach .card-inner { position: relative; }
+      .card--approach .approach-stage { justify-content: center; }
+      .scroll-cue--next {
+        display: block;
+        top: 50%;
+        bottom: auto;
+        width: 20px;
+        height: 32px;
+        transform: translateY(-50%);
+      }
+    }
 
     /* Desktop: title + paragraph sit in the vertical centre of the hero screen */
     @media (min-width: 901px) {
@@ -462,7 +477,6 @@
       .site-footer { align-items: stretch; }
       .site-footer > .footer-col:first-child { grid-column: 1 / -1; }
       .site-footer > .footer-col:first-child .footer-logo { display: none; }
-      .footer-logo--phone { display: block; }
       .footer-groups { display: contents; }
       .footer-links a { white-space: normal; }
       .footer-copyright { font-size: 12px; }
@@ -557,11 +571,14 @@
           </ul>
         </div>
       </div>
+      <a href="#deliverables" class="scroll-cue scroll-cue--next" id="nextCue" aria-label="Go to Deliverables">
+        <svg viewBox="0 0 20 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true"><polyline points="2,1.5 16.5,16 2,30.5"/></svg>
+      </a>
     </div>
   </section>
 
   <!-- Screen 3: deliverables -->
-  <section class="card card--centre" aria-labelledby="deliverables-label">
+  <section class="card card--centre" id="deliverables" aria-labelledby="deliverables-label">
     <div class="card-inner">
       <h2 class="tag deliverables-tag" id="deliverables-label">Deliverables</h2>
 
@@ -607,7 +624,6 @@
           <a href="tel:+447400192837">+44 7400 192837</a>
           <a href="https://calendar.app.google/itHV85cwLfoDmH7x5">OOO Hours</a>
         </div>
-        <a href="https://sabi.london/" class="footer-logo footer-logo--phone" aria-label="SABI">S A B I</a>
       </div>
 
       <div class="footer-col footer-col--services">
@@ -634,6 +650,88 @@
     menuBtn.classList.toggle('open', isOpen);
     menuBtn.setAttribute('aria-expanded', isOpen);
   });
+
+  /* Approach -> Deliverables: the Approach screen swipes off to the left while Deliverables slides in
+     from the right. Used by the right chevron and by manual scrolling down from the Approach screen. */
+  (function () {
+    var cue = document.getElementById('nextCue');
+    var from = document.getElementById('approach');
+    var target = document.getElementById('deliverables');
+    if (!cue || !from || !target) return;
+    var busy = false, cooldownUntil = 0;
+    var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function block(e) { e.preventDefault(); }
+    function desktop() { return window.innerWidth > 900; }
+    function onApproach() { return Math.abs(window.scrollY - from.offsetTop) <= 4; }
+
+    function jump() {
+      var root = document.documentElement;
+      root.style.scrollBehavior = 'auto';
+      window.scrollTo(0, target.offsetTop);
+      root.style.scrollBehavior = '';
+    }
+
+    function swipe() {
+      if (busy) return;
+      if (mq.matches || !from.animate) { jump(); return; }
+      busy = true;
+      var w = from.getBoundingClientRect().width;
+      var overlay = document.createElement('div');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.setAttribute('inert', '');
+      overlay.style.cssText = 'position:fixed;top:0;left:0;height:100vh;height:100dvh;overflow:hidden;z-index:50;background:var(--bg);width:' + w + 'px';
+      var clone = target.cloneNode(true);
+      clone.removeAttribute('id');
+      clone.removeAttribute('aria-labelledby');
+      clone.querySelectorAll('[id]').forEach(function (n) { n.removeAttribute('id'); });
+      clone.style.scrollSnapAlign = 'none';
+      overlay.appendChild(clone);
+      document.body.appendChild(overlay);
+
+      ['wheel', 'touchmove'].forEach(function (t) { window.addEventListener(t, block, { passive: false }); });
+      var opts = { duration: 700, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' };
+      var out = from.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-100%)' }], opts);
+      var inn = overlay.animate([{ transform: 'translateX(100%)' }, { transform: 'translateX(0)' }], opts);
+
+      inn.finished.then(function () {
+        jump();
+        overlay.remove();
+        out.cancel();
+        inn.cancel();
+        ['wheel', 'touchmove'].forEach(function (t) { window.removeEventListener(t, block); });
+        cooldownUntil = Date.now() + 400;
+        busy = false;
+      });
+    }
+
+    cue.addEventListener('click', function (e) { e.preventDefault(); swipe(); });
+
+    /* Manual scrolling down from the Approach screen (wheel, trackpad, keys, touch) */
+    window.addEventListener('wheel', function (e) {
+      if (!desktop() || mq.matches) return;
+      if (Date.now() < cooldownUntil) { e.preventDefault(); return; }
+      if (busy || !onApproach() || e.ctrlKey) return;
+      if (e.deltaY > 4 && Math.abs(e.deltaY) >= Math.abs(e.deltaX)) { e.preventDefault(); swipe(); }
+    }, { passive: false });
+
+    window.addEventListener('keydown', function (e) {
+      if (!desktop() || mq.matches || busy || !onApproach()) return;
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      var k = e.key;
+      var interactive = e.target && e.target.closest && e.target.closest('button, a, input, textarea, select');
+      if (k === 'ArrowDown' || k === 'PageDown' || ((k === ' ' || k === 'Spacebar') && !e.shiftKey && !interactive)) {
+        e.preventDefault();
+        swipe();
+      }
+    });
+
+    var touchY = null;
+    window.addEventListener('touchstart', function (e) { touchY = e.touches.length === 1 ? e.touches[0].clientY : null; }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+      if (touchY === null || busy || !desktop() || mq.matches || !onApproach()) return;
+      if (touchY - e.touches[0].clientY > 30) { touchY = null; e.preventDefault(); swipe(); }
+    }, { passive: false });
+  })();
 
   /* Approach selector */
   (function () {
