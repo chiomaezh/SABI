@@ -417,7 +417,7 @@
     .scroll-cue--next { display: none; }
     @media (min-width: 901px) {
       .card--approach .card-inner { position: relative; }
-      .card--approach .approach-stage { justify-content: center; }
+      .card--approach .approach-stage { justify-content: center; align-items: center; }
       .scroll-cue--next {
         display: block;
         top: 50%;
@@ -427,6 +427,8 @@
         transform: translateY(-50%);
       }
     }
+
+    html.deliv-tall .footer-line { scroll-snap-align: end; }
 
     /* Desktop: title + paragraph sit three-fifths of the way down the hero screen */
     @media (min-width: 901px) {
@@ -832,7 +834,12 @@
         need = Math.max(need, head.offsetHeight);
       });
       descs.forEach(function (d, j) { d.hidden = j !== cur; });
-      head.style.height = need + 'px';
+      head.style.height = '';
+      head.style.height = 'auto';
+      descs.forEach(function (d, j) { d.hidden = j !== 0; });
+      var first = head.offsetHeight;
+      descs.forEach(function (d, j) { d.hidden = j !== cur; });
+      head.style.height = first + 'px';
     }
     fit();
     window.addEventListener('resize', fit);
@@ -863,6 +870,21 @@
     align();
     window.addEventListener('resize', align);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(align);
+  })();
+</script>
+<script>
+  /* Long Deliverables screen: let it scroll all the way down to the line above the footer.
+     The footer screen itself is unchanged. */
+  (function () {
+    var deliver = document.getElementById('deliverables');
+    var root = document.documentElement;
+    if (!deliver) return;
+    function check() {
+      root.classList.toggle('deliv-tall', window.innerWidth > 900 && deliver.offsetHeight > window.innerHeight + 1);
+    }
+    check();
+    window.addEventListener('resize', check);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(check);
   })();
 </script>
 </body>
