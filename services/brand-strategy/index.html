@@ -7,8 +7,8 @@
 
   <link rel="stylesheet" href="https://use.typekit.net/bwp0bbg.css">
 
-  <title>Brand Strategy — SABI</title>
-  <meta name="description" content="A strategy service that clarifies your brand positioning, identifies untapped growth opportunities, and highlights priority actions across core branding, intellectual property, communications, customer service, and social media." />
+  <title>Campaign — SABI</title>
+  <meta name="description" content="Art direction and creative development for advertising campaigns. Working on visuals, messaging, and production planning, from the brief through to direction on set." />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -251,6 +251,8 @@
       line-height: 1.8;
     }
     .approach-desc[hidden] { display: none; }
+    .approach-list { list-style: none; margin-top: 0.7rem; }
+    .approach-list li { font-weight: 300; font-size: 14px; line-height: 1.6; }
 
     .menu { list-style: none; border-bottom: 0.5px solid var(--border); }
     .menu button {
@@ -426,6 +428,8 @@
       }
     }
 
+    html.deliv-tall .footer-line { scroll-snap-align: end; }
+
     /* Desktop: title + paragraph sit three-fifths of the way down the hero screen */
     @media (min-width: 901px) {
       .hero-bottom {
@@ -457,6 +461,13 @@
       .deliverables-row { row-gap: 64px; }
       .footer-wrap { padding-top: 64px; min-height: 0; display: block; }
       .scroll-cue { display: none; }
+    }
+    /* Pages with four phases: a little tighter so the screen still fits */
+    @media (min-width: 901px) {
+      .card--dense .phase { margin-bottom: 1.7rem; }
+      .card--dense .phase-row { padding: 0.4rem 0; }
+      .card--dense .phase-footnote { margin-top: 1.7rem; }
+      .card--dense .deliverables-tag { margin-bottom: 28px; }
     }
     /* Short desktop windows: same widths and layout, just tighter vertical spacing */
     @media (min-width: 901px) and (max-height: 700px) {
@@ -532,11 +543,9 @@
       <div class="hero-content">
         <a href="https://sabi.london/services/" class="back-link">← All Services</a>
         <div class="hero-bottom">
-          <h1 class="service-title">Brand Strategy</h1>
+          <h1 class="service-title">Campaign</h1>
           <p class="service-overview">
-            A strategy service that clarifies your brand positioning, identifies untapped
-            growth opportunities, and highlights priority actions across core branding, intellectual
-            property, communications, customer experience, and social media.
+            Creative development and art direction for advertising campaigns. Building the visual concept, narrative and production plan behind a campaign, from initial brief through to direction on set.
           </p>
         </div>
         <a href="#approach" class="scroll-cue" aria-label="Scroll to Approach">
@@ -553,21 +562,19 @@
         <div class="approach">
           <div class="approach-head">
             <h2 class="tag" id="approach-label">Approach</h2>
-            <p class="approach-counter"><span id="approach-current">01</span> / 05</p>
+            <p class="approach-counter"><span id="approach-current">01</span> / 04</p>
             <div aria-live="polite">
-              <p class="approach-desc" id="desc-1">Clarity, coherence, and cultural signals. Defining your target audience, and mapping your brand alongside 15 competitor brands. Assessing product-market fit.</p>
-              <p class="approach-desc" id="desc-2" hidden>Reviewing the impact and associations of your trademark, logo, brand name, slogan, or product names. Market research for naming, renaming, and copywriting.</p>
-              <p class="approach-desc" id="desc-3" hidden>Identifying opportunities to refine or reframe how your products or services are structured, priced, and conveyed. Mapping the customer experience journey to identify opportunities to improve conversion.</p>
-              <p class="approach-desc" id="desc-4" hidden>Assessing how your brand reaches and converts its audience across website, social, search, marketing, and other acquisition channels. Identifying gaps in discoverability and messaging to support launches, campaigns, and rebranding.</p>
-              <p class="approach-desc" id="desc-5" hidden>Key observations, growth opportunities, and priority actions. Referrals to 15 relevant industry contacts for community and partnerships opportunities.</p>
+              <div class="approach-desc" id="desc-1">Outlining the campaign objective, audience, and advertising context. Establishing the concept and narrative direction.</div>
+              <div class="approach-desc" id="desc-2" hidden>Defining the visual language and tone through image research, market research, moodboarding, and narrative framing. Producing a campaign deck to outline the guidelines.</div>
+              <div class="approach-desc" id="desc-3" hidden>Translating the approved creative guidelines into a production plan. Developing storyboards and ad scripts, alongside location research, casting recommendations, styling, and other considerations as required.</div>
+              <div class="approach-desc" id="desc-4" hidden>Directing the campaign on set. Supporting the crew and overseeing execution to ensure that the concept is realised as intended.</div>
             </div>
           </div>
           <ul class="menu">
-            <li><button type="button" aria-pressed="true" aria-controls="desc-1"><span class="num">01</span><span>Brand Positioning</span></button></li>
-            <li><button type="button" aria-pressed="false" aria-controls="desc-2"><span class="num">02</span><span>Intellectual Property</span></button></li>
-            <li><button type="button" aria-pressed="false" aria-controls="desc-3"><span class="num">03</span><span>Business Model</span></button></li>
-            <li><button type="button" aria-pressed="false" aria-controls="desc-4"><span class="num">04</span><span>Go-to-Market</span></button></li>
-            <li><button type="button" aria-pressed="false" aria-controls="desc-5"><span class="num">05</span><span>Referrals</span></button></li>
+            <li><button type="button" aria-pressed="true" aria-controls="desc-1"><span class="num">01</span><span>Brief</span></button></li>
+            <li><button type="button" aria-pressed="false" aria-controls="desc-2"><span class="num">02</span><span>Visual Narrative</span></button></li>
+            <li><button type="button" aria-pressed="false" aria-controls="desc-3"><span class="num">03</span><span>Production Planning</span></button></li>
+            <li><button type="button" aria-pressed="false" aria-controls="desc-4"><span class="num">04</span><span>On Set</span></button></li>
           </ul>
         </div>
       </div>
@@ -578,7 +585,7 @@
   </section>
 
   <!-- Screen 3: deliverables -->
-  <section class="card card--centre" id="deliverables" aria-labelledby="deliverables-label">
+  <section class="card card--centre card--dense" id="deliverables" aria-labelledby="deliverables-label">
     <div class="card-inner">
       <h2 class="tag deliverables-tag" id="deliverables-label">Deliverables</h2>
 
@@ -587,14 +594,26 @@
           <div class="phase">
             <h3 class="phase-title">Phase I</h3>
             <p class="phase-row">Pre-consultation questionnaire</p>
-            <p class="phase-row">First consultation up to 90 minutes to outline your priorities and objectives</p>
+            <p class="phase-row">First consultation up to 45 minutes to outline your priorities and objectives</p>
           </div>
           <div class="phase">
             <h3 class="phase-title">Phase II</h3>
-            <p class="phase-row">Up to 3 hours of meeting time</p>
-            <p class="phase-row">A concise report summarising insights and recommendations</p>
-            <p class="phase-row">4–6 weeks delivery*</p>
-            <p class="phase-footnote">* Scope scaled to the size of the business and the complexity of the priorities.</p>
+            <p class="phase-row">Up to 2 hours of meeting time</p>
+            <p class="phase-row">Building a bespoke campaign brief</p>
+            <p class="phase-row">2 weeks delivery</p>
+          </div>
+          <div class="phase">
+            <h3 class="phase-title">Phase III</h3>
+            <p class="phase-row">Concept development and campaign deck</p>
+            <p class="phase-row">2–4 weeks delivery*</p>
+          </div>
+          <div class="phase">
+            <h3 class="phase-title">Phase IV</h3>
+            <p class="phase-row">Production planning</p>
+            <p class="phase-row">On-set direction</p>
+            <p class="phase-row">3–6 weeks delivery**</p>
+            <p class="phase-footnote">* Timeline adjusted to the scope of the campaign.<br>
+            ** Final timeline determined by production requirements.</p>
           </div>
         </div>
         <div class="cta-col">
@@ -797,12 +816,32 @@
     function select(index) {
       buttons.forEach(function (b, i) { b.setAttribute('aria-pressed', i === index ? 'true' : 'false'); });
       descs.forEach(function (d, i) { d.hidden = i !== index; });
-      counter.textContent = '0' + (index + 1);
+      counter.textContent = (index + 1 < 10 ? '0' : '') + (index + 1);
     }
 
     buttons.forEach(function (b, i) {
       b.addEventListener('click', function () { select(i); });
     });
+
+    /* Make the description block tall enough for the longest item, so nothing
+       overflows and the menu never moves when you switch item. */
+    var head = document.querySelector('.approach-head');
+    function fit() {
+      head.style.height = '';
+      if (window.innerWidth <= 900) return;
+      var base = head.offsetHeight, need = base, cur = 0;
+      buttons.forEach(function (b, i) { if (b.getAttribute('aria-pressed') === 'true') cur = i; });
+      head.style.height = 'auto';
+      descs.forEach(function (_, i) {
+        descs.forEach(function (d, j) { d.hidden = j !== i; });
+        need = Math.max(need, head.offsetHeight);
+      });
+      descs.forEach(function (d, j) { d.hidden = j !== cur; });
+      head.style.height = need + 'px';
+    }
+    fit();
+    window.addEventListener('resize', fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   })();
 
   /* Footer logo: sit its baseline exactly on the baseline of the last Services link */
@@ -829,6 +868,21 @@
     align();
     window.addEventListener('resize', align);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(align);
+  })();
+</script>
+<script>
+  /* Long Deliverables screen: let it scroll all the way down to the line above the footer.
+     The footer screen itself is unchanged. */
+  (function () {
+    var deliver = document.getElementById('deliverables');
+    var root = document.documentElement;
+    if (!deliver) return;
+    function check() {
+      root.classList.toggle('deliv-tall', window.innerWidth > 900 && deliver.offsetHeight > window.innerHeight + 1);
+    }
+    check();
+    window.addEventListener('resize', check);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(check);
   })();
 </script>
 </body>
