@@ -428,6 +428,8 @@
       }
     }
 
+    html.deliv-tall .footer-line { scroll-snap-align: end; }
+
     /* Desktop: title + paragraph sit three-fifths of the way down the hero screen */
     @media (min-width: 901px) {
       .hero-bottom {
@@ -866,6 +868,21 @@
     align();
     window.addEventListener('resize', align);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(align);
+  })();
+</script>
+<script>
+  /* Long Deliverables screen: let it scroll all the way down to the line above the footer.
+     The footer screen itself is unchanged. */
+  (function () {
+    var deliver = document.getElementById('deliverables');
+    var root = document.documentElement;
+    if (!deliver) return;
+    function check() {
+      root.classList.toggle('deliv-tall', window.innerWidth > 900 && deliver.offsetHeight > window.innerHeight + 1);
+    }
+    check();
+    window.addEventListener('resize', check);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(check);
   })();
 </script>
 </body>
