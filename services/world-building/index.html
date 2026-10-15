@@ -412,6 +412,46 @@
     }
     .footer-col--services .footer-links a { text-transform: uppercase; }
 
+    /* ── Approach + Deliverables: one pinned stage. Scrolling moves the two screens
+       sideways (scroll-linked), so wheel, keys, chevron and scrollbar drags all look the same. ── */
+    .duo-snap { display: none; }
+    html.deliv-tall .footer-line { scroll-snap-align: end; }
+    @media (min-width: 901px) {
+      .duo { position: relative; height: 200vh; height: 200dvh; }
+      .duo-snap {
+        display: block;
+        position: absolute;
+        left: 0;
+        width: 100%;
+        pointer-events: none;
+        visibility: hidden;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+      }
+      .duo-snap--a { top: 0; height: 100vh; height: 100dvh; }
+      .duo-snap--d { top: 100vh; top: 100dvh; height: 100vh; height: 100dvh; }
+      .duo-pin {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+      }
+      .duo-track {
+        display: flex;
+        align-items: flex-start;
+        width: 200%;
+        will-change: transform;
+      }
+      .duo-track > .card {
+        flex: 0 0 50%;
+        min-width: 0;
+        scroll-snap-align: none;
+        scroll-snap-stop: normal;
+      }
+      .duo-track > .card--centre:last-child { will-change: transform; }
+    }
+
     /* Desktop: Approach block is centred on the page; a right chevron on the
        right edge swipes on to Deliverables */
     .scroll-cue--next { display: none; }
@@ -554,7 +594,12 @@
   </section>
 
   <!-- Screen 2: approach -->
-  <section class="card card--centre card--approach" id="approach" aria-labelledby="approach-label">
+  <div class="duo" id="duo">
+  <div class="duo-snap duo-snap--a" id="approach" aria-hidden="true"></div>
+  <div class="duo-snap duo-snap--d" id="deliverables" aria-hidden="true"></div>
+  <div class="duo-pin">
+  <div class="duo-track">
+  <section class="card card--centre card--approach" aria-labelledby="approach-label">
     <div class="card-inner">
       <div class="approach-stage">
         <div class="approach">
@@ -587,7 +632,7 @@
   </section>
 
   <!-- Screen 3: deliverables -->
-  <section class="card card--centre" id="deliverables" aria-labelledby="deliverables-label">
+  <section class="card card--centre" aria-labelledby="deliverables-label">
     <div class="card-inner">
       <h2 class="tag deliverables-tag" id="deliverables-label">Deliverables</h2>
 
@@ -612,6 +657,9 @@
       </div>
     </div>
   </section>
+  </div>
+  </div>
+  </div>
 
 </main>
 
@@ -660,141 +708,149 @@
     menuBtn.setAttribute('aria-expanded', isOpen);
   });
 
-  /* Approach <-> Deliverables: a horizontal swipe instead of a vertical scroll.
-     Forward: Approach slides off to the left, Deliverables comes in from the right.
-     Back: Deliverables slides off to the right, Approach comes in from the left.
-     Triggered by the right chevron, wheel/trackpad, keys, touch and scrollbar drags. */
+  /* Approach <-> Deliverables: scroll-linked sideways transition.
+     The two screens sit side by side on a pinned stage; vertical scrolling slides them left/right.
+     Keys and the right chevron glide the page there with the same easing. */
   (function () {
+    var root = document.documentElement;
+    var duo = document.getElementById('duo');
+    var pin = duo && duo.querySelector('.duo-pin');
+    var track = duo && duo.querySelector('.duo-track');
+    var snapA = document.getElementById('approach');
+    var snapD = document.getElementById('deliverables');
+    var cards = track ? track.querySelectorAll(':scope > .card') : [];
+    var deliver = cards[1];
     var cue = document.getElementById('nextCue');
-    var approach = document.getElementById('approach');
-    var deliver = document.getElementById('deliverables');
     var footerWrap = document.querySelector('.footer-wrap');
-    if (!cue || !approach || !deliver) return;
-    var busy = false, cooldownUntil = 0;
-    var origin = Math.round(window.scrollY);
+    if (!duo || !pin || !track || !deliver || !snapA || !snapD) return;
     var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    function block(e) { e.preventDefault(); }
+    var busy = false, cooldownUntil = 0, ticking = false, e = 0, vh = 0;
+
     function desktop() { return window.innerWidth > 900; }
-    function at(el) { return Math.abs(window.scrollY - el.offsetTop) <= 4; }
-    function instant(y) {
-      var root = document.documentElement;
-      root.style.scrollBehavior = 'auto';
-      window.scrollTo(0, y);
-      root.style.scrollBehavior = '';
+    function block(ev) { ev.preventDefault(); }
+
+    /* Sizes: the stage is as tall as both screens plus any extra the (taller) Deliverables needs */
+    function layout() {
+      if (!desktop()) {
+        duo.style.height = ''; snapA.style.height = ''; snapD.style.height = '';
+        track.style.transform = ''; deliver.style.transform = '';
+        root.classList.remove('deliv-tall');
+        return;
+      }
+      vh = pin.offsetHeight;
+      e = Math.max(0, deliver.offsetHeight - vh);
+      duo.style.height = (2 * vh + e) + 'px';
+      snapA.style.height = vh + 'px';
+      snapD.style.height = (vh + e) + 'px';
+      root.classList.toggle('deliv-tall', e > 0);
+      update();
     }
 
-    /* dir = 1: Approach -> Deliverables, dir = -1: Deliverables -> Approach */
-    function swipe(dir) {
-      if (busy) return;
-      var from = dir > 0 ? approach : deliver;
-      var to = dir > 0 ? deliver : approach;
-      if (mq.matches || !from.animate) { instant(to.offsetTop); return; }
+    function update() {
+      ticking = false;
+      if (!desktop()) return;
+      var s = window.scrollY - duo.offsetTop;
+      var p = Math.max(0, Math.min(1, s / vh));
+      var y = Math.max(0, Math.min(e, s - vh));
+      track.style.transform = 'translate3d(' + (-p * pin.clientWidth) + 'px,0,0)';
+      deliver.style.transform = y ? 'translate3d(0,' + (-y) + 'px,0)' : '';
+    }
+
+    /* Keep the address bar in step with the screen you are on */
+    var hashTimer = null;
+    function currentHash() {
+      var y = window.scrollY, ay = duo.offsetTop;
+      var ft = footerWrap ? footerWrap.offsetTop : Infinity;
+      if (y < ay - vh / 2) return '';
+      if (y < ay + vh / 2) return '#approach';
+      if (y < ft - vh / 2) return '#deliverables';
+      return '';
+    }
+    function syncHash() {
+      if (!desktop() || busy || !window.history.replaceState) return;
+      var h = currentHash();
+      if (window.location.hash !== h) {
+        try { window.history.replaceState(null, '', window.location.pathname + window.location.search + h); } catch (err) {}
+      }
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
+      clearTimeout(hashTimer);
+      hashTimer = setTimeout(syncHash, 140);
+    }, { passive: true });
+    window.addEventListener('resize', layout);
+    window.addEventListener('load', layout);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+    layout();
+
+    /* Glide the page to y with an ease-in-out (snap is paused while it runs) */
+    function animateTo(y) {
+      if (mq.matches) { root.style.scrollBehavior = 'auto'; window.scrollTo(0, y); root.style.scrollBehavior = ''; return; }
       busy = true;
-      var w = from.getBoundingClientRect().width;
-      var overlay = document.createElement('div');
-      overlay.setAttribute('aria-hidden', 'true');
-      overlay.setAttribute('inert', '');
-      overlay.style.cssText = 'position:fixed;top:0;left:0;height:100vh;height:100dvh;overflow:hidden;z-index:50;background:var(--bg);width:' + w + 'px';
-      var clone = to.cloneNode(true);
-      clone.removeAttribute('id');
-      clone.removeAttribute('aria-labelledby');
-      clone.querySelectorAll('[id]').forEach(function (n) { n.removeAttribute('id'); });
-      clone.style.scrollSnapAlign = 'none';
-      overlay.appendChild(clone);
-      document.body.appendChild(overlay);
-
+      var y0 = window.scrollY, t0 = performance.now(), dur = 700;
+      root.style.scrollSnapType = 'none';
+      root.style.scrollBehavior = 'auto';
       ['wheel', 'touchmove'].forEach(function (t) { window.addEventListener(t, block, { passive: false }); });
-      var opts = { duration: 700, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' };
-      var out = from.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(' + (-100 * dir) + '%)' }], opts);
-      var inn = overlay.animate([{ transform: 'translateX(' + (100 * dir) + '%)' }, { transform: 'translateX(0)' }], opts);
-      var fromTop = from.offsetTop;
-
-      inn.finished.then(function () {
-        instant(to.offsetTop);
-        overlay.remove();
-        out.cancel();
-        inn.cancel();
-        ['wheel', 'touchmove'].forEach(function (t) { window.removeEventListener(t, block); });
+      function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+      function step(now) {
+        var t = Math.min(1, (now - t0) / dur);
+        window.scrollTo(0, y0 + (y - y0) * ease(t));
+        if (t < 1) { window.requestAnimationFrame(step); return; }
+        root.style.scrollSnapType = '';
+        root.style.scrollBehavior = '';
+        ['wheel', 'touchmove'].forEach(function (n) { window.removeEventListener(n, block); });
         cooldownUntil = Date.now() + 400;
-        origin = to.offsetTop;
         busy = false;
-      });
-      swipe.fromTop = fromTop;
+        syncHash();
+      }
+      window.requestAnimationFrame(step);
     }
 
-    cue.addEventListener('click', function (e) { e.preventDefault(); swipe(1); });
-
-    /* Which swipe (if any) does a scroll in direction d (1 = down, -1 = up) mean right now? */
-    function swipeFor(d) {
-      if (!desktop() || mq.matches || busy) return 0;
-      if (d > 0 && at(approach)) return 1;
-      if (d < 0 && at(deliver)) return -1;
-      return 0;
+    function at(y) { return Math.abs(window.scrollY - y) <= 4; }
+    function ay() { return duo.offsetTop; }
+    function dy() { return duo.offsetTop + vh; }
+    /* d = 1 (down/right) or -1 (up/left): the target if it crosses between Approach and Deliverables */
+    function crossTarget(d) {
+      if (!desktop() || busy) return null;
+      if (d > 0 && at(ay())) return dy();
+      if (d < 0 && at(dy())) return ay();
+      return null;
     }
 
-    /* Mouse wheel / trackpad */
-    window.addEventListener('wheel', function (e) {
-      if (!desktop() || mq.matches) return;
-      if (Date.now() < cooldownUntil) { e.preventDefault(); return; }
-      if (busy || e.ctrlKey || Math.abs(e.deltaY) < 5 || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
-      var dir = swipeFor(e.deltaY > 0 ? 1 : -1);
-      if (dir) { e.preventDefault(); swipe(dir); }
+    if (cue) cue.addEventListener('click', function (ev) { ev.preventDefault(); if (!busy) animateTo(dy()); });
+
+    /* Ignore wheel momentum right after a glide, and everything while one runs */
+    window.addEventListener('wheel', function (ev) {
+      if (busy || Date.now() < cooldownUntil) ev.preventDefault();
     }, { passive: false });
 
-    /* Keys: Left/Right stand in for Up/Down */
-    var stops = function () { return [0, approach.offsetTop, deliver.offsetTop, footerWrap ? footerWrap.offsetTop : deliver.offsetTop]; };
     function goStep(d) {
-      var dir = swipeFor(d);
-      if (dir) { swipe(dir); return; }
-      var pos = stops(), y = window.scrollY, idx = 0;
-      pos.forEach(function (p, i) { if (Math.abs(p - y) < Math.abs(pos[idx] - y)) idx = i; });
+      var t = crossTarget(d);
+      if (t !== null) { animateTo(t); return; }
+      var pos = [0, ay(), dy(), footerWrap ? footerWrap.offsetTop : dy()];
+      var y = window.scrollY, idx = 0;
+      pos.forEach(function (q, i) { if (Math.abs(q - y) < Math.abs(pos[idx] - y)) idx = i; });
       var next = Math.max(0, Math.min(pos.length - 1, idx + d));
       if (next !== idx) window.scrollTo({ top: pos[next], behavior: 'smooth' });
     }
-    window.addEventListener('keydown', function (e) {
-      if (!desktop() || e.altKey || e.ctrlKey || e.metaKey) return;
-      if (busy) { if (/^(Arrow|Page| |Spacebar)/.test(e.key)) e.preventDefault(); return; }
-      var k = e.key;
-      var tag = e.target && e.target.closest && e.target.closest('input, textarea, select');
-      if (tag) return;
-      var interactive = e.target && e.target.closest && e.target.closest('button, a');
+    window.addEventListener('keydown', function (ev) {
+      if (!desktop() || ev.altKey || ev.ctrlKey || ev.metaKey) return;
+      var k = ev.key;
+      if (busy) { if (/^(Arrow|Page| |Spacebar)/.test(k)) ev.preventDefault(); return; }
+      if (ev.target && ev.target.closest && ev.target.closest('input, textarea, select')) return;
+      var interactive = ev.target && ev.target.closest && ev.target.closest('button, a');
       var d = 0, native = true;
       if (k === 'ArrowDown' || k === 'PageDown') d = 1;
       else if (k === 'ArrowUp' || k === 'PageUp') d = -1;
-      else if ((k === ' ' || k === 'Spacebar') && !interactive) d = e.shiftKey ? -1 : 1;
+      else if ((k === ' ' || k === 'Spacebar') && !interactive) d = ev.shiftKey ? -1 : 1;
       else if (k === 'ArrowRight') { d = 1; native = false; }
       else if (k === 'ArrowLeft') { d = -1; native = false; }
       if (!d) return;
-      var dir = swipeFor(d);
-      if (dir) { e.preventDefault(); swipe(dir); }
-      else if (!native) { e.preventDefault(); goStep(d); }
+      var t = crossTarget(d);
+      if (t !== null) { ev.preventDefault(); animateTo(t); }
+      else if (!native) { ev.preventDefault(); goStep(d); }
     });
-
-    /* Scrollbar drags (or any other scroll we can't intercept): put the page back and swipe instead */
-    var settle = null;
-    window.addEventListener('scroll', function () {
-      var y = Math.round(window.scrollY);
-      if (busy) { if (swipe.fromTop !== undefined && y !== swipe.fromTop) instant(swipe.fromTop); return; }
-      if (desktop() && !mq.matches && Date.now() >= cooldownUntil) {
-        var dir = 0;
-        if (Math.abs(origin - approach.offsetTop) <= 4 && y > origin + 10 && y <= deliver.offsetTop + 10) dir = 1;
-        else if (Math.abs(origin - deliver.offsetTop) <= 4 && y < origin - 10 && y >= approach.offsetTop - 10) dir = -1;
-        if (dir) { instant(origin); swipe(dir); return; }
-      }
-      clearTimeout(settle);
-      settle = setTimeout(function () { if (!busy) origin = Math.round(window.scrollY); }, 120);
-    }, { passive: true });
-
-    /* Touch */
-    var touchY = null;
-    window.addEventListener('touchstart', function (e) { touchY = e.touches.length === 1 ? e.touches[0].clientY : null; }, { passive: true });
-    window.addEventListener('touchmove', function (e) {
-      if (touchY === null || busy || !desktop() || mq.matches) return;
-      var dy = touchY - e.touches[0].clientY;
-      if (Math.abs(dy) < 30) return;
-      var dir = swipeFor(dy > 0 ? 1 : -1);
-      if (dir) { touchY = null; e.preventDefault(); swipe(dir); }
-    }, { passive: false });
   })();
 
   /* Approach selector */
