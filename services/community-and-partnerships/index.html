@@ -253,6 +253,8 @@
     .approach-desc[hidden] { display: none; }
     .approach-list { list-style: none; margin-top: 0.7rem; }
     .approach-list li { font-weight: 300; font-size: 14px; line-height: 1.6; }
+    .approach.list-inline .approach-list li { display: inline; }
+    .approach.list-inline .approach-list li:not(:last-child)::after { content: ' / '; opacity: 0.55; }
 
     .menu { list-style: none; border-bottom: 0.5px solid var(--border); }
     .menu button {
@@ -457,7 +459,7 @@
     .scroll-cue--next { display: none; }
     @media (min-width: 901px) {
       .card--approach .card-inner { position: relative; }
-      .card--approach .approach-stage { justify-content: center; }
+      .card--approach .approach-stage { justify-content: center; align-items: center; }
       .scroll-cue--next {
         display: block;
         top: 50%;
@@ -602,7 +604,7 @@
   <section class="card card--centre card--approach" aria-labelledby="approach-label">
     <div class="card-inner">
       <div class="approach-stage">
-        <div class="approach">
+        <div class="approach list-inline" data-inline>
           <div class="approach-head">
             <h2 class="tag" id="approach-label">Approach</h2>
             <p class="approach-counter"><span id="approach-current">01</span> / 05</p>
@@ -871,18 +873,48 @@
     /* Make the description block tall enough for the longest item, so nothing
        overflows and the menu never moves when you switch item. */
     var head = document.querySelector('.approach-head');
+    var approachEl = document.querySelector('.approach');
+    var cardEl = document.querySelector('.card--approach');
+    var CENTRE = true;
     function fit() {
       head.style.height = '';
+      if (!approachEl.hasAttribute('data-inline')) approachEl.classList.remove('list-inline');
       if (window.innerWidth <= 900) return;
-      var base = head.offsetHeight, need = base, cur = 0;
+      var cur = 0;
       buttons.forEach(function (b, i) { if (b.getAttribute('aria-pressed') === 'true') cur = i; });
-      head.style.height = 'auto';
-      descs.forEach(function (_, i) {
-        descs.forEach(function (d, j) { d.hidden = j !== i; });
-        need = Math.max(need, head.offsetHeight);
-      });
-      descs.forEach(function (d, j) { d.hidden = j !== cur; });
-      head.style.height = need + 'px';
+      function measure() {
+        head.style.height = '';
+        var n = CENTRE ? 0 : head.offsetHeight;
+        head.style.height = 'auto';
+        descs.forEach(function (_, i) {
+          descs.forEach(function (d, j) { d.hidden = j !== i; });
+          n = Math.max(n, head.offsetHeight);
+        });
+        descs.forEach(function (d, j) { d.hidden = j !== cur; });
+        return n;
+      }
+      var need = measure();
+      var menuH = approachEl.querySelector('.menu').offsetHeight;
+      /* If the block would not fit the screen (long referral list in a short window),
+         run the list on as a single flowing line instead of one item per row. */
+      var inner = cardEl.querySelector('.card-inner'), cs = window.getComputedStyle(inner);
+      var avail = cardEl.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      if (need + menuH > avail && approachEl.querySelector('.approach-list') && !approachEl.classList.contains('list-inline')) {
+        approachEl.classList.add('list-inline');
+        need = measure();
+      }
+      if (CENTRE) {
+        /* Centre the block for the first item; make the head just tall enough that
+           the longest item still clears the top edge. */
+        head.style.height = 'auto';
+        descs.forEach(function (d, j) { d.hidden = j !== 0; });
+        var first = head.offsetHeight;
+        descs.forEach(function (d, j) { d.hidden = j !== cur; });
+        var availC = cardEl.clientHeight - 48;
+         head.style.height = Math.min(need, Math.max(first, 2 * need - availC + menuH)) + 'px';
+      } else {
+        head.style.height = need + 'px';
+      }
     }
     fit();
     window.addEventListener('resize', fit);
