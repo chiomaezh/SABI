@@ -696,6 +696,18 @@
     font-size: 12px;
   }
 }
+
+    /* ── Desktop only: body fonts -0.5px ──
+       Excludes header, footer, section labels, weather block, and the
+       underlined links (OOO Hours / Start a Project).
+       Skips landscape phones, same as the header rule above. */
+    @media (min-width: 651px) and (not ((orientation: landscape) and (max-height: 500px))) {
+      .page-body       { font-size: 17px; }      /* About intro, was 17.5px */
+      .manifesto-text  { font-size: 15.5px; }    /* was 16px   */
+      .wwd-name        { font-size: 14px; }      /* What We Do rows, was 14.5px */
+      .industry-list   { font-size: 16.5px; }    /* Who We Work With, was 17px */
+      .ba-text         { font-size: 16.5px; }    /* By Appointment text, was 17px */
+    }
   </style>
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ZHK592471"></script>
