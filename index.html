@@ -592,6 +592,16 @@
       transform: translateY(3px);
     }
 
+    /* Desktop / PC only: the weather block has its own fixed height (115px) and
+       is no longer stretched to match the left column. Phone portrait (<=760px)
+       and phone landscape keep their own layouts below. */
+    @media (min-width: 761px) and (not ((orientation: landscape) and (max-height: 500px))) {
+      .station {
+        height: 115px;
+        justify-content: space-between;
+      }
+    }
+
     /* City + time rows reveal independently of the weather row — the time's
        font-size is derived from the city label, not from the weather fetch,
        so it shouldn't be held hostage by a slow/hung network request. */
@@ -722,7 +732,7 @@
   .footer-desc {
   max-width: 420px;
   font-family: var(--font-body);
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 400;
   line-height: 1.15;
   color: var(--text);
@@ -740,7 +750,7 @@
 
     .contact-label {
       font-family: var(--font-body);
-      font-size: 15px;
+      font-size: 14.5px;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--text);
@@ -749,7 +759,7 @@
 
     .contact-line {
       font-family: var(--font-body);
-      font-size: 16.5px;
+      font-size: 16px;
       color: #000000;
       font-weight: 300;
     }
@@ -796,6 +806,9 @@
       }
       .footer-desc { text-align: center; font-size: 15px; max-width: none; margin: 0 0 4px 0; justify-self: center; }
       .contact-block { text-align: left; }
+      /* Base (desktop) sizes were lowered 0.5px; phone keeps its original sizes */
+      .contact-label { font-size: 15px; }
+      .contact-line { font-size: 16.5px; }
       .station-city { font-size: 15px; letter-spacing: 2px; }
       .station-time { font-size: 28px; }
       .station-meta { font-size: 22px; }
@@ -1425,12 +1438,19 @@
 
       if (window.innerWidth <= 760) return;
 
+      // Desktop / PC: weather block height is fixed in CSS (115px), so there is
+      // nothing to match. Only phone landscape (compact footer) still uses the matching below.
+      if (!window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches) return;
+
       const baseMarginBottom = parseFloat(getComputedStyle(desc).marginBottom);
       const baseStationGap = parseFloat(getComputedStyle(station).gap) || 8;
 
       const stationHeight = station.getBoundingClientRect().height;
       const descHeight = desc.getBoundingClientRect().height;
-      const contactHeight = contact.getBoundingClientRect().height;
+      // offsetHeight = the real layout height. getBoundingClientRect() would return the
+      // visually scaled height (the contact column has transform: scale(0.9)), which made
+      // the weather block come out ~7px shorter than the left column.
+      const contactHeight = contact.offsetHeight;
       const leftTotal = descHeight + baseMarginBottom + contactHeight;
 
       const diff = leftTotal - stationHeight;
