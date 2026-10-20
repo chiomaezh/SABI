@@ -851,6 +851,17 @@
       text-underline-offset: 4px;
       margin-top: 1.5rem;
     }
+
+    /* ── Desktop only: main section fonts -0.5px ──
+       Excludes header, Dial In, footer, and the Brand / Experience / Production headings.
+       Skips landscape phones, same as the header rule above. */
+    @media (min-width: 651px) and (not ((orientation: landscape) and (max-height: 500px))) {
+      .services-hero .page-body { font-size: 17px; }      /* was 17.5px */
+      .service-name             { font-size: 15.5px; }    /* was 16px   */
+      .service-desc             { font-size: 15px; }      /* was 15.5px */
+      .service-more-link        { font-size: 11.5px; }    /* was 12px   */
+      .ba-text                  { font-size: 16.5px; }    /* Dial In body text, was 17px */
+    }
   </style>
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ZHK592471"></script>
