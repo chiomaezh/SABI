@@ -812,7 +812,7 @@
       .station-city { font-size: 15px; letter-spacing: 2px; }
       .station-time { font-size: 28px; }
       .station-meta { font-size: 22px; }
-      .station-icon { width: 22px; height: 22px; }
+      .station-icon { width: 23px; height: 23px; }
       /* Icon pinned to the left edge of the label and temperature to the right edge,
          so a one-digit temperature ("9°C") doesn't leave the icon floating inwards.
          (Error state keeps its own layout.) */
@@ -1354,12 +1354,12 @@
         const availableForText = cityWidth - iconWidth - gapPx;
         if (tempWidth > 0 && availableForText > 0) {
           let newTempSize = tempFontSize * (availableForText / tempWidth);
-          // Phone portrait only: the temperature is capped at 20px so narrow digits
+          // Phone portrait only: the temperature is capped at 19px so narrow digits
           // (e.g. "11°C") don't blow it up to the size of the time. It can still
           // shrink below 20px if the text is ever too wide to fit the row.
           const phonePortrait = window.innerWidth <= 760 &&
             !window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches;
-          if (phonePortrait) newTempSize = Math.min(newTempSize, 20);
+          if (phonePortrait) newTempSize = Math.min(newTempSize, 19);
           metaTemp.style.fontSize = newTempSize + 'px';
         }
       }
