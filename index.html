@@ -1496,7 +1496,7 @@
 
   <!-- ═══════════ Custom cursor: asterisk (experimental) ═══════════
        Mouse / trackpad only (phones and tablets are untouched).
-       • Default: a hairline ink asterisk exactly on the pointer, no lag.
+       • Default: a solid ink asterisk (six club-shaped petals) exactly on the pointer, no lag.
        • Over links and buttons: the asterisk turns 30° (vertical arm becomes horizontal, like a typewriter
          keystroke) and grows slightly. Add data-cursor="active" to anything else that should react.
        • Anything with data-cursor-note="…" also shows the text as a small typewriter footnote beside the pointer.
@@ -1518,20 +1518,16 @@
     .sabi-cursor.is-visible { opacity: 1; }
     .sabi-cursor svg {
       position: absolute;
-      left: -10px;               /* 20px mark, centre exactly on the pointer */
-      top: -10px;
-      width: 20px;
-      height: 20px;
+      left: -7.5px;              /* 15px mark, centre exactly on the pointer */
+      top: -7.5px;
+      width: 15px;               /* change these three numbers together to resize the star */
+      height: 15px;
       overflow: visible;
       transition: transform 0.15s cubic-bezier(.2,.7,.2,1);
     }
     .sabi-cursor svg * {
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.4;         /* same hairline as the site's icons */
-      stroke-linecap: butt;
-      stroke-linejoin: miter;
-      vector-effect: non-scaling-stroke;
+      fill: currentColor;        /* solid, club-petal asterisk */
+      stroke: none;
     }
     .sabi-cursor.is-active svg               { transform: rotate(30deg) scale(1.25); }
     .sabi-cursor.is-down svg                 { transform: scale(0.85); }
@@ -1574,11 +1570,17 @@
       var cursor = document.createElement('div');
       cursor.className = 'sabi-cursor';
       cursor.setAttribute('aria-hidden', 'true');
+      // Six club-shaped petals (narrow at the centre, swelling to a rounded tip),
+      // one drawn pointing up and rotated in 60° steps, plus a small hexagonal hub.
+      var PETAL = 'M-19 0C-19-100-43-150-43-225C-43-285-28-309 0-309C28-309 43-285 43-225C43-150 19-100 19 0Z';
+      var petals = '';
+      for (var i = 0; i < 6; i++) {
+        petals += '<path transform="rotate(' + (i * 60) + ')" d="' + PETAL + '"/>';
+      }
       cursor.innerHTML =
-        '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">' +
-          '<line x1="10" y1="3.5" x2="10" y2="16.5"/>' +
-          '<line x1="4.4" y1="6.8" x2="15.6" y2="13.2"/>' +
-          '<line x1="15.6" y1="6.8" x2="4.4" y2="13.2"/>' +
+        '<svg viewBox="-330 -330 660 660" xmlns="http://www.w3.org/2000/svg">' +
+          petals +
+          '<polygon points="0,-62 54,-31 54,31 0,62 -54,31 -54,-31"/>' +
         '</svg>';
 
       var note = document.createElement('div');
