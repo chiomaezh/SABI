@@ -1493,5 +1493,237 @@
     });
 
   </script>
+
+  <!-- ═══════════ Custom cursor (experimental) ═══════════
+       Mouse / trackpad only (phones and tablets are untouched).
+       • Default: four hairline ticks (up / down / left / right) exactly on the pointer, no lag.
+       • Over links and buttons: crop marks frame the element, like marking it up for press.
+         Add data-cursor="frame" to anything else that should get the crop marks (e.g. the logo).
+       • Over anything with data-cursor-note="…": the ticks become an asterisk and the note
+         appears as a small typewriter footnote beside the pointer. Opt-in per element.
+       • Ink (#211D1D) on paper, flips to paper over the dark ticker / lightbox. Text fields keep the native cursor. -->
+  <style>
+    .sabi-cursor, .sabi-frame, .sabi-note {
+      position: fixed;
+      left: 0;
+      top: 0;
+      pointer-events: none;
+      z-index: 2147483000;
+      color: var(--text, #211D1D);
+    }
+    html.sabi-on-dark .sabi-cursor,
+    html.sabi-on-dark .sabi-frame,
+    html.sabi-on-dark .sabi-note { color: var(--bg, #FAFBE3); }
+
+    .sabi-cursor { width: 0; height: 0; opacity: 0; will-change: transform; }
+    .sabi-cursor.is-visible { opacity: 1; }
+    .sabi-cursor svg {
+      position: absolute;
+      left: -10px;               /* 20px mark, centre exactly on the pointer */
+      top: -10px;
+      width: 20px;
+      height: 20px;
+      overflow: visible;
+      transition: transform 0.15s cubic-bezier(.2,.7,.2,1), opacity 0.12s ease;
+    }
+    .sabi-cursor svg * {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.4;         /* same hairline as the site's icons */
+      stroke-linecap: butt;
+      stroke-linejoin: miter;
+      vector-effect: non-scaling-stroke;
+    }
+    .sabi-cursor__asterisk { opacity: 0; transform: rotate(30deg) scale(0.6); }
+    .sabi-cursor.is-note .sabi-cursor__ticks    { opacity: 0; transform: rotate(-30deg) scale(0.6); }
+    .sabi-cursor.is-note .sabi-cursor__asterisk { opacity: 1; transform: none; }
+    .sabi-cursor.is-down .sabi-cursor__ticks    { transform: scale(0.8); }
+
+    /* Crop marks that frame the hovered element */
+    .sabi-frame {
+      opacity: 0;
+      transition: opacity 0.12s ease, transform 0.16s cubic-bezier(.2,.7,.2,1),
+                  width 0.16s cubic-bezier(.2,.7,.2,1), height 0.16s cubic-bezier(.2,.7,.2,1);
+    }
+    .sabi-frame.is-visible { opacity: 1; }
+    .sabi-frame.no-anim { transition: none; }
+    .sabi-frame i {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border: 0 solid currentColor;
+    }
+    .sabi-frame .tl { left: 0;  top: 0;    border-width: 1.4px 0 0 1.4px; }
+    .sabi-frame .tr { right: 0; top: 0;    border-width: 1.4px 1.4px 0 0; }
+    .sabi-frame .bl { left: 0;  bottom: 0; border-width: 0 0 1.4px 1.4px; }
+    .sabi-frame .br { right: 0; bottom: 0; border-width: 0 1.4px 1.4px 0; }
+
+    /* Footnote-style note (typewriter mono, paper background so it reads over anything) */
+    .sabi-note {
+      font-family: 'gemeli-mono', ui-monospace, Menlo, Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+      max-width: 220px;
+      padding: 5px 8px;
+      background: var(--bg, #FAFBE3);
+      opacity: 0;
+      transition: opacity 0.12s ease;
+      will-change: transform;
+    }
+    html.sabi-on-dark .sabi-note { background: #170006; }
+    .sabi-note.is-visible { opacity: 1; }
+
+    /* Hide the native cursor only once the custom one is actually running */
+    html.sabi-cursor-on, html.sabi-cursor-on * { cursor: none !important; }
+    /* Over text fields: native cursor (I-beam) comes back, ours steps aside */
+    html.sabi-cursor-on.sabi-native, html.sabi-cursor-on.sabi-native * { cursor: auto !important; }
+    html.sabi-cursor-on.sabi-native .sabi-cursor,
+    html.sabi-cursor-on.sabi-native .sabi-frame,
+    html.sabi-cursor-on.sabi-native .sabi-note { opacity: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sabi-cursor svg, .sabi-frame, .sabi-note { transition: none; }
+    }
+  </style>
+  <script>
+    (function () {
+      // Only for devices with a real, hover-capable pointer.
+      var mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+      if (!mq.matches) return;
+
+      var root = document.documentElement;
+      var cursor = document.createElement('div');
+      cursor.className = 'sabi-cursor';
+      cursor.setAttribute('aria-hidden', 'true');
+      cursor.innerHTML =
+        '<svg class="sabi-cursor__ticks" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">' +
+          '<line x1="10" y1="1.5"  x2="10" y2="6.5"/>' +
+          '<line x1="10" y1="13.5" x2="10" y2="18.5"/>' +
+          '<line x1="1.5"  y1="10" x2="6.5"  y2="10"/>' +
+          '<line x1="13.5" y1="10" x2="18.5" y2="10"/>' +
+        '</svg>' +
+        '<svg class="sabi-cursor__asterisk" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">' +
+          '<line x1="10" y1="3.5" x2="10" y2="16.5"/>' +
+          '<line x1="4.4" y1="6.8" x2="15.6" y2="13.2"/>' +
+          '<line x1="15.6" y1="6.8" x2="4.4" y2="13.2"/>' +
+        '</svg>';
+
+      var frame = document.createElement('div');
+      frame.className = 'sabi-frame';
+      frame.setAttribute('aria-hidden', 'true');
+      frame.innerHTML = '<i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i>';
+
+      var note = document.createElement('div');
+      note.className = 'sabi-note';
+      note.setAttribute('aria-hidden', 'true');
+
+      document.body.appendChild(frame);
+      document.body.appendChild(note);
+      document.body.appendChild(cursor);
+
+      var FRAME_SEL  = 'a, button, [role="button"], summary, label, [data-cursor="frame"]';
+      var NATIVE_SEL = 'input, textarea, select, [contenteditable=""], [contenteditable="true"]';
+      var DARK_SEL   = '.ticker, .lightbox-overlay';
+      var PAD = 6;                       // gap between element and crop marks
+
+      var x = -100, y = -100, queued = false;
+      var frameTarget = null, noteTarget = null, noteW = 0, noteH = 0;
+
+      function placeFrame(animate) {
+        if (!frameTarget || !frameTarget.isConnected) { hideFrame(); return; }
+        var r = frameTarget.getBoundingClientRect();
+        if (!animate) { frame.classList.add('no-anim'); }
+        // Keep the crop marks fully on screen (e.g. the ticker button sits flush with the top edge)
+        var bl = 2, bt = 2, br = window.innerWidth - 2, bb = window.innerHeight - 2;
+        // Inside the dark ticker the marks stay within the bar so they never spill onto the cream page
+        var zone = frameTarget.closest(DARK_SEL);
+        if (zone) { var z = zone.getBoundingClientRect(); bl = Math.max(bl, z.left + 3); bt = Math.max(bt, z.top + 3); br = Math.min(br, z.right - 3); bb = Math.min(bb, z.bottom - 3); }
+        var L = Math.max(r.left - PAD, bl), T = Math.max(r.top - PAD, bt);
+        var R = Math.min(r.right + PAD, br), B = Math.min(r.bottom + PAD, bb);
+        frame.style.width  = (R - L) + 'px';
+        frame.style.height = (B - T) + 'px';
+        frame.style.transform = 'translate3d(' + L + 'px,' + T + 'px,0)';
+        if (!animate) { void frame.offsetWidth; frame.classList.remove('no-anim'); }
+      }
+      function showFrame(t) {
+        var firstShow = !frame.classList.contains('is-visible');
+        frameTarget = t;
+        placeFrame(!firstShow);
+        frame.classList.add('is-visible');
+      }
+      function hideFrame() {
+        frameTarget = null;
+        frame.classList.remove('is-visible');
+      }
+
+      function showNote(t) {
+        noteTarget = t;
+        note.textContent = t.getAttribute('data-cursor-note');
+        note.classList.add('is-visible');
+        noteW = note.offsetWidth; noteH = note.offsetHeight;
+        cursor.classList.add('is-note');
+        queue();
+      }
+      function hideNote() {
+        noteTarget = null;
+        note.classList.remove('is-visible');
+        cursor.classList.remove('is-note');
+      }
+
+      function paint() {
+        queued = false;
+        cursor.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
+        if (noteTarget) {
+          var nx = x + 16, ny = y + 14;
+          if (nx + noteW > window.innerWidth - 8)  nx = x - 16 - noteW;   // flip near the right edge
+          if (ny + noteH > window.innerHeight - 8) ny = y - 14 - noteH;   // flip near the bottom edge
+          note.style.transform = 'translate3d(' + nx + 'px,' + ny + 'px,0)';
+        }
+      }
+      function queue() { if (!queued) { queued = true; requestAnimationFrame(paint); } }
+
+      window.addEventListener('mousemove', function (e) {
+        x = e.clientX; y = e.clientY;
+        queue();
+        if (!root.classList.contains('sabi-cursor-on')) root.classList.add('sabi-cursor-on');
+        cursor.classList.add('is-visible');
+        // The element under the pointer can be replaced (e.g. the weather retry button)
+        if (frameTarget && !frameTarget.isConnected) hideFrame();
+      }, { passive: true });
+
+      document.addEventListener('mouseover', function (e) {
+        var t = e.target;
+        if (!(t instanceof Element)) return;
+        root.classList.toggle('sabi-native', !!t.closest(NATIVE_SEL));
+        root.classList.toggle('sabi-on-dark', !!t.closest(DARK_SEL));
+
+        var n = t.closest('[data-cursor-note]');
+        if (n) showNote(n); else if (noteTarget) hideNote();
+
+        var f = t.closest(FRAME_SEL);
+        if (f) { if (f !== frameTarget) showFrame(f); } else if (frameTarget) hideFrame();
+      });
+
+      document.addEventListener('mousedown', function () { cursor.classList.add('is-down'); });
+      window.addEventListener('mouseup',   function () { cursor.classList.remove('is-down'); });
+
+      // Keep the crop marks glued to the element if the page moves or resizes under a still pointer
+      window.addEventListener('scroll', function () { if (frameTarget) placeFrame(false); }, { passive: true, capture: true });
+      window.addEventListener('resize', function () { if (frameTarget) placeFrame(false); });
+
+      // Pointer leaves the window
+      root.addEventListener('mouseleave', function () { cursor.classList.remove('is-visible'); hideFrame(); hideNote(); });
+      root.addEventListener('mouseenter', function () { cursor.classList.add('is-visible'); });
+
+      // If the device stops being mouse-driven, switch everything off
+      if (mq.addEventListener) mq.addEventListener('change', function (e) {
+        if (!e.matches) {
+          root.classList.remove('sabi-cursor-on', 'sabi-native', 'sabi-on-dark');
+          cursor.remove(); frame.remove(); note.remove();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
