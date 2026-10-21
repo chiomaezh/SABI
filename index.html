@@ -1354,12 +1354,12 @@
         const availableForText = cityWidth - iconWidth - gapPx;
         if (tempWidth > 0 && availableForText > 0) {
           let newTempSize = tempFontSize * (availableForText / tempWidth);
-          // Phone portrait only: the temperature is capped at 19px so narrow digits
+          // Phone portrait only: the temperature is capped at 21px so narrow digits
           // (e.g. "11°C") don't blow it up to the size of the time. It can still
           // shrink below 20px if the text is ever too wide to fit the row.
           const phonePortrait = window.innerWidth <= 760 &&
             !window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches;
-          if (phonePortrait) newTempSize = Math.min(newTempSize, 19);
+          if (phonePortrait) newTempSize = Math.min(newTempSize, 21);
           metaTemp.style.fontSize = newTempSize + 'px';
         }
       }
