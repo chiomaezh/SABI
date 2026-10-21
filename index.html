@@ -1501,7 +1501,9 @@
          keystroke) and grows slightly. Add data-cursor="active" to anything else that should react.
        • Anything with data-cursor-note="…" also shows the text as a small typewriter footnote beside the pointer.
          Opt-in per element; nothing uses it yet.
-       • Ink (#211D1D) on paper, flips to paper over the dark ticker / lightbox. Text fields keep the native cursor. -->
+       • Inverts whatever is underneath it, pixel by pixel (mix-blend-mode: difference): dark on paper, light on the
+         dark ticker / lightbox, split along the edge when it straddles both, and flipped over text.
+         Text fields keep the native cursor. -->
   <style>
     .sabi-cursor, .sabi-note {
       position: fixed;
@@ -1511,8 +1513,18 @@
       z-index: 2147483000;
       color: var(--text, #211D1D);
     }
-    html.sabi-on-dark .sabi-cursor,
     html.sabi-on-dark .sabi-note { color: var(--bg, #FAFBE3); }
+
+    /* The asterisk inverts whatever is under each part of it (mix-blend-mode: difference).
+       Paper-coloured source: over paper it comes out black, over the dark ticker / lightbox
+       it comes out light, and a star straddling both is split half and half. Dark text
+       under it flips to light, light text to dark. Must sit on .sabi-cursor itself (the
+       element with the stacking context), not on the svg inside it. */
+    html .sabi-cursor,
+    html.sabi-on-dark .sabi-cursor {
+      color: var(--bg, #FAFBE3);
+      mix-blend-mode: difference;
+    }
 
     .sabi-cursor { width: 0; height: 0; opacity: 0; will-change: transform; }
     .sabi-cursor.is-visible { opacity: 1; }
