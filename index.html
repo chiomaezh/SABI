@@ -813,6 +813,10 @@
       .station-time { font-size: 28px; }
       .station-meta { font-size: 22px; }
       .station-icon { width: 22px; height: 22px; }
+      /* Icon pinned to the left edge of the label and temperature to the right edge,
+         so a one-digit temperature ("9°C") doesn't leave the icon floating inwards.
+         (Error state keeps its own layout.) */
+      .station-meta:not(.is-error) { width: 100%; justify-content: space-between; }
       /* Row gap tightened (8px -> 5.5px) so the weather block, and therefore the
          contact block that stretches to match it, comes out at 82px tall. */
       .station { width: auto; gap: 5.5px; }
