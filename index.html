@@ -1349,7 +1349,13 @@
         const tempFontSize = parseFloat(getComputedStyle(metaTemp).fontSize) || parseFloat(getComputedStyle(metaEl).fontSize);
         const availableForText = cityWidth - iconWidth - gapPx;
         if (tempWidth > 0 && availableForText > 0) {
-          const newTempSize = tempFontSize * (availableForText / tempWidth);
+          let newTempSize = tempFontSize * (availableForText / tempWidth);
+          // Phone portrait only: the temperature is capped at 20px so narrow digits
+          // (e.g. "11°C") don't blow it up to the size of the time. It can still
+          // shrink below 20px if the text is ever too wide to fit the row.
+          const phonePortrait = window.innerWidth <= 760 &&
+            !window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches;
+          if (phonePortrait) newTempSize = Math.min(newTempSize, 20);
           metaTemp.style.fontSize = newTempSize + 'px';
         }
       }
