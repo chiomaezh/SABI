@@ -203,8 +203,8 @@
     .section:first-of-type { padding-top: 0; }
 
     .section--about {
-      padding-top: 6rem;
-      padding-bottom: 6rem;
+      padding-top: 3rem;      /* kept modest so spare height can absorb the opening menu */
+      padding-bottom: 3rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -339,25 +339,27 @@
       }
     }
 
-    /* Phone: centre the three lines horizontally, and let the content section
-       fill the space between the header and footer so the block sits in the
-       vertical middle of the page rather than hugging the top. */
+    /* Sticky footer: the page fills the viewport and the middle section absorbs any
+       spare height, so the footer (and the line above it) stays put when the hamburger
+       menu opens. Only the hero moves. */
+    .page {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 8rem);   /* 100vh minus the body's 3rem top + 5rem bottom padding */
+      min-height: calc(100svh - 8rem);
+    }
+    /* In a flex column, the auto side margins on .container would shrink each
+       block to its content width. Forcing width: 100% keeps the header,
+       dividers and footer exactly as wide as they were before. */
+    .page > .container {
+      width: 100%;
+    }
+    .section--about {
+      flex: 1 0 auto;
+    }
+
+    /* Phone: centre the three lines horizontally */
     @media (max-width: 720px) {
-      .page {
-        display: flex;
-        flex-direction: column;
-        min-height: calc(100vh - 8rem);   /* 100vh minus the body's 3rem top + 5rem bottom padding */
-        min-height: calc(100svh - 8rem);
-      }
-      /* In a flex column, the auto side margins on .container would shrink each
-         block to its content width. Forcing width: 100% keeps the header,
-         dividers and footer exactly as wide as they were before. */
-      .page > .container {
-        width: 100%;
-      }
-      .section--about {
-        flex: 1 0 auto;
-      }
       .coming-soon {
         align-items: center;
         text-align: center;
@@ -397,7 +399,7 @@
       <div class="menu-list">
         <a href="https://sabi.london/about/">About</a>
         <a href="https://sabi.london/services/">Services</a>
-        <a class="active" aria-current="page" aria-disabled="true">Projects</a>
+        <a href="https://sabi.london/projects/" class="nav-link">Index</a>
       </div>
     </nav>
 
