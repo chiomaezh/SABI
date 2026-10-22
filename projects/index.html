@@ -364,6 +364,12 @@
         align-items: center;
         text-align: center;
       }
+      /* Menu open on phones: padding above and below the block drops to 0.9 of normal (3rem → 2.7rem) */
+      .section--about { transition: padding 0.25s ease; }
+      .page.menu-open .section--about {
+        padding-top: 2.7rem;
+        padding-bottom: 2.7rem;
+      }
     }
   </style>
   <!-- Google tag (gtag.js) -->
@@ -461,6 +467,7 @@
     const isOpen = menuAccordion.classList.toggle('open');
     menuBtn.classList.toggle('open', isOpen);
     menuBtn.setAttribute('aria-expanded', isOpen);
+    document.querySelector('.page').classList.toggle('menu-open', isOpen);
   });
 </script>
   <!-- ═══════════ Custom cursor: asterisk (experimental) ═══════════
