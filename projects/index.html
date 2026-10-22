@@ -339,9 +339,29 @@
       letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--text);
-      text-decoration: underline;
-      text-underline-offset: 4px;
+      /* Underline drawn as a bottom border (not text-decoration) so that it runs
+         under the arrow as well as the words. */
+      text-decoration: none;
+      border-bottom: 0.5px solid currentColor;
+      padding-bottom: 1px;
       margin-top: 0.875rem;
+    }
+
+    /* Drawn arrow instead of the ⟵ character, which isn't in the site font and so
+       falls back to whatever the device has, sitting low. This one is vertically
+       centred on the capital letters of the text, whatever the device. */
+    .back-arrow {
+      display: inline-block;
+      width: 1.6em;
+      height: 0.8em;
+      margin-right: 0.35em;
+      vertical-align: -0.05em;
+      overflow: visible;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1;
+      stroke-linecap: butt;
+      stroke-linejoin: miter;
     }
 
     @media (min-width: 721px) {
@@ -421,7 +441,7 @@
     <div class="coming-soon">
       <h1 class="coming-soon-title">Content on the way</h1>
       <p class="legal-updated">[work portfolio goes here]</p>
-      <a href="javascript:history.back()" class="back-link">⟵ Back to previous page</a>
+      <a href="javascript:history.back()" class="back-link"><svg class="back-arrow" viewBox="0 0 20 10" aria-hidden="true"><path d="M1 5H19M5 1L1 5L5 9"/></svg>Back to previous page</a>
     </div>
   </div>
 
