@@ -228,8 +228,11 @@
     }
 
     /* ── Site footer (same as the Services pages, minus the logo) ── */
-    /* Spacing under the divider, same as the Brand Strategy page: 64px extra on desktop (900px and up), none on phones (+ 1.5rem footer padding either way) */
-    @media (min-width: 901px) { .footer-block { margin-top: 64px; } }
+    /* Spacing under the divider (+ 1.5rem footer padding either way):
+       desktop: 1rem extra, same as the Services page.
+       phones (900px and under): no extra, same as the Brand Strategy page. */
+    .footer-block { margin-top: 1rem; }
+    @media (max-width: 900px) { .footer-block { margin-top: 0; } }
     .site-footer {
       padding-top: 1.5rem;
       display: flex;
