@@ -361,6 +361,12 @@
         min-height: calc(100vh - 8rem);   /* 100vh minus the body's 3rem top + 5rem bottom padding */
         min-height: calc(100svh - 8rem);
       }
+      /* In a flex column, the auto side margins on .container would shrink each
+         block to its content width. Forcing width: 100% keeps the header,
+         dividers and footer exactly as wide as they were before. */
+      .page > .container {
+        width: 100%;
+      }
       .section--about {
         flex: 1 0 auto;
       }
