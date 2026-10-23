@@ -359,6 +359,13 @@
     }
     .section--about {
       flex: 1 0 auto;
+      transition: padding 0.25s ease;
+    }
+    /* Desktop, menu open: the fixed padding above and below the block shrinks, so the
+       extra height of the open menu is absorbed and the page doesn't grow a scrollbar. */
+    .page.menu-open .section--about {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
     }
 
     /* Phone: centre the three lines horizontally */
