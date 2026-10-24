@@ -460,6 +460,8 @@
     @media (min-width: 901px) {
       .card--approach .card-inner { position: relative; }
       .card--approach .approach-stage { justify-content: center; align-items: center; }
+      /* Approach block is exactly one third of the page width */
+      .card--approach .approach { flex: 0 0 calc((100% + (var(--gutter) * 2)) / 3); }
       .scroll-cue--next {
         display: block;
         top: 50%;
@@ -722,6 +724,9 @@
     var cards = track ? track.querySelectorAll(':scope > .card') : [];
     var deliver = cards[1];
     var cue = document.getElementById('nextCue');
+    var dInner = deliver && deliver.querySelector('.card-inner');
+    var dBtn = deliver && deliver.querySelector('.btn');
+    var dCta = deliver && deliver.querySelector('.cta-col');
     var footerWrap = document.querySelector('.footer-wrap');
     if (!duo || !pin || !track || !deliver || !snapA || !snapD) return;
     var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -736,7 +741,17 @@
         duo.style.height = ''; snapA.style.height = ''; snapD.style.height = '';
         track.style.transform = ''; deliver.style.transform = '';
         root.classList.remove('deliv-tall');
+        if (dInner) dInner.style.paddingLeft = '';
+        if (dCta) dCta.style.flex = '';
         return;
+      }
+      /* Deliverables: left padding equals the space between the button's right edge and the page's right edge.
+         The button column keeps its one-third-based width, so the button does not move. */
+      if (dInner && dBtn && dCta) {
+        var W = pin.clientWidth, g = parseFloat(getComputedStyle(dInner).paddingRight) || 0;
+        var colW = Math.max(280, (W - 4 * g) / 3);
+        dCta.style.flex = '0 0 ' + colW + 'px';
+        dInner.style.paddingLeft = Math.round(g + colW - dBtn.offsetWidth) + 'px';
       }
       vh = pin.offsetHeight;
       e = Math.max(0, deliver.offsetHeight - vh);
