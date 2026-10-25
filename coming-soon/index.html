@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="https://use.typekit.net/bwp0bbg.css">
+
+  <title>Coming Soon — SABI</title>
+  <meta name="description" content="Content on the way..." />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    :root {
+      --bg: #FAFBE3;
+      --surface: #FAFBE3;
+      --border: #423A3A;
+      --border-light: #423A3A;
+      --text: #211D1D;
+      --found-bg: #211D1D;
+      --found-text: #FAFBE3;
+      --select-bg: rgba(183, 184, 168, 0.4);
+      --select-text: var(--text);
+      --font-body: 'owners-text', sans-serif;
+      --font-mono: 'gemeli-mono', serif;
+    }
+
+    ::selection {
+      background: var(--select-bg);
+    }
+    ::-moz-selection {
+      background: var(--select-bg);
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 350;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 0 5rem;
+    }
+
+    .page { width: 100%; }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    /* Full-bleed horizontal rule, used between every section */
+    .full-divider {
+      width: 100%;
+      border-top: 0.5px solid var(--border);
+    }
+
+    .header-divider-inset {
+      width: 100%;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      padding-top: 0;
+    }
+
+    .site-name {
+      font-family: "all-round-gothic", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    /* ── Hamburger menu (accordion) ── */
+    .menu-btn {
+      position: relative;
+      width: 22px;
+      height: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .menu-btn span {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--text);
+      transition: transform 0.25s ease, top 0.25s ease;
+    }
+    .menu-btn span:first-child { top: 1.75px; }
+    .menu-btn span:last-child { top: 12.25px; }
+    .menu-btn.open span { height: 1.8px; }
+    .menu-btn.open span:first-child { top: 7px; transform: rotate(45deg); }
+    .menu-btn.open span:last-child { top: 7px; transform: rotate(-45deg); }
+    .menu-accordion {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .menu-accordion.open { max-height: 220px; }
+    .menu-list {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 1rem;
+    }
+    .menu-list a {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.5rem 0;
+    }
+    .menu-list a.active {
+      color: rgba(139, 140, 120, 0.5);
+      pointer-events: none;
+      cursor: default;
+    }
+
+    @media (min-width: 721px) {
+      .site-header-wrap {
+        max-width: none;
+        width: 100%;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+      }
+    }
+
+    @media (min-width: 721px) and (orientation: landscape) and (max-height: 500px) {
+      .site-header-wrap {
+        max-width: 720px;
+        width: auto;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+    }
+
+    /* ── Section title (small eyebrow heading) ── */
+    .section-title {
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 1.1;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 2.2rem;
+    }
+
+    .page-title {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 22px;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .page-body {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 15.5px;
+      color: var(--text);
+      line-height: 1.9;
+      max-width: 100%;
+    }
+    .page-body p { margin-bottom: 1.5rem; }
+    .page-body p:last-child { margin-bottom: 0; }
+    .page-body a { color: var(--text); }
+    .page-body ul {
+      margin: 0 0 1.5rem 1.2rem;
+    }
+    .page-body li { margin-bottom: 0.6rem; }
+    .page-body li:last-child { margin-bottom: 0; }
+    .page-body strong { font-weight: 600; }
+
+    /* ── Sections ── */
+    .section {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+    .section:first-of-type { padding-top: 0; }
+
+    .section--about {
+      padding-top: 3rem;      /* kept modest so spare height can absorb the opening menu */
+      padding-bottom: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+
+    /* ── Legal sub-sections ── */
+    .legal-section {
+      padding-top: 2.25rem;
+      padding-bottom: 2.25rem;
+    }
+    .legal-section:first-of-type { padding-top: 0; }
+    .legal-updated {
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      color: var(--text);
+      opacity: 0.6;
+      margin-bottom: 0.875rem;
+    }
+
+    /* ── Site footer (same as the Services pages, minus the logo) ── */
+    /* Spacing under the divider (+ 1.5rem footer padding either way):
+       desktop: 1rem extra, same as the Services page.
+       phones (900px and under): no extra, same as the Brand Strategy page. */
+    .footer-block { margin-top: 1rem; }
+    @media (max-width: 900px) { .footer-block { margin-top: 0; } }
+    .site-footer {
+      padding-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+    .footer-groups {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3rem;
+      align-items: flex-start;
+    }
+    .footer-col { display: flex; flex-direction: column; }
+    @media (min-width: 501px) { .site-footer { align-items: stretch; } .footer-groups { align-items: flex-start; } }
+    .footer-desc {
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 0.9rem;
+      margin-top: -0.2em;
+    }
+    .footer-copyright {
+      font-family: var(--font-mono);
+      font-weight: 300;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+    .footer-heading {
+      font-weight: 400;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 0.7rem;
+    }
+    .footer-links { display: flex; flex-direction: column; gap: 0.55rem; }
+    .footer-links a {
+      font-weight: 300;
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+    .footer-links a:hover { opacity: 0.7; }
+    .footer-col--services .footer-links a { text-transform: uppercase; }
+
+    @media (max-width: 500px) {
+      .site-footer { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1rem; row-gap: 1.75rem; }
+      .site-footer { align-items: stretch; }
+      .site-footer > .footer-col:first-child { grid-column: 1 / -1; }
+      .footer-groups { display: contents; }
+      .footer-links a { white-space: normal; }
+      .footer-copyright { font-size: 12px; }
+    }
+    .coming-soon {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .coming-soon-title {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 18px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text);
+      /* Underline drawn as a bottom border (not text-decoration) so that it runs
+         under the arrow as well as the words. */
+      text-decoration: none;
+      border-bottom: 0.5px solid currentColor;
+      padding-bottom: 1px;
+      margin-top: 0.875rem;
+    }
+
+    /* Drawn arrow instead of the ⟵ character, which isn't in the site font and so
+       falls back to whatever the device has, sitting low. This one is vertically
+       centred on the capital letters of the text, whatever the device. */
+    .back-arrow {
+      display: inline-block;
+      width: 1.6em;
+      height: 0.8em;
+      margin-right: 0.35em;
+      vertical-align: -0.05em;
+      overflow: visible;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1;
+      stroke-linecap: butt;
+      stroke-linejoin: miter;
+    }
+
+    @media (min-width: 721px) {
+      .coming-soon {
+        align-items: center;
+        text-align: center;
+      }
+    }
+
+    /* Sticky footer: the page fills the viewport and the middle section absorbs any
+       spare height, so the footer (and the line above it) stays put when the hamburger
+       menu opens. Only the hero moves. */
+    .page {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 8rem);   /* 100vh minus the body's 3rem top + 5rem bottom padding */
+      min-height: calc(100svh - 8rem);
+    }
+    /* In a flex column, the auto side margins on .container would shrink each
+       block to its content width. Forcing width: 100% keeps the header,
+       dividers and footer exactly as wide as they were before. */
+    .page > .container {
+      width: 100%;
+    }
+    .section--about {
+      flex: 1 0 auto;
+      transition: padding 0.25s ease;
+    }
+    /* Desktop, menu open: the fixed padding above and below the block shrinks, so the
+       extra height of the open menu is absorbed and the page doesn't grow a scrollbar. */
+    .page.menu-open .section--about {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    /* Phone: centre the three lines horizontally */
+    @media (max-width: 720px) {
+      .coming-soon {
+        align-items: center;
+        text-align: center;
+      }
+      /* Phones, menu closed: padding above and below the block is 100px */
+      .section--about {
+        padding-top: 100px;
+        padding-bottom: 100px;
+        transition: padding 0.25s ease;
+      }
+      /* Menu open on phones: the padding above and below the block gives up exactly the
+         height the menu takes (half from each side), so the footer stays where it is
+         and only the main block moves. --menu-h is set by the menu script. */
+      .page.menu-open .section--about {
+        padding-top: max(0px, calc(100px - var(--menu-h, 0px) / 2));
+        padding-bottom: max(0px, calc(100px - var(--menu-h, 0px) / 2));
+      }
+    }
+  </style>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9ZHK592471"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9ZHK592471');
+</script>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xxr0mg59uq");
+</script>
+</head>
+<body>
+<div class="page">
+
+  <div class="container site-header-wrap">
+    <header class="site-header">
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+      </button>
+      <a href="https://sabi.london/" class="site-name">S A B I</a>
+    </header>
+
+    <nav class="menu-accordion" id="menuAccordion">
+      <div class="menu-list">
+        <a href="https://sabi.london/about/">About</a>
+        <a href="https://sabi.london/services/">Services</a>
+        <a class="active" aria-current="page" aria-disabled="true">Index</a>
+      </div>
+    </nav>
+
+    <div class="full-divider header-divider-inset"></div>
+  </div>
+
+  <!-- ── Section: Coming Soon ── -->
+  <div class="container section section--about">
+    <div class="coming-soon">
+      <h1 class="coming-soon-title">Content on the way</h1>
+      <p class="legal-updated">[new updates coming soon]</p>
+      <a href="javascript:history.back()" class="back-link"><svg class="back-arrow" viewBox="0 0 20 10" aria-hidden="true"><path d="M1 5H19M5 1L1 5L5 9"/></svg>Back to previous page</a>
+    </div>
+  </div>
+
+  <div class="container site-header-wrap">
+    <div class="full-divider"></div>
+  </div>
+
+  <div class="container site-header-wrap footer-block">
+    <footer class="site-footer">
+      <div class="footer-col">
+        <p class="footer-desc">A creative consultancy offering strategy and design<br>for culture-shaping presence and storytelling.</p>
+        <p class="footer-copyright">© 2026 SABI LDN</p>
+      </div>
+
+      <div class="footer-groups">
+        <div class="footer-col">
+          <p class="footer-heading">Contact</p>
+          <div class="footer-links">
+            <a href="mailto:office@sabi.london">office@sabi.london</a>
+            <a href="tel:+447400192837">+44 7400 192837</a>
+            <a href="https://calendar.app.google/itHV85cwLfoDmH7x5">OOO Hours</a>
+          </div>
+        </div>
+
+        <div class="footer-col footer-col--services">
+          <p class="footer-heading">Services</p>
+          <div class="footer-links">
+            <a href="https://sabi.london/services/brand-strategy">Brand Strategy</a>
+            <a href="https://sabi.london/services/world-building">World Building</a>
+            <a href="https://sabi.london/services/copy">Copy</a>
+            <a href="https://sabi.london/services/community-and-partnerships">Community &amp; Partnerships</a>
+            <a href="https://sabi.london/services/campaign">Campaign</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+</div>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const menuAccordion = document.getElementById('menuAccordion');
+
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = menuAccordion.classList.toggle('open');
+    menuBtn.classList.toggle('open', isOpen);
+    menuBtn.setAttribute('aria-expanded', isOpen);
+    const page = document.querySelector('.page');
+    page.classList.toggle('menu-open', isOpen);
+    syncMenuHeight();
+  });
+
+  // The menu opens to its exact height (instead of an oversized max-height), so the
+  // padding change on phones can run in step with it and the footer never bounces.
+  function syncMenuHeight() {
+    const page = document.querySelector('.page');
+    if (menuAccordion.classList.contains('open')) {
+      const h = menuAccordion.scrollHeight;
+      menuAccordion.style.maxHeight = h + 'px';
+      page.style.setProperty('--menu-h', h + 'px');
+    } else {
+      menuAccordion.style.maxHeight = '';
+    }
+  }
+  window.addEventListener('resize', syncMenuHeight);
+</script>
+  <!-- ═══════════ Custom cursor: asterisk (experimental) ═══════════
+       Mouse / trackpad only (phones and tablets are untouched).
+       • Default: a solid ink asterisk (six club-shaped petals) exactly on the pointer, no lag.
+       • Over links and buttons: the asterisk turns 30° (vertical arm becomes horizontal, like a typewriter
+         keystroke) and grows slightly. Add data-cursor="active" to anything else that should react.
+       • Anything with data-cursor-note="…" also shows the text as a small typewriter footnote beside the pointer.
+         Opt-in per element; nothing uses it yet.
+       • Inverts whatever is underneath it, pixel by pixel (mix-blend-mode: difference): dark on paper, light on the
+         dark ticker / lightbox, split along the edge when it straddles both, and flipped over text.
+         Text fields keep the native cursor. -->
+  <style>
+    .sabi-cursor, .sabi-note {
+      position: fixed;
+      left: 0;
+      top: 0;
+      pointer-events: none;
+      z-index: 2147483000;
+      color: var(--text, #211D1D);
+    }
+    html.sabi-on-dark .sabi-note { color: var(--bg, #FAFBE3); }
+
+    /* The asterisk inverts whatever is under each part of it (mix-blend-mode: difference).
+       Paper-coloured source: over paper it comes out black, over the dark ticker / lightbox
+       it comes out light, and a star straddling both is split half and half. Dark text
+       under it flips to light, light text to dark. Must sit on .sabi-cursor itself (the
+       element with the stacking context), not on the svg inside it. */
+    html .sabi-cursor,
+    html.sabi-on-dark .sabi-cursor {
+      color: var(--bg, #FAFBE3);
+      mix-blend-mode: difference;
+    }
+
+    .sabi-cursor { width: 0; height: 0; opacity: 0; will-change: transform; }
+    .sabi-cursor.is-visible { opacity: 1; }
+    .sabi-cursor svg {
+      position: absolute;
+      left: -7.5px;              /* 15px mark, centre exactly on the pointer */
+      top: -7.5px;
+      width: 15px;               /* change these three numbers together to resize the star */
+      height: 15px;
+      overflow: visible;
+      transition: transform 0.15s cubic-bezier(.2,.7,.2,1);
+    }
+    .sabi-cursor svg * {
+      fill: currentColor;        /* solid, club-petal asterisk */
+      stroke: none;
+    }
+    .sabi-cursor.is-active svg               { transform: rotate(30deg) scale(1.25); }
+    .sabi-cursor.is-down svg                 { transform: scale(0.85); }
+    .sabi-cursor.is-active.is-down svg       { transform: rotate(30deg) scale(1.05); }
+
+    /* Footnote-style note (typewriter mono, paper background so it reads over anything) */
+    .sabi-note {
+      font-family: 'gemeli-mono', ui-monospace, Menlo, Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+      max-width: 220px;
+      padding: 5px 8px;
+      background: var(--bg, #FAFBE3);
+      opacity: 0;
+      transition: opacity 0.12s ease;
+      will-change: transform;
+    }
+    html.sabi-on-dark .sabi-note { background: #170006; }
+    .sabi-note.is-visible { opacity: 1; }
+
+    /* Hide the native cursor only once the custom one is actually running */
+    html.sabi-cursor-on, html.sabi-cursor-on * { cursor: none !important; }
+    /* Over text fields: native cursor (I-beam) comes back, ours steps aside */
+    html.sabi-cursor-on.sabi-native, html.sabi-cursor-on.sabi-native * { cursor: auto !important; }
+    html.sabi-cursor-on.sabi-native .sabi-cursor,
+    html.sabi-cursor-on.sabi-native .sabi-note { opacity: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sabi-cursor svg, .sabi-note { transition: none; }
+    }
+  </style>
+  <script>
+    (function () {
+      // Only for devices with a real, hover-capable pointer.
+      var mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+      if (!mq.matches) return;
+
+      var root = document.documentElement;
+      var cursor = document.createElement('div');
+      cursor.className = 'sabi-cursor';
+      cursor.setAttribute('aria-hidden', 'true');
+      // Six club-shaped petals (narrow at the centre, swelling to a rounded tip),
+      // one drawn pointing up and rotated in 60° steps, plus a small hexagonal hub.
+      var PETAL = 'M-19 0C-19-100-43-150-43-225C-43-285-28-309 0-309C28-309 43-285 43-225C43-150 19-100 19 0Z';
+      var petals = '';
+      for (var i = 0; i < 6; i++) {
+        petals += '<path transform="rotate(' + (i * 60) + ')" d="' + PETAL + '"/>';
+      }
+      cursor.innerHTML =
+        '<svg viewBox="-330 -330 660 660" xmlns="http://www.w3.org/2000/svg">' +
+          petals +
+          '<polygon points="0,-62 54,-31 54,31 0,62 -54,31 -54,-31"/>' +
+        '</svg>';
+
+      var note = document.createElement('div');
+      note.className = 'sabi-note';
+      note.setAttribute('aria-hidden', 'true');
+
+      document.body.appendChild(note);
+      document.body.appendChild(cursor);
+
+      var ACTIVE_SEL = 'a, button, [role="button"], summary, label, [data-cursor="active"]';
+      var NATIVE_SEL = 'input, textarea, select, [contenteditable=""], [contenteditable="true"]';
+      var DARK_SEL   = '.ticker, .lightbox-overlay';
+
+      var x = -100, y = -100, queued = false;
+      var noteTarget = null, noteW = 0, noteH = 0;
+
+      function showNote(t) {
+        noteTarget = t;
+        note.textContent = t.getAttribute('data-cursor-note');
+        note.classList.add('is-visible');
+        noteW = note.offsetWidth; noteH = note.offsetHeight;
+        queue();
+      }
+      function hideNote() {
+        noteTarget = null;
+        note.classList.remove('is-visible');
+      }
+
+      function paint() {
+        queued = false;
+        cursor.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
+        if (noteTarget) {
+          var nx = x + 16, ny = y + 14;
+          if (nx + noteW > window.innerWidth - 8)  nx = x - 16 - noteW;   // flip near the right edge
+          if (ny + noteH > window.innerHeight - 8) ny = y - 14 - noteH;   // flip near the bottom edge
+          note.style.transform = 'translate3d(' + nx + 'px,' + ny + 'px,0)';
+        }
+      }
+      function queue() { if (!queued) { queued = true; requestAnimationFrame(paint); } }
+
+      window.addEventListener('mousemove', function (e) {
+        x = e.clientX; y = e.clientY;
+        queue();
+        if (!root.classList.contains('sabi-cursor-on')) root.classList.add('sabi-cursor-on');
+        cursor.classList.add('is-visible');
+      }, { passive: true });
+
+      document.addEventListener('mouseover', function (e) {
+        var t = e.target;
+        if (!(t instanceof Element)) return;
+        root.classList.toggle('sabi-native', !!t.closest(NATIVE_SEL));
+        root.classList.toggle('sabi-on-dark', !!t.closest(DARK_SEL));
+
+        var n = t.closest('[data-cursor-note]');
+        if (n) showNote(n); else if (noteTarget) hideNote();
+
+        cursor.classList.toggle('is-active', !!t.closest(ACTIVE_SEL) || !!n);
+      });
+
+      document.addEventListener('mousedown', function () { cursor.classList.add('is-down'); });
+      window.addEventListener('mouseup',   function () { cursor.classList.remove('is-down'); });
+
+      // Pointer leaves the window
+      root.addEventListener('mouseleave', function () { cursor.classList.remove('is-visible'); hideNote(); });
+      root.addEventListener('mouseenter', function () { cursor.classList.add('is-visible'); });
+
+      // If the device stops being mouse-driven, switch everything off
+      if (mq.addEventListener) mq.addEventListener('change', function (e) {
+        if (!e.matches) {
+          root.classList.remove('sabi-cursor-on', 'sabi-native', 'sabi-on-dark');
+          cursor.remove(); note.remove();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
