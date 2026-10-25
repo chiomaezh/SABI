@@ -380,10 +380,12 @@
         padding-bottom: 100px;
         transition: padding 0.25s ease;
       }
-      /* Menu open on phones: padding drops to 2.7rem (0.9 of the 3rem desktop value) */
+      /* Menu open on phones: the padding above and below the block gives up exactly the
+         height the menu takes (half from each side), so the footer stays where it is
+         and only the main block moves. --menu-h is set by the menu script. */
       .page.menu-open .section--about {
-        padding-top: 2.7rem;
-        padding-bottom: 2.7rem;
+        padding-top: max(0px, calc(100px - var(--menu-h, 0px) / 2));
+        padding-bottom: max(0px, calc(100px - var(--menu-h, 0px) / 2));
       }
     }
   </style>
@@ -482,8 +484,24 @@
     const isOpen = menuAccordion.classList.toggle('open');
     menuBtn.classList.toggle('open', isOpen);
     menuBtn.setAttribute('aria-expanded', isOpen);
-    document.querySelector('.page').classList.toggle('menu-open', isOpen);
+    const page = document.querySelector('.page');
+    page.classList.toggle('menu-open', isOpen);
+    syncMenuHeight();
   });
+
+  // The menu opens to its exact height (instead of an oversized max-height), so the
+  // padding change on phones can run in step with it and the footer never bounces.
+  function syncMenuHeight() {
+    const page = document.querySelector('.page');
+    if (menuAccordion.classList.contains('open')) {
+      const h = menuAccordion.scrollHeight;
+      menuAccordion.style.maxHeight = h + 'px';
+      page.style.setProperty('--menu-h', h + 'px');
+    } else {
+      menuAccordion.style.maxHeight = '';
+    }
+  }
+  window.addEventListener('resize', syncMenuHeight);
 </script>
   <!-- ═══════════ Custom cursor: asterisk (experimental) ═══════════
        Mouse / trackpad only (phones and tablets are untouched).
