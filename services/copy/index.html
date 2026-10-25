@@ -751,6 +751,7 @@
         root.classList.remove('deliv-tall');
         if (dInner) dInner.style.paddingLeft = '';
         if (dCta) dCta.style.flex = '';
+        if (dInner) dInner.style.paddingTop = '';
         return;
       }
       /* Deliverables: left padding equals the space between the button's right edge and the page's right edge.
@@ -762,6 +763,13 @@
         dInner.style.paddingLeft = Math.round(g + colW - dBtn.offsetWidth) + 'px';
       }
       vh = pin.offsetHeight;
+      /* Tall Deliverables: the top gets the same space that sits above the footer line when you reach the end */
+      if (dInner) {
+        dInner.style.paddingTop = '';
+        if (deliver.offsetHeight > vh && footerWrap) {
+          dInner.style.paddingTop = Math.round((parseFloat(getComputedStyle(dInner).paddingBottom) || 0) + (parseFloat(getComputedStyle(footerWrap).paddingTop) || 0)) + 'px';
+        }
+      }
       e = Math.max(0, deliver.offsetHeight - vh);
       duo.style.height = (2 * vh + e) + 'px';
       snapA.style.height = vh + 'px';
