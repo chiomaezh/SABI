@@ -1361,6 +1361,19 @@
         timeEl.style.fontSize = newTimeSize + 'px';
       }
 
+      // Error state ("weather update" note + retry icon): line the left edge of the note up
+      // with the left edge of LONDON by adjusting the gap between the note and the icon.
+      // (Right edge stays pinned: the icon already lines up with the right of LONDON.)
+      metaEl.style.gap = '';
+      if (metaEl.classList.contains('is-error')) {
+        const noteEl = metaEl.querySelector('[data-refresh-text]');
+        if (noteEl && noteEl.getClientRects().length) {
+          const baseGap = parseFloat(getComputedStyle(metaEl).gap) || 0;
+          const diff = cityEl.getBoundingClientRect().left - noteEl.getBoundingClientRect().left;
+          if (Math.abs(diff) > 0.5) metaEl.style.gap = Math.max(3, baseGap - diff) + 'px';
+        }
+      }
+
       const metaIcon = metaEl.querySelector('.station-icon');
       const metaTemp = metaEl.querySelector('[data-temp]');
       if (metaIcon && metaTemp) {
@@ -1439,6 +1452,9 @@
       // BOTTOM_TRIM: fraction of the remaining empty space under the contact/weather blocks
       // that is moved to the top as well (0.35 = take 35% of it off the bottom, add to the top).
       const BOTTOM_TRIM = 0.35;
+      // BOTTOM_BOOST: the space under the contact/weather blocks (after the trim above) is
+      // then increased by this fraction (0.25 = 25% more), taken back from the top.
+      const BOTTOM_BOOST = 0.25;
       const isPhonePortrait = window.innerWidth <= 760 && viewportHeight > window.innerWidth;
       let navShift = 0;
       if (isPhonePortrait) {
@@ -1452,6 +1468,10 @@
           const bottomEmpty = parseFloat(getComputedStyle(footer).paddingBottom) + evenLift;
           const moveToTop = Math.min(bottomEmpty * BOTTOM_TRIM, evenLift);
           navShift = extra * TOP_SHARE + moveToTop;
+          // Then give the space under the contact/weather blocks 0.25x more than that,
+          // taking it back from the top so the nav-to-description gap stays the same.
+          const bottomNow = parseFloat(getComputedStyle(footer).paddingBottom) + (extra - navShift);
+          navShift -= Math.min(bottomNow * BOTTOM_BOOST, navShift);
           footer.style.bottom = (extra - navShift) + 'px';
           if (ticker) {
             ticker.style.height = (ticker.getBoundingClientRect().height + navShift) + 'px';
