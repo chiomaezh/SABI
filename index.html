@@ -879,14 +879,17 @@
       .contact-label { font-size: 10px; letter-spacing: 1.5px; }
       .contact-line { font-size: 11px; }
 
-      .station { gap: 3px; }
-      .station-city { font-size: 11px; letter-spacing: 1.5px; }
-      .station-time { font-size: 18px; }
-      .station-meta { font-size: 14px; gap: 4px; }
-      .station-icon { width: 14px; height: 14px; }
+      /* Weather block scaled down (all sizes x 10/11, same proportions as before) so LONDON
+         is the same size as CONTACT (10px). Its height is matched to the contact block in JS
+         (matchLeftColumnHeightToStation) and its 3px visual nudge is removed so the bottoms align. */
+      .station { gap: 2.7px; transform: none; justify-content: space-between; }
+      .station-city { font-size: 10px; letter-spacing: 1.36px; }
+      .station-time { font-size: 16.4px; }
+      .station-meta { font-size: 12.7px; gap: 3.6px; }
+      .station-icon { width: 12.7px; height: 12.7px; }
       /* Error state scaled down with the icon so the note + retry icon still fit the narrow row */
-      .station-meta.is-error { gap: 6px; }
-      .station-refresh-text { font-size: 8px; }
+      .station-meta.is-error { gap: 5.5px; }
+      .station-refresh-text { font-size: 7.3px; }
 
       .lightbox-close {
         top: 0;
@@ -1527,34 +1530,16 @@
       // the actual cause of the block appearing taller after rotating back.
       desc.style.marginBottom = '';
       station.style.gap = '';
+      station.style.height = '';
 
-      if (window.innerWidth <= 760) return;
-
-      // Desktop / PC: weather block height is fixed in CSS (115px), so there is
-      // nothing to match. Only phone landscape (compact footer) still uses the matching below.
+      // Only phone landscape (compact footer) uses the matching below. Desktop has its own
+      // fixed weather height in CSS, and phone portrait stretches both blocks to the same row.
       if (!window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches) return;
 
-      const baseMarginBottom = parseFloat(getComputedStyle(desc).marginBottom);
-      const baseStationGap = parseFloat(getComputedStyle(station).gap) || 8;
-
-      const stationHeight = station.getBoundingClientRect().height;
-      const descHeight = desc.getBoundingClientRect().height;
-      // offsetHeight = the real layout height. getBoundingClientRect() would return the
-      // visually scaled height (the contact column has transform: scale(0.9)), which made
-      // the weather block come out ~7px shorter than the left column.
-      const contactHeight = contact.offsetHeight;
-      const leftTotal = descHeight + baseMarginBottom + contactHeight;
-
-      const diff = leftTotal - stationHeight;
-
-      if (diff > 0) {
-        // Left column is taller — stretch the station's internal gaps to match
-        const extraPerGap = diff / 2; // 2 gaps between the 3 station rows
-        station.style.gap = (baseStationGap + extraPerGap) + 'px';
-      } else {
-        // Station is taller or equal — grow the description's margin to match
-        desc.style.marginBottom = (baseMarginBottom - diff) + 'px';
-      }
+      // Phone landscape: the weather block is exactly as tall as the contact block, and both
+      // sit on the bottom of the footer, so their bottoms line up. The description is not
+      // touched, so it stays where it is. offsetHeight = the real layout height.
+      station.style.height = contact.offsetHeight + 'px';
     }
 
     window.addEventListener('load', matchLeftColumnHeightToStation);
