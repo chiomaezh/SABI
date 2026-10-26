@@ -884,10 +884,15 @@
          (matchLeftColumnHeightToStation) and its 3px visual nudge is removed so the bottoms align. */
       .station { gap: 2.7px; transform: none; justify-content: space-between; }
       .station-city { font-size: 10px; letter-spacing: 1.36px; }
-      .station-time { font-size: 16.4px; }
-      .station-meta { font-size: 12.7px; gap: 3.6px; }
-      .station-icon { width: 12.7px; height: 12.7px; }
+      .station-time { font-size: 16.4px; line-height: 1; }
+      /* Weather row laid out like portrait: icon pinned to the left edge of the LONDON column,
+         temperature to the right edge, icon about 1.1x the temperature size (portrait is 23px
+         icon / 21px temperature; scaled by 10/15 for the smaller LONDON that is 15.3px / 14px). */
+      .station-meta { font-size: 14px; gap: 3.6px; line-height: 1; }
+      .station-meta:not(.is-error) { width: 100%; justify-content: space-between; }
+      .station-icon { width: 15.3px; height: 15.3px; }
       /* Error state scaled down with the icon so the note + retry icon still fit the narrow row */
+      .station-meta.is-error .station-icon { width: 12.7px; height: 12.7px; }
       .station-meta.is-error { gap: 5.5px; }
       .station-refresh-text { font-size: 7.3px; }
 
@@ -1393,6 +1398,10 @@
           const phonePortrait = window.innerWidth <= 760 &&
             !window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches;
           if (phonePortrait) newTempSize = Math.min(newTempSize, 21);
+          // Phone landscape: same idea at the scaled-down size (21px x 10/15 = 14px), so the icon
+          // stays pinned left and the temperature right instead of the text filling the row.
+          const phoneLandscape = window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches;
+          if (phoneLandscape) newTempSize = Math.min(newTempSize, 14);
           metaTemp.style.fontSize = newTempSize + 'px';
         }
       }
