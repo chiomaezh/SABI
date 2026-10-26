@@ -918,6 +918,23 @@
       }
 
     }
+
+    /* ── Phone modes (portrait + landscape): ticker strip padding above and below the
+         typewriter text increased by 0.3x. The strip grows by 0.3 x (its height minus the text
+         height) and the nav moves down by the same amount so the spacing below it is unchanged.
+         Kept after the other phone rules so it wins the cascade. ── */
+    @media (max-width: 760px) {
+      .ticker { height: 42.5px; }   /* was 36px, text 14.5px */
+      .site-nav { top: 42.5px; }    /* was 36px */
+    }
+    @media (max-width: 560px) {
+      .ticker { height: 50.5px; }   /* was 42px, text 13.5px */
+      .site-nav { top: 38.5px; }    /* was 30px */
+    }
+    @media (orientation: landscape) and (max-height: 500px) {
+      .ticker { height: 50.5px; }   /* was 42px, text 13.5px */
+      .site-nav { top: 32.5px; }    /* was 24px */
+    }
   </style>
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ZHK592471"></script>
@@ -1401,10 +1418,51 @@
       const isPhone = window.innerWidth <= 760 ||
         (window.matchMedia('(orientation: landscape)').matches && window.innerHeight <= 500);
 
-      const navBottom = nav.getBoundingClientRect().bottom;
-      const footerHeight = footer.getBoundingClientRect().height;
+      const ticker = document.querySelector('.ticker');
       const viewportHeight = window.innerHeight;
-      const gapMid = navBottom + (viewportHeight - navBottom - footerHeight) / 2;
+
+      // Clear anything this function set on a previous run, so measurements start from the CSS defaults.
+      footer.style.bottom = '';
+      nav.style.top = '';
+      if (ticker) { ticker.style.height = ''; ticker.style.paddingTop = ''; }
+
+      // Phone portrait: keep the proportions of the page like Safari, where the distance
+      // between the bottom of the nav and the top of the description is about the screen
+      // width. Browsers with no bottom toolbar (e.g. Instagram's in-app browser) give a
+      // taller page, so the extra height is shared between two places instead of stretching
+      // the gap: half goes to the top of the ticker strip (extra dark space above the
+      // typewriter text, nav moves down with it) and half lifts the footer off the bottom edge.
+      // GAP_TO_WIDTH: target gap as a fraction of screen width (Safari measures ~0.95).
+      // TOP_SHARE: fraction of the extra height given to the top (0.5 = half and half).
+      const GAP_TO_WIDTH = 0.96;
+      const TOP_SHARE = 0.5;
+      // BOTTOM_TRIM: fraction of the remaining empty space under the contact/weather blocks
+      // that is moved to the top as well (0.35 = take 35% of it off the bottom, add to the top).
+      const BOTTOM_TRIM = 0.35;
+      const isPhonePortrait = window.innerWidth <= 760 && viewportHeight > window.innerWidth;
+      let navShift = 0;
+      if (isPhonePortrait) {
+        const naturalGap = footer.getBoundingClientRect().top - nav.getBoundingClientRect().bottom;
+        const targetGap = window.innerWidth * GAP_TO_WIDTH;
+        if (naturalGap > targetGap) {
+          const extra = naturalGap - targetGap;
+          // Empty space under the contact/weather blocks if split evenly (footer padding + lift),
+          // then BOTTOM_TRIM of it is moved to the top instead.
+          const evenLift = extra * (1 - TOP_SHARE);
+          const bottomEmpty = parseFloat(getComputedStyle(footer).paddingBottom) + evenLift;
+          const moveToTop = Math.min(bottomEmpty * BOTTOM_TRIM, evenLift);
+          navShift = extra * TOP_SHARE + moveToTop;
+          footer.style.bottom = (extra - navShift) + 'px';
+          if (ticker) {
+            ticker.style.height = (ticker.getBoundingClientRect().height + navShift) + 'px';
+            ticker.style.paddingTop = navShift + 'px';
+          }
+          nav.style.top = (parseFloat(getComputedStyle(nav).top) + navShift) + 'px';
+        }
+      }
+      const navBottom = nav.getBoundingClientRect().bottom;
+      const footerTop = footer.getBoundingClientRect().top;
+      const gapMid = navBottom + (footerTop - navBottom) / 2;
 
       if (!isPhone) {
         // Desktop: split the difference between dead-centre of the full
@@ -1427,7 +1485,11 @@
 
     window.addEventListener('load', centreLogoInMainBlock);
     window.addEventListener('resize', centreLogoInMainBlock);
+    window.addEventListener('orientationchange', centreLogoInMainBlock);
+    // In-app browsers (Instagram etc.) can change their bar heights after load
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', centreLogoInMainBlock);
     setTimeout(centreLogoInMainBlock, 100);
+    setTimeout(centreLogoInMainBlock, 600);
 
     // ── Desktop only: match total height of (description + contact) to the weather block ──
     function matchLeftColumnHeightToStation() {
