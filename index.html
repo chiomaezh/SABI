@@ -947,7 +947,8 @@
          add space under the footer that matches the space above the contact/weather blocks
          (45px grid gap). The footer already has 20px bottom padding, so 25px more = 45px. */
       .in-instagram .stage::after,
-      .in-tiktok .stage::after { min-height: 25px; }
+      .in-tiktok .stage::after,
+      .in-app .stage::after { min-height: 25px; }
 
       .ticker { position: relative; flex: 0 0 auto; }
       .site-nav { position: static; flex: 0 0 auto; }
@@ -995,6 +996,19 @@
     if (/musical_ly|BytedanceWebview|TikTok|trill/i.test(navigator.userAgent) || /[?&]tiktok\b/.test(location.search)) {
       document.documentElement.classList.add('in-tiktok');
     }
+    // Catch-all for any other in-app browser (TikTok when it doesn't name itself, Facebook, LinkedIn, etc.).
+    // Real iPhone browsers (Safari, Chrome, Firefox) all include "Safari/" in their user agent; in-app
+    // webviews usually don't. On Android, in-app webviews are marked "; wv)". Twitter/X is excluded
+    // because it has its own spacing above. ?inapp forces it on for testing.
+    (function () {
+      var ua = navigator.userAgent;
+      var isTwitter = document.documentElement.classList.contains('in-twitter');
+      var iosInApp = /iPhone|iPod/.test(ua) && !/Safari\//.test(ua);
+      var androidInApp = /Android/.test(ua) && /; wv\)/.test(ua);
+      if (!isTwitter && (iosInApp || androidInApp || /[?&]inapp\b/.test(location.search))) {
+        document.documentElement.classList.add('in-app');
+      }
+    })();
   </script>
 </head>
 <body>
