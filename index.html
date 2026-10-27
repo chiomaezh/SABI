@@ -943,6 +943,11 @@
          space under the footer at least this tall so the contact and weather blocks stay clear
          and tappable. */
       .in-twitter .stage::after { min-height: 56px; }
+      /* Instagram / TikTok in-app browsers: the page sits flush to the bottom of the screen, so
+         add space under the footer that matches the space above the contact/weather blocks
+         (45px grid gap). The footer already has 20px bottom padding, so 25px more = 45px. */
+      .in-instagram .stage::after,
+      .in-tiktok .stage::after { min-height: 25px; }
 
       .ticker { position: relative; flex: 0 0 auto; }
       .site-nav { position: static; flex: 0 0 auto; }
@@ -981,6 +986,14 @@
     // Adding ?twitter to the address forces it on, handy for testing in Safari.
     if (/Twitter/i.test(navigator.userAgent) || /[?&]twitter\b/.test(location.search)) {
       document.documentElement.classList.add('in-twitter');
+    }
+    // Instagram and TikTok in-app browsers: same idea, flagged so the CSS can add bottom space.
+    // ?instagram / ?tiktok force them on for testing in Safari.
+    if (/Instagram/i.test(navigator.userAgent) || /[?&]instagram\b/.test(location.search)) {
+      document.documentElement.classList.add('in-instagram');
+    }
+    if (/musical_ly|BytedanceWebview|TikTok|trill/i.test(navigator.userAgent) || /[?&]tiktok\b/.test(location.search)) {
+      document.documentElement.classList.add('in-tiktok');
     }
   </script>
 </head>
