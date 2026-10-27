@@ -928,25 +928,16 @@
     }
 
     /* ── Phone portrait: the whole page layout is pure CSS, no scripts. ──
-         .stage is one fixed full-screen column holding, top to bottom: extra dark strip,
-         ticker, nav, logo zone, footer, empty space. The logo zone has a fixed height of
-         0.96 x the screen width, so the gap between the nav and the footer is always
-         the same proportion and the logo sits dead-centre in it. Any spare screen height
-         is split between the dark strip above the ticker (61%) and the empty space under
-         the footer (39%); on shorter screens only the logo zone shrinks.
+         .stage is one fixed full-screen column holding, top to bottom: ticker, nav, logo zone,
+         footer. Ticker and nav sit at the very top, the footer at the very bottom, and the
+         logo zone takes all the space in between with the logo centred in it.
          Outside phone portrait .stage / .logo-zone are display: contents, so nothing changes. */
     .stage, .logo-zone { display: contents; }
 
     @media (max-width: 760px) and (orientation: portrait) {
       .stage { position: fixed; inset: 0; display: flex; flex-direction: column; }
-      .stage::before, .stage::after { content: ''; min-height: 0; flex-shrink: 0; }
-      .stage::before {
-        flex: 0.614 0 0px;
-        background: #170006;
-        opacity: 0;
-        animation: fadeIn 1.8s ease forwards;
-      }
-      .stage::after { flex: 0.386 0 0px; }
+      /* empty spacer under the footer: nothing by default */
+      .stage::after { content: ''; flex: 0 0 0px; min-height: 0; }
       /* Twitter/X app: the page already ends above the tweet panel, but the app's floating bar
          (sabi.london / X / refresh) still overlaps roughly the bottom 70px of the page. Keep the
          space under the footer at least this tall so the contact and weather blocks stay clear
@@ -955,7 +946,7 @@
 
       .ticker { position: relative; flex: 0 0 auto; }
       .site-nav { position: static; flex: 0 0 auto; }
-      .logo-zone { display: grid; place-items: center; flex: 0 1 96vw; min-height: 0; }
+      .logo-zone { display: grid; place-items: center; flex: 1 1 0px; min-height: 0; }
       .logo-zone img { position: static; transform: none; }
       .site-footer { position: static; flex: 0 0 auto; }
     }
