@@ -947,10 +947,11 @@
         animation: fadeIn 1.8s ease forwards;
       }
       .stage::after { flex: 0.386 0 0px; }
-      /* Twitter/X app: its floating bar + tweet panel cover about the bottom 220px of the page,
-         so never let the space under the footer be smaller than that (keeps the contact and
-         weather blocks clear and tappable). */
-      .in-twitter .stage::after { min-height: 200px; }
+      /* Twitter/X app: the page already ends above the tweet panel, but the app's floating bar
+         (sabi.london / X / refresh) still overlaps roughly the bottom 70px of the page. Keep the
+         space under the footer at least this tall so the contact and weather blocks stay clear
+         and tappable. */
+      .in-twitter .stage::after { min-height: 56px; }
 
       .ticker { position: relative; flex: 0 0 auto; }
       .site-nav { position: static; flex: 0 0 auto; }
