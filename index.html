@@ -597,8 +597,18 @@
        and phone landscape keep their own layouts below. */
     @media (min-width: 761px) and (not ((orientation: landscape) and (max-height: 500px))) {
       .station {
-        height: 115px;
+        height: var(--pc-station-h, 115px);
+        gap: 0;
         justify-content: space-between;
+        /* PC only: JS scales the whole weather block down (see matchStationRowWidths) so it is
+           exactly as tall as the contact block, anchored on the bottom-right corner so its
+           bottom stays level with the bottom of the contact block. */
+        transform-origin: bottom right;
+      }
+      /* PC only: weather icon at 0.85x three times (32.4px -> 27.54px -> 23.409px -> 19.898px) */
+      .station-icon {
+        width: 19.898px;
+        height: 19.898px;
       }
     }
 
@@ -1414,6 +1424,47 @@
       timeEl.style.fontSize = '';
       metaEl.style.fontSize = '';
 
+      // ── PC only: scale the weather block down proportionally so LONDON is the same font size
+      //    as CONTACT, with the same letter-spacing, and make the block exactly as tall as the
+      //    contact block (rows spread to fill it), bottoms aligned. Everything is measured unscaled,
+      //    and the scale is applied at the very end of this function. ──
+      const stationEl = document.getElementById('station');
+      const isPC = window.matchMedia('(min-width: 761px) and (not ((orientation: landscape) and (max-height: 500px)))').matches;
+      let pcScale = 1;
+      cityEl.style.letterSpacing = '';
+      const contactBlockEl = document.querySelector('.contact-block');
+      if (contactBlockEl) contactBlockEl.style.gap = '';
+      if (stationEl) {
+        stationEl.style.transform = '';
+        stationEl.style.removeProperty('--pc-station-h');
+      }
+      if (isPC && stationEl) {
+        const contactCol = document.querySelector('.footer-col-left');
+        const contactLabel = document.querySelector('.contact-label');
+        if (contactCol && contactLabel) {
+          // PC only: make the contact block 10% taller by opening up the gaps between its rows
+          // evenly (text sizes unchanged). The weather block then matches this taller height.
+          const naturalH = contactCol.getBoundingClientRect().height;
+          const naturalScale = contactCol.offsetHeight ? naturalH / contactCol.offsetHeight : 1;
+          if (contactBlockEl && naturalH > 0) {
+            const rowGaps = Math.max(contactBlockEl.children.length - 1, 1);
+            const baseGap = parseFloat(getComputedStyle(contactBlockEl).rowGap) || 0;
+            const extraPerGap = (naturalH * 0.10) / rowGaps / naturalScale;
+            contactBlockEl.style.gap = (baseGap + extraPerGap) + 'px';
+          }
+          const contactH = contactCol.getBoundingClientRect().height;
+          const contactScale = contactCol.offsetHeight ? contactH / contactCol.offsetHeight : 1;
+          const contactFont = parseFloat(getComputedStyle(contactLabel).fontSize) * contactScale;
+          const contactSpacing = (parseFloat(getComputedStyle(contactLabel).letterSpacing) || 0) * contactScale;
+          const cityFont = parseFloat(getComputedStyle(cityEl).fontSize);
+          if (contactH > 0 && contactFont > 0 && cityFont > 0) {
+            pcScale = contactFont / cityFont;
+            cityEl.style.letterSpacing = (contactSpacing / pcScale) + 'px';
+            stationEl.style.setProperty('--pc-station-h', (contactH / pcScale) + 'px');
+          }
+        }
+      }
+
       const cityWidth = cityEl.getBoundingClientRect().width;
 
       const timeWidth = timeEl.getBoundingClientRect().width;
@@ -1456,8 +1507,15 @@
           // stays pinned left and the temperature right instead of the text filling the row.
           const phoneLandscape = window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches;
           if (phoneLandscape) newTempSize = Math.min(newTempSize, 14);
+          // PC only: temperature +1px on screen (divided by the block's scale to get the CSS value)
+          if (isPC && pcScale > 0 && pcScale !== 1) newTempSize += 1 / pcScale;
           metaTemp.style.fontSize = newTempSize + 'px';
         }
+      }
+
+      // PC only: apply the proportional scale (keeps the existing 3px downward nudge)
+      if (isPC && stationEl && pcScale !== 1) {
+        stationEl.style.transform = 'translateY(3px) scale(' + pcScale + ')';
       }
     }
 
