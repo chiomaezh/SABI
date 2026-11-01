@@ -605,10 +605,12 @@
            bottom stays level with the bottom of the contact block. */
         transform-origin: bottom right;
       }
-      /* PC only: weather icon at 0.85x four times (32.4px -> 27.54px -> 23.409px -> 19.898px -> 16.913px) */
-      .station-icon {
-        width: 16.913px;
-        height: 16.913px;
+      /* PC only: weather icon at 0.85x of its current on-screen size (32.4px -> 27.54px).
+         Written as ".station .station-icon" so it out-ranks the base ".station-icon" rule further
+         down the file (the old rule here lost that tie, so it never actually applied). */
+      .station .station-icon {
+        width: 27.54px;
+        height: 27.54px;
       }
     }
 
@@ -822,7 +824,7 @@
       .station-city { font-size: 15px; letter-spacing: 2px; }
       .station-time { font-size: 28px; }
       .station-meta { font-size: 22px; }
-      .station-icon { width: 23px; height: 23px; }
+      .station-icon { width: 19.55px; height: 19.55px; } /* 23px x 0.85 */
       /* Icon pinned to the left edge of the label and temperature to the right edge,
          so a one-digit temperature ("9°C") doesn't leave the icon floating inwards.
          (Error state keeps its own layout.) */
@@ -900,9 +902,9 @@
          icon / 21px temperature; scaled by 10/15 for the smaller LONDON that is 15.3px / 14px). */
       .station-meta { font-size: 14px; gap: 3.6px; line-height: 1; }
       .station-meta:not(.is-error) { width: 100%; justify-content: space-between; }
-      .station-icon { width: 15.3px; height: 15.3px; }
+      .station-icon { width: 13.005px; height: 13.005px; } /* 15.3px x 0.85 */
       /* Error state scaled down with the icon so the note + retry icon still fit the narrow row */
-      .station-meta.is-error .station-icon { width: 12.7px; height: 12.7px; }
+      .station-meta.is-error .station-icon { width: 10.795px; height: 10.795px; } /* 12.7px x 0.85 */
       .station-meta.is-error { gap: 5.5px; }
       .station-refresh-text { font-size: 7.3px; }
 
