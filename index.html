@@ -685,6 +685,21 @@
       object-fit: contain;
     }
 
+    /* PC only: a slightly larger invisible hover area around the temperature, so the pointer
+       only has to be close to it (not exactly on it) to show Fahrenheit. It is an absolutely
+       positioned pseudo-element, so it does not change the layout or any measurements. */
+    @media (hover: hover) and (pointer: fine) {
+      [data-temp] { position: relative; }
+      [data-temp]::before {
+        content: '';
+        position: absolute;
+        top: -12px;
+        bottom: -12px;
+        left: -8px;
+        right: -10px;
+      }
+    }
+
     /* Clickable retry — only appears in place of the icon when the weather
        fetch has failed. Sized to fill .station-icon exactly (100%/100%), so
        it automatically matches the normal icon's dimensions at every
@@ -824,7 +839,7 @@
       .station-city { font-size: 15px; letter-spacing: 2px; }
       .station-time { font-size: 28px; }
       .station-meta { font-size: 22px; }
-      .station-icon { width: 19.55px; height: 19.55px; } /* 23px x 0.85 */
+      .station-icon { width: 23px; height: 23px; }
       /* Icon pinned to the left edge of the label and temperature to the right edge,
          so a one-digit temperature ("9°C") doesn't leave the icon floating inwards.
          (Error state keeps its own layout.) */
@@ -902,9 +917,9 @@
          icon / 21px temperature; scaled by 10/15 for the smaller LONDON that is 15.3px / 14px). */
       .station-meta { font-size: 14px; gap: 3.6px; line-height: 1; }
       .station-meta:not(.is-error) { width: 100%; justify-content: space-between; }
-      .station-icon { width: 13.005px; height: 13.005px; } /* 15.3px x 0.85 */
+      .station-icon { width: 15.3px; height: 15.3px; }
       /* Error state scaled down with the icon so the note + retry icon still fit the narrow row */
-      .station-meta.is-error .station-icon { width: 10.795px; height: 10.795px; } /* 12.7px x 0.85 */
+      .station-meta.is-error .station-icon { width: 12.7px; height: 12.7px; }
       .station-meta.is-error { gap: 5.5px; }
       .station-refresh-text { font-size: 7.3px; }
 
@@ -1401,15 +1416,12 @@
         panel.querySelector('.station-meta').classList.remove('is-error');
         const tempEl = panel.querySelector('[data-temp]');
         tempEl.textContent = `${temp}°C`;
-        // Only now is there a real temperature to swap, so only now does the cursor react to it.
-        tempEl.setAttribute('data-cursor', 'active');
         const iconName = iconForCode(code, isDay);
         panel.querySelector('[data-icon]').innerHTML =
           `<img src="icons/${iconName}.png" alt="" width="256" height="256" onerror="this.style.display='none'">`;
       } catch (e) {
         panel.querySelector('.station-meta').classList.add('is-error');
         currentTempC = null;
-        panel.querySelector('[data-temp]').removeAttribute('data-cursor');
         panel.querySelector('[data-temp]').textContent = '';
         panel.querySelector('[data-icon]').innerHTML =
           `<button type="button" class="station-refresh-btn" aria-label="Retry weather">
