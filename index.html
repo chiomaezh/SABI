@@ -983,6 +983,17 @@
       .logo-zone img { position: static; transform: none; }
       .site-footer { position: static; flex: 0 0 auto; }
     }
+    /* Phone portrait: the company description is always exactly two lines, broken after "design".
+       Each line is kept on one line (nowrap) and the font shrinks only as far as needed to fit
+       the screen width: 15px on wider phones (unchanged), smaller on narrow ones. 23.3 is the
+       longer line's width in em at 15px; the script below (fitDescToTwoLines) then fine-tunes it
+       against the real font. */
+    @media (max-width: 760px) and (orientation: portrait) {
+      .footer-desc {
+        white-space: nowrap;
+        font-size: min(15px, calc((100vw - 40px) / 23.3));
+      }
+    }
     /* nav overlaps the bottom 12px of the (taller) ticker on narrow phones, as before */
     @media (max-width: 560px) and (orientation: portrait) {
       .site-nav { margin-top: -12px; }
@@ -1632,6 +1643,33 @@
     window.addEventListener('resize', centreLogoInMainBlock);
     window.addEventListener('orientationchange', centreLogoInMainBlock);
     setTimeout(centreLogoInMainBlock, 100);
+
+    // ── Phone portrait: keep the company description on exactly two lines ──
+    //    The CSS already sets a size that should fit; this measures the real rendered width
+    //    (the webfont can be a little wider or narrower than expected) and shrinks the text
+    //    just enough if the longer line would overflow. It never makes the text bigger than 15px.
+    function fitDescToTwoLines() {
+      const desc = document.querySelector('.footer-desc');
+      const footer = document.querySelector('.site-footer');
+      if (!desc || !footer) return;
+
+      desc.style.fontSize = '';   // start from the CSS size
+      if (!window.matchMedia('(max-width: 760px) and (orientation: portrait)').matches) return;
+
+      const cs = getComputedStyle(footer);
+      const available = footer.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const needed = desc.scrollWidth;
+      if (needed > available && needed > 0) {
+        const size = parseFloat(getComputedStyle(desc).fontSize);
+        desc.style.fontSize = (size * available / needed * 0.995) + 'px';
+      }
+    }
+
+    fitDescToTwoLines();
+    window.addEventListener('load', fitDescToTwoLines);
+    window.addEventListener('resize', fitDescToTwoLines);
+    window.addEventListener('orientationchange', () => setTimeout(fitDescToTwoLines, 300));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitDescToTwoLines);
 
     // ── Desktop only: match total height of (description + contact) to the weather block ──
     function matchLeftColumnHeightToStation() {
