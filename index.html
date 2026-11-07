@@ -1398,6 +1398,8 @@
 
     // ── PC only: hovering the temperature shows it in Fahrenheit (calculated, no extra request) ──
     let currentTempC = null;
+    let tempHovering = false;   // true while the pointer is over the temperature (showing Fahrenheit)
+    let restRowH = null;        // height of the weather row (icon + temperature) at rest, in Celsius
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
 
     function showTemp(unit) {
@@ -1411,8 +1413,8 @@
     }
 
     const tempHoverEl = panel.querySelector('[data-temp]');
-    tempHoverEl.addEventListener('mouseenter', () => { if (canHover.matches) showTemp('F'); });
-    tempHoverEl.addEventListener('mouseleave', () => { if (canHover.matches) showTemp('C'); });
+    tempHoverEl.addEventListener('mouseenter', () => { if (canHover.matches) { tempHovering = true; showTemp('F'); } });
+    tempHoverEl.addEventListener('mouseleave', () => { if (canHover.matches) { tempHovering = false; showTemp('C'); } });
 
     async function updateWeather() {
       try {
@@ -1474,6 +1476,8 @@
       // Reset any previous scaling before measuring fresh
       timeEl.style.fontSize = '';
       metaEl.style.fontSize = '';
+      const weatherRowEl = metaEl.closest('.station-row');
+      if (weatherRowEl) { weatherRowEl.style.height = ''; weatherRowEl.style.flexShrink = ''; }
 
       // ── PC only: scale the weather block down proportionally so LONDON is the same font size
       //    as CONTACT, with the same letter-spacing, and make the block exactly as tall as the
@@ -1562,6 +1566,17 @@
           if (isPC && pcScale > 0 && pcScale !== 1) newTempSize += 1 / pcScale;
           metaTemp.style.fontSize = newTempSize + 'px';
         }
+      }
+
+      // PC only: keep the weather row (icon + temperature) exactly the same height whether it shows
+      // Celsius or Fahrenheit. The two strings fit to slightly different font sizes, which changed this
+      // row's height; the block spreads its three rows evenly (space-between), so the time row was
+      // nudged up or down whenever the temperature switched. Locking the height to its resting
+      // (Celsius) value means only the temperature text itself changes.
+      if (isPC && weatherRowEl) {
+        if (!tempHovering || restRowH === null) restRowH = weatherRowEl.getBoundingClientRect().height;
+        weatherRowEl.style.height = restRowH + 'px';
+        weatherRowEl.style.flexShrink = '0';
       }
 
       // PC only: apply the proportional scale (keeps the existing 3px downward nudge)
