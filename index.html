@@ -1400,6 +1400,7 @@
     let currentTempC = null;
     let tempHovering = false;   // true while the pointer is over the temperature (showing Fahrenheit)
     let restRowH = null;        // height of the weather row (icon + temperature) at rest, in Celsius
+    let restStationW = null;    // width of the weather block at rest, in Celsius
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
 
     function showTemp(unit) {
@@ -1478,6 +1479,8 @@
       metaEl.style.fontSize = '';
       const weatherRowEl = metaEl.closest('.station-row');
       if (weatherRowEl) { weatherRowEl.style.height = ''; weatherRowEl.style.flexShrink = ''; }
+      const stationBox = document.getElementById('station');
+      if (stationBox) stationBox.style.width = '';
 
       // ── PC only: scale the weather block down proportionally so LONDON is the same font size
       //    as CONTACT, with the same letter-spacing, and make the block exactly as tall as the
@@ -1577,6 +1580,14 @@
         if (!tempHovering || restRowH === null) restRowH = weatherRowEl.getBoundingClientRect().height;
         weatherRowEl.style.height = restRowH + 'px';
         weatherRowEl.style.flexShrink = '0';
+      }
+      // PC only: same for the block's width. Celsius and Fahrenheit fit the row to within a fraction of
+      // a pixel of each other, so the block's left edge moved by that fraction, and the browser then drew
+      // the whole block (LONDON, the time, the temperature) up to 1px to the left or right. A fixed width
+      // keeps the block's box identical in both states.
+      if (isPC && stationEl) {
+        if (!tempHovering || restStationW === null) restStationW = stationEl.getBoundingClientRect().width;
+        stationEl.style.width = restStationW + 'px';
       }
 
       // PC only: apply the proportional scale (keeps the existing 3px downward nudge)
