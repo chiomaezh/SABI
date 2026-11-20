@@ -39,6 +39,8 @@
       --font-mono: 'gemeli-mono', serif;
     }
 
+    html { background-color: var(--bg); }
+
     body {
       margin: 0;
       height: 100vh;
@@ -160,12 +162,19 @@
       inset: 0;
       background: rgba(23, 0, 6, 0.95);
       z-index: 100;
-      display: flex;
+      /* Fully removed from rendering while closed (display: none), not just invisible. On iPhone Safari
+         a hidden-but-present full-screen dark layer left its wine colour behind the bottom toolbar after
+         the lightbox was closed. .is-shown puts it back for the fade; .is-open does the fade itself. */
+      display: none;
       align-items: center;
       justify-content: center;
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.3s ease;
+    }
+
+    .lightbox-overlay.is-shown {
+      display: flex;
     }
 
     .lightbox-overlay.is-open {
@@ -1217,14 +1226,24 @@
     const lightboxClose = document.getElementById('lightboxClose');
     const tickerLightboxTrigger = document.getElementById('tickerLightboxTrigger');
 
+    let lightboxHideTimer;
+
     function openLightbox() {
+      clearTimeout(lightboxHideTimer);
+      smsLightbox.classList.add('is-shown');   // back into rendering (display: flex)
+      void smsLightbox.offsetWidth;            // let the browser lay it out first, so the fade-in still plays
       smsLightbox.classList.add('is-open');
       document.body.style.overflow = 'hidden';
     }
 
     function closeLightbox() {
-      smsLightbox.classList.remove('is-open');
+      smsLightbox.classList.remove('is-open');  // fades out over 0.3s
       document.body.style.overflow = '';
+      clearTimeout(lightboxHideTimer);
+      // Once the fade has finished, take the overlay out of rendering completely
+      lightboxHideTimer = setTimeout(() => {
+        if (!smsLightbox.classList.contains('is-open')) smsLightbox.classList.remove('is-shown');
+      }, 350);
     }
 
     tickerLightboxTrigger.addEventListener('click', openLightbox);
