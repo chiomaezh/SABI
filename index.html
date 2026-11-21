@@ -162,10 +162,7 @@
       inset: 0;
       background: rgba(23, 0, 6, 0.95);
       z-index: 100;
-      /* Fully removed from rendering while closed (display: none), not just invisible. On iPhone Safari
-         a hidden-but-present full-screen dark layer left its wine colour behind the bottom toolbar after
-         the lightbox was closed. .is-shown puts it back for the fade; .is-open does the fade itself. */
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
@@ -173,14 +170,16 @@
       transition: opacity 0.3s ease;
     }
 
-    .lightbox-overlay.is-shown {
-      display: flex;
+    .lightbox-overlay.is-open {
+      opacity: 1;
+      visibility: visible;
     }
 
-    /* Phones only: a thin, always-present strip of the page's off-white along the very bottom edge.
-       Safari (iPhone) colours the area behind its bottom toolbar from whatever sits on that edge. While
-       the lightbox is open the dark overlay (z-index 100) is on top, so it looks as before; once the
-       lightbox is closed this strip is what is left there, so the area goes back to off-white. */
+    /* Phones only: a thin strip along the very bottom edge that matches the page. Safari (iPhone) colours the
+       area behind its bottom toolbar from whatever sits on that edge, so the strip follows the lightbox:
+       off-white normally, and the lightbox's own dark colour while the lightbox is open (so there is never an
+       off-white band under an open lightbox). It sits under the lightbox (z-index 1 vs 100), so it is not
+       itself visible. The colour is the lightbox's rgba(23,0,6,0.95) laid over the off-white page. */
     .edge-guard { display: none; }
     @media (max-width: 760px) {
       .edge-guard {
@@ -194,11 +193,7 @@
         pointer-events: none;
         z-index: 1;
       }
-    }
-
-    .lightbox-overlay.is-open {
-      opacity: 1;
-      visibility: visible;
+      html.lightbox-open .edge-guard { background: rgb(34, 13, 17); }
     }
 
     .lightbox-box {
@@ -1247,29 +1242,16 @@
     const lightboxClose = document.getElementById('lightboxClose');
     const tickerLightboxTrigger = document.getElementById('tickerLightboxTrigger');
 
-    let lightboxHideTimer;
-
     function openLightbox() {
-      clearTimeout(lightboxHideTimer);
-      smsLightbox.classList.add('is-shown');   // back into rendering (display: flex)
-      void smsLightbox.offsetWidth;            // let the browser lay it out first, so the fade-in still plays
+      document.documentElement.classList.add('lightbox-open');
       smsLightbox.classList.add('is-open');
       document.body.style.overflow = 'hidden';
     }
 
     function closeLightbox() {
-      smsLightbox.classList.remove('is-open');  // fades out over 0.3s
+      smsLightbox.classList.remove('is-open');
+      document.documentElement.classList.remove('lightbox-open');
       document.body.style.overflow = '';
-      clearTimeout(lightboxHideTimer);
-      // Once the fade has finished, take the overlay out of rendering completely
-      lightboxHideTimer = setTimeout(() => {
-        if (smsLightbox.classList.contains('is-open')) return;
-        smsLightbox.classList.remove('is-shown');
-        // Nudge iPhone Safari to re-read the colour behind its bottom toolbar (it can hold on to the
-        // lightbox's dark colour otherwise). A 1px scroll and straight back; harmless if nothing scrolls.
-        window.scrollTo(0, 1);
-        requestAnimationFrame(() => window.scrollTo(0, 0));
-      }, 350);
     }
 
     tickerLightboxTrigger.addEventListener('click', openLightbox);
