@@ -954,34 +954,15 @@
 
     }
 
-    /* ── Phone portrait: the whole page layout is pure CSS, no scripts. ──
-         .stage is one fixed full-screen column holding, top to bottom: ticker, nav, logo zone,
-         footer. Ticker and nav sit at the very top, the footer at the very bottom, and the
-         logo zone takes all the space in between with the logo centred in it.
-         Outside phone portrait .stage / .logo-zone are display: contents, so nothing changes. */
-    .stage, .logo-zone { display: contents; }
-
+    /* Phone portrait: ticker, nav and footer are plain fixed elements again, exactly as in the
+       earlier version that behaved correctly around the lightbox (no full-screen fixed wrapper).
+       The logo is centred between nav and footer by script. The footer sits flush to the bottom,
+       lifted only inside in-app browsers that need clear space under it. */
     @media (max-width: 760px) and (orientation: portrait) {
-      .stage { position: fixed; inset: 0; display: flex; flex-direction: column; }
-      /* empty spacer under the footer: nothing by default */
-      .stage::after { content: ''; flex: 0 0 0px; min-height: 0; }
-      /* Twitter/X app: the page already ends above the tweet panel, but the app's floating bar
-         (sabi.london / X / refresh) still overlaps roughly the bottom 70px of the page. Keep the
-         space under the footer at least this tall so the contact and weather blocks stay clear
-         and tappable. */
-      .in-twitter .stage::after { min-height: 56px; }
-      /* Instagram / TikTok in-app browsers: the page sits flush to the bottom of the screen, so
-         add space under the footer that matches the space above the contact/weather blocks
-         (45px grid gap). The footer already has 20px bottom padding, so 25px more = 45px. */
-      .in-instagram .stage::after,
-      .in-tiktok .stage::after,
-      .in-app .stage::after { min-height: 25px; }
-
-      .ticker { position: relative; flex: 0 0 auto; }
-      .site-nav { position: static; flex: 0 0 auto; }
-      .logo-zone { display: grid; place-items: center; flex: 1 1 0px; min-height: 0; }
-      .logo-zone img { position: static; transform: none; }
-      .site-footer { position: static; flex: 0 0 auto; }
+      .in-twitter .site-footer { bottom: 56px; }
+      .in-instagram .site-footer,
+      .in-tiktok .site-footer,
+      .in-app .site-footer { bottom: 25px; }
     }
     /* Phone portrait: the company description is always exactly two lines, broken after "design".
        Each line is kept on one line (nowrap) and the font shrinks only as far as needed to fit
@@ -993,14 +974,6 @@
         white-space: nowrap;
         font-size: min(15px, calc((100vw - 40px) / 23.3));
       }
-    }
-    /* nav overlaps the bottom 12px of the (taller) ticker on narrow phones, as before */
-    @media (max-width: 560px) and (orientation: portrait) {
-      .site-nav { margin-top: -12px; }
-    }
-    /* wider portrait: nav has 28px under its text but the footer only 20px above its text */
-    @media (min-width: 561px) and (max-width: 760px) and (orientation: portrait) {
-      .logo-zone img { transform: translateY(-4px); }
     }
   </style>
   <!-- Google tag (gtag.js) -->
@@ -1106,7 +1079,7 @@
     </div>
   </div>
 
-  <div class="stage">
+  
     <div class="ticker">
       <div class="ticker-quote-wrap">
         <span class="ticker-quote" id="tickerQuote" aria-live="polite"></span><span class="ticker-cursor" aria-hidden="true"></span>
@@ -1124,9 +1097,8 @@
       <a href="https://sabi.london/projects/" class="nav-link">Index</a>
     </nav>
 
-    <div class="logo-zone">
+    
       <img src="sabi-logo.png" alt="SABI">
-    </div>
 
     <footer class="site-footer">
       <p class="footer-desc">A creative consultancy offering direction and design <br class="desc-break">for culture-shaping presence and storytelling.</p>
@@ -1159,7 +1131,6 @@
         </div>
       </div>
     </footer>
-  </div>
 
   <script>
     // ── Typewriter quote reel (replaces the old scrolling ticker) ──
@@ -1629,16 +1600,6 @@
       const footer = document.querySelector('.site-footer');
       if (!logo || !nav || !footer) return;
 
-      // Phone portrait is laid out entirely in CSS (see .stage), so nothing to do here
-      // except clear anything left over from landscape / desktop.
-      if (window.matchMedia('(max-width: 760px) and (orientation: portrait)').matches) {
-        logo.style.position = '';
-        logo.style.left = '';
-        logo.style.top = '';
-        logo.style.transform = '';
-        return;
-      }
-
       const isPhone = window.innerWidth <= 760 ||
         (window.matchMedia('(orientation: landscape)').matches && window.innerHeight <= 500);
 
@@ -1659,9 +1620,12 @@
         return;
       }
 
+      // 561-760px portrait: nudged 4px up (nav has 28px under its text, footer 20px above its text)
+      const nudge = (window.innerWidth >= 561 && window.innerWidth <= 760 &&
+        window.matchMedia('(orientation: portrait)').matches) ? -4 : 0;
       logo.style.position = 'fixed';
       logo.style.left = '50%';
-      logo.style.top = gapMid + 'px';
+      logo.style.top = (gapMid + nudge) + 'px';
       logo.style.transform = 'translate(-50%, -50%)';
     }
 
