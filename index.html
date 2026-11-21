@@ -39,8 +39,6 @@
       --font-mono: 'gemeli-mono', serif;
     }
 
-    html { background-color: var(--bg); }
-
     body {
       margin: 0;
       height: 100vh;
@@ -173,27 +171,6 @@
     .lightbox-overlay.is-open {
       opacity: 1;
       visibility: visible;
-    }
-
-    /* Phones only: a thin strip along the very bottom edge that matches the page. Safari (iPhone) colours the
-       area behind its bottom toolbar from whatever sits on that edge, so the strip follows the lightbox:
-       off-white normally, and the lightbox's own dark colour while the lightbox is open (so there is never an
-       off-white band under an open lightbox). It sits under the lightbox (z-index 1 vs 100), so it is not
-       itself visible. The colour is the lightbox's rgba(23,0,6,0.95) laid over the off-white page. */
-    .edge-guard { display: none; }
-    @media (max-width: 760px) {
-      .edge-guard {
-        display: block;
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 6px;
-        background: var(--bg);
-        pointer-events: none;
-        z-index: 1;
-      }
-      html.lightbox-open .edge-guard { background: rgb(34, 13, 17); }
     }
 
     .lightbox-box {
@@ -1129,8 +1106,6 @@
     </div>
   </div>
 
-  <div class="edge-guard" aria-hidden="true"></div>
-
   <div class="stage">
     <div class="ticker">
       <div class="ticker-quote-wrap">
@@ -1243,14 +1218,12 @@
     const tickerLightboxTrigger = document.getElementById('tickerLightboxTrigger');
 
     function openLightbox() {
-      document.documentElement.classList.add('lightbox-open');
       smsLightbox.classList.add('is-open');
       document.body.style.overflow = 'hidden';
     }
 
     function closeLightbox() {
       smsLightbox.classList.remove('is-open');
-      document.documentElement.classList.remove('lightbox-open');
       document.body.style.overflow = '';
     }
 
