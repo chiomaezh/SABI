@@ -177,6 +177,25 @@
       display: flex;
     }
 
+    /* Phones only: a thin, always-present strip of the page's off-white along the very bottom edge.
+       Safari (iPhone) colours the area behind its bottom toolbar from whatever sits on that edge. While
+       the lightbox is open the dark overlay (z-index 100) is on top, so it looks as before; once the
+       lightbox is closed this strip is what is left there, so the area goes back to off-white. */
+    .edge-guard { display: none; }
+    @media (max-width: 760px) {
+      .edge-guard {
+        display: block;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 6px;
+        background: var(--bg);
+        pointer-events: none;
+        z-index: 1;
+      }
+    }
+
     .lightbox-overlay.is-open {
       opacity: 1;
       visibility: visible;
@@ -1115,6 +1134,8 @@
     </div>
   </div>
 
+  <div class="edge-guard" aria-hidden="true"></div>
+
   <div class="stage">
     <div class="ticker">
       <div class="ticker-quote-wrap">
@@ -1242,7 +1263,12 @@
       clearTimeout(lightboxHideTimer);
       // Once the fade has finished, take the overlay out of rendering completely
       lightboxHideTimer = setTimeout(() => {
-        if (!smsLightbox.classList.contains('is-open')) smsLightbox.classList.remove('is-shown');
+        if (smsLightbox.classList.contains('is-open')) return;
+        smsLightbox.classList.remove('is-shown');
+        // Nudge iPhone Safari to re-read the colour behind its bottom toolbar (it can hold on to the
+        // lightbox's dark colour otherwise). A 1px scroll and straight back; harmless if nothing scrolls.
+        window.scrollTo(0, 1);
+        requestAnimationFrame(() => window.scrollTo(0, 0));
       }, 350);
     }
 
